@@ -1,0 +1,117 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">›</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/departments">Organizational Structure</a>
+      <span class="text-slate-400">›</span>
+      <span class="text-primary font-bold">Add Sub Department</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="pb-2">
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Create New Sub Department</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 text-base">Define a new functional unit within your existing hierarchy to better manage operations.</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-10 w-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center dark:bg-blue-900/30 dark:text-blue-400">
+                <span class="material-symbols-outlined">domain_add</span>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Department Details</h3>
+                <p class="text-xs text-slate-500">Basic information required for organizational mapping.</p>
+            </div>
+        </div>
+
+        <form [formGroup]="subDeptForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+            
+            <div>
+                <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Parent Department <span class="text-red-500">*</span></label>
+                <div class="relative">
+                    <select formControlName="parentDepartmentId" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm appearance-none">
+                        <option value="" disabled selected>Select a parent department...</option>
+                        @for (dept of departments(); track dept.id) {
+                            <option [value]="dept.id">{{ dept.departmentName }}</option>
+                        }
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">The high-level unit this sub-department belongs to.</p>
+                @if (subDeptForm.get('parentDepartmentId')?.invalid && subDeptForm.get('parentDepartmentId')?.touched) {
+                    <p class="text-xs text-red-500 mt-1">Parent department is required.</p>
+                }
+            </div>
+
+            <div>
+                <div class="flex justify-between">
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Sub Dept. Name <span class="text-red-500">*</span></label>
+                    <span class="text-[10px] text-slate-400">{{ subDeptForm.get('name')?.value?.length || 0 }} / 50</span>
+                </div>
+                <input type="text" formControlName="name" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. Talent Acquisition"/>
+                <p class="text-xs text-slate-500 mt-1">Full legal or professional name of the sub-department.</p>
+                 @if (subDeptForm.get('name')?.invalid && subDeptForm.get('name')?.touched) {
+                    <p class="text-xs text-red-500 mt-1">Name is required.</p>
+                }
+            </div>
+
+            <div>
+                <div class="flex justify-between">
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Short Name <span class="text-red-500">*</span></label>
+                    <span class="text-[10px] text-slate-400">{{ subDeptForm.get('shortName')?.value?.length || 0 }} / 50</span>
+                </div>
+                <input type="text" formControlName="shortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. HR-TA"/>
+                <p class="text-xs text-slate-500 mt-1">Used for internal reports and system abbreviations.</p>
+                 @if (subDeptForm.get('shortName')?.invalid && subDeptForm.get('shortName')?.touched) {
+                    <p class="text-xs text-red-500 mt-1">Short name is required.</p>
+                }
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-900 dark:text-white mb-3">Active Status</label>
+                <div class="flex items-center gap-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" formControlName="status" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    </label>
+                    <span class="text-sm text-slate-700 dark:text-slate-300">{{ subDeptForm.get('status')?.value ? 'Currently Active' : 'Inactive' }}</span>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4">
+                <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors">Cancel</button>
+                <button type="submit" [disabled]="subDeptForm.invalid || isSubmitting()" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    @if (isSubmitting()) { Saving... } @else { Save Department }
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Alert Box -->
+    <div class="bg-blue-50 border border-blue-100 dark:bg-blue-900/20 dark:border-blue-900/40 rounded-xl p-4 flex gap-4">
+        <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-200 flex-shrink-0">
+            <span class="material-symbols-outlined !text-[20px]">info</span>
+        </div>
+        <div>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Hierarchy Note</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Changes to parent departments will ripple down to sub-units automatically.</p>
+        </div>
+    </div>
+    
+    <div class="bg-amber-50 border border-amber-100 dark:bg-amber-900/20 dark:border-amber-900/40 rounded-xl p-4 flex gap-4">
+        <div class="h-8 w-8 rounded-full bg-amber-100 dark:bg-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-200 flex-shrink-0">
+            <span class="text-lg font-bold">!</span>
+        </div>
+        <div>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Character Limit</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Department names must be under 50 characters to comply with reporting formats.</p>
+        </div>
+    </div>
+  </div>
+</div>

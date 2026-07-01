@@ -1,0 +1,153 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <span class="text-slate-500 dark:text-slate-400 font-medium">Bank Management</span>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/bank-accounts">Bank Accounts</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-primary font-medium">Edit Details</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <div class="flex items-center justify-between">
+          <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Edit Bank Account Details</h1>
+          @if (account?.status === 'Active & Verified') {
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase dark:bg-emerald-900/30 dark:text-emerald-400">System Active</span>
+          }
+      </div>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Modify current financial information for the corporate account.
+      </p>
+    </div>
+
+    @if (account) {
+        <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+            <!-- Primary Information -->
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8">
+                <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-6">Primary Information</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Account Name <span class="text-red-500">*</span></label>
+                        <input type="text" formControlName="accountName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Account Number <span class="text-red-500">*</span></label>
+                        <input type="text" formControlName="accountNumber" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Bank <span class="text-red-500">*</span></label>
+                        <select formControlName="bankId" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            @for (bank of banks(); track bank.id) {
+                                <option [value]="bank.id">{{ bank.bankName }}</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Branch</label>
+                        <input type="text" formControlName="branchName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Account Type <span class="text-red-500">*</span></label>
+                        <select formControlName="accountType" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <option value="" disabled>Select Type</option>
+                            @for (type of accountTypes; track type) {
+                                <option [value]="type">{{ type }}</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Associated Company <span class="text-red-500">*</span></label>
+                        <select formControlName="companyId" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <option value="" disabled>Select Company</option>
+                            @for (comp of companies(); track comp.id) {
+                                <option [value]="comp.id">{{ comp.companyName }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Codes & Identifiers -->
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8">
+                <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-6">Codes & Identifiers</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">IFSC / Routing Code</label>
+                        <input type="text" formControlName="ifscCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">SWIFT / BIC</label>
+                        <input type="text" formControlName="swiftCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">MICR Code</label>
+                        <input type="text" formControlName="micrCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 flex items-center justify-between border border-slate-200 dark:border-slate-700">
+                    <div>
+                        <span class="block text-sm font-bold text-slate-900 dark:text-white">Is Active</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">Allow this account to be selected for transfers and payments</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Audit Information -->
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-6">Audit Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 border border-slate-100 dark:border-slate-800">
+                    <div>
+                        <p class="flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase"><span class="material-symbols-outlined !text-[12px]">edit_note</span> CREATED BY</p>
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ account.createdBy }}</p>
+                        <p class="text-xs text-slate-500">{{ account.createdDate | date:'d MMM y, h:mm a' }}</p>
+                    </div>
+                    <div>
+                        <p class="flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase"><span class="material-symbols-outlined !text-[12px]">update</span> LAST UPDATED BY</p>
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ account.updatedBy || '-' }}</p>
+                        <p class="text-xs text-slate-500">{{ (account.lastUpdated | date:'d MMM y, h:mm a') || '-' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 pt-2">
+                <button type="button" (click)="onCancel()" class="px-6 py-2.5 text-sm font-bold text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" [disabled]="accountForm.invalid || isSubmitting()" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    @if(isSubmitting()) {
+                        <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span> Updating...
+                    } @else {
+                        <span class="material-symbols-outlined !text-[18px]">save</span> Update Account
+                    }
+                </button>
+            </div>
+        </form>
+
+        <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex gap-4 mt-6">
+            <div class="min-w-[40px] h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 flex items-center justify-center">
+                <span class="material-symbols-outlined !text-[20px]">info</span>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-slate-900 dark:text-white">Data Accuracy Notice</h4>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Ensure all codes (IFSC, SWIFT) are verified against the central bank registry to avoid transaction failures.</p>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center text-slate-500 py-10">Loading account details...</p>
+    }
+  </div>
+</div>

@@ -1,0 +1,167 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm text-slate-500">
+      <a class="hover:text-primary transition-colors" routerLink="/dashboard">Signal Types</a>
+      <span class="text-slate-400">›</span>
+      <span class="text-slate-700 font-bold">{{ signalType?.typeName }}</span>
+    </nav>
+
+    @if (signalType) {
+        <div class="flex flex-col gap-1 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">{{ signalType.typeName }}</h1>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase flex items-center gap-1 dark:bg-emerald-900/30 dark:text-emerald-400">
+                        {{ signalType.status }}
+                    </span>
+                </div>
+                <div class="flex gap-3">
+                    <button (click)="onDelete()" class="bg-white border border-red-200 text-red-600 hover:bg-red-50 font-bold h-10 px-4 rounded-lg shadow-sm transition-all active:scale-95 text-sm flex items-center gap-2 dark:bg-slate-800 dark:border-slate-700 dark:text-red-400 dark:hover:bg-red-900/20">
+                        <span class="material-symbols-outlined !text-[18px]">delete</span>
+                        Delete
+                    </button>
+                    <a [routerLink]="['/signal-types/edit', signalType.id]" class="bg-primary hover:bg-blue-600 text-white font-bold h-10 px-6 rounded-lg shadow-md transition-all active:scale-95 text-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined !text-[18px]">edit</span>
+                        Edit Type
+                    </a>
+                </div>
+            </div>
+            <p class="text-slate-500 dark:text-slate-400 text-lg max-w-3xl mt-2">
+                {{ signalType.description || 'High-speed fiber optic specification for long-range data transmission.' }}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+            <!-- Left Column: Signal Configuration -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden h-full">
+                 <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center gap-3">
+                     <span class="material-symbols-outlined text-primary !text-[24px]">tune</span>
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">Signal Configuration</h3>
+                 </div>
+                 
+                 <div class="p-0">
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Signal Protocol</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.signalProtocol || 'TCP/UDP (Encapsulated)' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Encoding Method</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.encodingMethod || 'Manchester Phase' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Nominal Power Level</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.nominalPower || '15 dBm' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Carrier Frequency</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.frequencyBand || '2.4 GHz (Optimized)' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Modulation Type</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.modulationMethod || 'QAM-64' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6">
+                         <span class="text-sm font-medium text-slate-500">Channel Bandwidth</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.channelBandwidth || '20 MHz / 40 MHz Toggle' }}</span>
+                     </div>
+                 </div>
+            </div>
+
+            <!-- Right Column: System Metadata -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden h-full">
+                 <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center gap-3">
+                     <span class="material-symbols-outlined text-blue-600 !text-[24px]">database</span>
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">System Metadata</h3>
+                 </div>
+                 
+                 <div class="p-0">
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Unique Identifier (UUID)</span>
+                         <span class="text-xs font-mono bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-slate-700 dark:text-slate-300">{{ signalType.signalCode || 'SIG-UUID-MISSING' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Owner Department</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.ownerDepartment || 'Infrastructure Engineering' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">System Version</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.version || 'v1.0.0' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Created Date</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.createdDate | date:'MMM d, y, h:mm a' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                         <span class="text-sm font-medium text-slate-500">Last Validated By</span>
+                         <span class="text-sm font-bold text-slate-900 dark:text-white">{{ signalType.lastValidatedBy || signalType.updatedBy || 'System' }}</span>
+                     </div>
+                     <div class="flex items-center justify-between p-6">
+                         <span class="text-sm font-medium text-slate-500">Legacy Compatibility</span>
+                         <div class="flex items-center gap-1 text-emerald-600 font-bold text-sm">
+                             <span class="material-symbols-outlined !text-[18px]">check_circle</span>
+                             {{ signalType.registrySync ? 'Full Support' : 'Partial' }}
+                         </div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+
+        <!-- History Log Section -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mt-8">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                     <span class="material-symbols-outlined text-slate-500 !text-[24px]">history</span>
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">Change History</h3>
+                </div>
+                <a href="#" class="text-sm font-bold text-primary hover:underline">View All History</a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 dark:bg-slate-800/50 text-xs font-bold text-slate-500 uppercase">
+                        <tr>
+                            <th class="px-6 py-4">DATE & TIME</th>
+                            <th class="px-6 py-4">USER</th>
+                            <th class="px-6 py-4">ACTION</th>
+                            <th class="px-6 py-4">PREVIOUS VALUE</th>
+                            <th class="px-6 py-4">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        @for (log of signalType.historyLog; track log.id) {
+                            <tr>
+                                <td class="px-6 py-4 text-slate-900 dark:text-white font-medium">{{ log.timestamp | date:'MMM d, y, HH:mm' }}</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">
+                                            {{ (log.user || 'S').charAt(0) }}
+                                        </div>
+                                        <span class="text-slate-900 dark:text-white">{{ log.user || 'System' }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs font-bold">{{ log.title }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-slate-500 italic">{{ log.description }}</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-1 text-emerald-600 font-bold text-xs">
+                                        <span class="material-symbols-outlined !text-[14px]">check_circle</span> Applied
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="p-4 border-t border-slate-100 dark:border-slate-700 text-center">
+                 <p class="text-xs text-slate-400">Changes are logged for auditing purposes. System ID: {{ signalType.id }}</p>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Signal Type not found.</p>
+    }
+  </div>
+</div>

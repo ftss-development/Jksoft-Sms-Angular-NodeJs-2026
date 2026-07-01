@@ -1,0 +1,98 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Data Management</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/countries">Countries</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Country Details</span>
+    </nav>
+
+    <!-- Page Heading & Subtitle -->
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Country Details</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Viewing details for <strong class="font-semibold text-slate-900 dark:text-white">{{ country?.fullName }}</strong>.
+      </p>
+    </div>
+
+    @if (country) {
+      <div class="flex flex-col gap-6">
+        <!-- General Information Section -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+          <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <span class="material-symbols-outlined text-primary text-2xl">flag</span>
+            <h3 class="text-xl font-semibold text-slate-900 dark:text-white">General Information</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">Full Name</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ country.fullName }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">Short Name</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ country.shortName }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">Code</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ country.code }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">Status</p>
+              @if (getStatusType(country.statusId) === countryStatusType.Active) {
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                  <span class="size-1.5 rounded-full bg-green-600 mr-1.5"></span>
+                  Active
+                </span>
+              } @else {
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                  <span class="size-1.5 rounded-full bg-slate-400 mr-1.5"></span>
+                  Inactive
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Audit Information Section -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+          <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <span class="material-symbols-outlined text-slate-500 text-2xl">history</span>
+            <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Audit Information</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">CREATED BY</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ country.createdBy }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">CREATED DATE</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ country.createdDate | date:'MMM d, y, hh:mm a' }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">UPDATED BY</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ country.updatedBy }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">LAST UPDATED</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ country.lastUpdated | date:'MMM d, y, hh:mm a' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 flex justify-end gap-3">
+          <a routerLink="/countries"
+             class="inline-flex items-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+            Back to List
+          </a>
+        </div>
+      </div>
+    } @else {
+      <p class="text-slate-500 dark:text-slate-400">Country not found.</p>
+    }
+  </div>
+</div>

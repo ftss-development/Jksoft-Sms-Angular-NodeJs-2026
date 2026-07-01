@@ -1,0 +1,108 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Inventory</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/stores">Stores</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold">Store Details</span>
+    </nav>
+
+    @if (store) {
+        <div class="flex flex-col md:flex-row items-start justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ store.storeName }}</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl mt-1">
+                    Viewing detailed information for the selected warehouse location.
+                </p>
+            </div>
+            <div class="flex gap-3">
+                 <button class="bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold h-10 px-4 rounded-lg transition-colors text-sm flex items-center gap-2 dark:bg-[#1a2632] dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+                    <span class="material-symbols-outlined !text-[18px]">arrow_back</span>
+                    <a routerLink="/stores">Back to List</a>
+                </button>
+                 <a [routerLink]="['/stores/edit', store.id]" class="bg-primary hover:bg-blue-600 text-white font-bold h-10 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit Store
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex items-center gap-2 mb-6 text-primary">
+                 <span class="material-symbols-outlined !text-[22px]">info</span>
+                 <h3 class="text-lg font-bold">General Information</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 mb-8">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Store Name</p>
+                    <p class="text-lg font-bold text-slate-900 dark:text-white">{{ store.storeName }}</p>
+                </div>
+                
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Store ID</p>
+                    <p class="text-base font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded inline-block text-slate-700 dark:text-slate-300">{{ store.id }}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Active Status</p>
+                    <div class="flex items-center gap-2">
+                         <span class="h-2.5 w-2.5 rounded-full" [class.bg-emerald-500]="store.status === 'Active'" [class.bg-slate-400]="store.status !== 'Active'"></span>
+                         <span class="text-base font-bold uppercase tracking-wide" [class.text-emerald-600]="store.status === 'Active'" [class.text-slate-500]="store.status !== 'Active'">{{ store.status }}</span>
+                    </div>
+                </div>
+
+                 <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Location</p>
+                    <p class="text-base font-bold text-slate-900 dark:text-white">{{ store.location }}</p>
+                    <p class="text-xs text-slate-500 mt-1">4522 Innovation Drive, Logistics Park, {{ store.location.split(',')[0] }} 60601</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Trail Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex items-center gap-2 mb-6 text-slate-500">
+                 <span class="material-symbols-outlined !text-[22px]">history</span>
+                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center gap-4">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold">
+                        <span class="material-symbols-outlined !text-[20px]">add_circle</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Created At</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ store.createdDate | date:'MMMM d, y, h:mm a' }}</p>
+                        <p class="text-xs text-slate-500">by {{ store.createdBy }} (admin_jh)</p>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center gap-4">
+                    <div class="h-10 w-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+                        <span class="material-symbols-outlined !text-[20px]">edit_note</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Last Updated</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ store.lastUpdated | date:'MMMM d, y, h:mm a' }}</p>
+                        <p class="text-xs text-slate-500">by {{ store.updatedBy || 'System' }} (m_roberts)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 border-t border-slate-100 dark:border-slate-700 pt-4">
+                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">System Reference</p>
+                 <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded border border-slate-200 dark:border-slate-700 font-mono text-xs text-slate-600 dark:text-slate-400">
+                     db_uuid: 8f2a4c11-7641-4c6c-9403-162e89f81a6b
+                 </div>
+            </div>
+        </div>
+
+    } @else {
+        <p class="text-center py-20 text-slate-500">Store not found.</p>
+    }
+  </div>
+</div>

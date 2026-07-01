@@ -1,0 +1,158 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">System Manager</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/stb-types">STB Classifications</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold">Edit STB Type</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit STB Type</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Modify classification details for the selected Set-Top Box equipment type.
+      </p>
+    </div>
+
+    @if (stbType) {
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Main Form -->
+        <div class="flex-1 flex flex-col gap-6">
+            <form [formGroup]="stbForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+                
+                <!-- General Info -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8">
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">General Information</h3>
+                     
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                         <div>
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Type Name</label>
+                            <input type="text" formControlName="typeName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                         </div>
+                         <div>
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Type Code (Read-only)</label>
+                            <input type="text" formControlName="manufacturerCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-slate-50 dark:bg-[#15202b] text-slate-500 dark:text-slate-400 p-3 shadow-sm sm:text-sm font-mono cursor-not-allowed" readonly/>
+                         </div>
+                     </div>
+
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                         <div>
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Active Status</label>
+                            <select formControlName="isActive" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm appearance-none">
+                                <option [value]="true">Active</option>
+                                <option [value]="false">Inactive</option>
+                            </select>
+                         </div>
+                         <div>
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Manufacturer</label>
+                            <select formControlName="manufacturer" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm appearance-none">
+                                @for (mfg of manufacturers; track mfg) {
+                                    <option [value]="mfg">{{ mfg }}</option>
+                                }
+                            </select>
+                         </div>
+                     </div>
+
+                     <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Description</label>
+                        <textarea formControlName="description" rows="3" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
+                     </div>
+                </div>
+
+                <!-- Hardware Specs -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8">
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">Hardware Specifications</h3>
+                     
+                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                         <label class="flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
+                             <input type="checkbox" formControlName="supports4k" class="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary">
+                             <span class="ml-3 text-sm font-medium text-slate-900 dark:text-white">Supports 4K Resolution</span>
+                         </label>
+                         <label class="flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
+                             <input type="checkbox" formControlName="wifiConnectivity" class="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary">
+                             <span class="ml-3 text-sm font-medium text-slate-900 dark:text-white">Wi-Fi Connectivity</span>
+                         </label>
+                         <label class="flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
+                             <input type="checkbox" formControlName="voiceRemote" class="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary">
+                             <span class="ml-3 text-sm font-medium text-slate-900 dark:text-white">Voice Remote Support</span>
+                         </label>
+                         <label class="flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
+                             <input type="checkbox" formControlName="bluetooth" class="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary">
+                             <span class="ml-3 text-sm font-medium text-slate-900 dark:text-white">Bluetooth Pairing</span>
+                         </label>
+                     </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm transition-colors dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">Cancel</button>
+                    <button type="submit" [disabled]="isSubmitting() || stbForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                        @if(isSubmitting()) {
+                            <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span> Saving...
+                        } @else {
+                            <span class="material-symbols-outlined !text-[18px]">save</span> Save Changes
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="w-full lg:w-80 flex flex-col gap-6">
+            <!-- Audit Info -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                <div class="flex items-center gap-2 mb-4 text-blue-600">
+                    <span class="material-symbols-outlined !text-[20px]">history</span>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Audit Information</h3>
+                </div>
+                
+                <div class="flex flex-col gap-4 text-sm">
+                    <div class="pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED BY</p>
+                        <p class="font-bold text-slate-900 dark:text-white">{{ stbType.createdBy }}</p>
+                        <p class="text-xs text-slate-500">{{ stbType.createdDate | date:'MMM d, y, h:mm a' }}</p>
+                    </div>
+                     <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LAST UPDATED BY</p>
+                        <p class="font-bold text-slate-900 dark:text-white">{{ stbType.updatedBy || 'System' }}</p>
+                        <p class="text-xs text-slate-500">{{ stbType.lastUpdated | date:'MMM d, y, h:mm a' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 p-6">
+                <div class="flex items-center gap-2 mb-4 text-primary">
+                    <span class="material-symbols-outlined !text-[20px] filled">info</span>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">System Info</h3>
+                </div>
+                
+                <div class="flex flex-col gap-3">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-500">Record ID</span>
+                        <span class="font-mono text-slate-700 dark:text-slate-300 text-xs text-right break-all ml-2">#{{stbType.id.split('-')[2]}}-{{stbType.id.split('-')[3]}}</span>
+                    </div>
+                     <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-500">DB Schema</span>
+                        <span class="font-medium text-slate-900 dark:text-white text-xs">{{ stbType.schemaVersion || 'v1.0.0' }}</span>
+                    </div>
+                     <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-500">Category</span>
+                        <span class="font-bold text-primary flex items-center gap-1 text-xs">
+                            <span class="material-symbols-outlined !text-[14px]">inventory_2</span> STB-DVR
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-4 text-center bg-slate-50 dark:bg-slate-800/20">
+                 <p class="text-xs text-slate-500">Changes to hardware types require administrative approval if the status is set to 'Deprecated'. <a href="#" class="text-primary hover:underline">View Policy</a>.</p>
+            </div>
+        </div>
+    </div>
+    } @else {
+        <p class="text-center py-10 text-slate-500">Record not found.</p>
+    }
+  </div>
+</div>

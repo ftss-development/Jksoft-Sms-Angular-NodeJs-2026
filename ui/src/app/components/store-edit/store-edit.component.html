@@ -1,0 +1,99 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Inventory</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/stores">Stores</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold">Edit Store Details</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit Store Details</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Update information for the {{ store?.storeName }} location.
+      </p>
+    </div>
+
+    @if (store) {
+    <form [formGroup]="storeForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+        
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex flex-col gap-6">
+                 <div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 border-b border-primary w-12 pb-1">General Information</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Store Name <span class="text-red-500">*</span></label>
+                        <input type="text" formControlName="storeName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Location</label>
+                        <input type="text" formControlName="location" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center justify-between border border-slate-200 dark:border-slate-700">
+                        <div>
+                            <span class="block text-sm font-bold text-slate-900 dark:text-white">Active Status</span>
+                            <span class="text-xs text-slate-500">Toggle whether this store is currently operational and accepting inventory.</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+                     <div class="flex items-center gap-2 mb-3 text-slate-500">
+                        <span class="material-symbols-outlined !text-[20px]">history</span>
+                        <h3 class="text-xs font-bold uppercase tracking-wider">AUDIT INFORMATION</h3>
+                     </div>
+                     <div class="grid grid-cols-2 gap-4 text-xs">
+                         <div>
+                             <p class="text-slate-400 font-bold uppercase">CREATED BY</p>
+                             <div class="flex items-center gap-2 mt-1">
+                                 <span class="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600 text-[10px]">{{ store.createdBy.charAt(0) }}</span>
+                                 <span class="font-medium text-slate-900 dark:text-white">{{ store.createdBy }}</span>
+                             </div>
+                             <p class="text-slate-400 mt-1">{{ store.createdDate | date:'medium' }}</p>
+                         </div>
+                         <div>
+                             <p class="text-slate-400 font-bold uppercase">LAST UPDATED BY</p>
+                             <div class="flex items-center gap-2 mt-1">
+                                 <span class="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-[10px]">{{ store.updatedBy?.charAt(0) || 'S' }}</span>
+                                 <span class="font-medium text-slate-900 dark:text-white">{{ store.updatedBy || 'System' }}</span>
+                             </div>
+                             <p class="text-slate-400 mt-1">{{ store.lastUpdated | date:'medium' }}</p>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+             <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm transition-colors dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:border-slate-600">
+                Cancel
+            </button>
+            <button type="submit" [disabled]="isSubmitting() || storeForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                @if(isSubmitting()) {
+                    <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span>
+                } 
+                Save Changes
+            </button>
+        </div>
+
+        <div class="bg-rose-50 dark:bg-rose-900/10 border border-rose-100 dark:border-rose-900/30 rounded-xl p-4 mt-4">
+             <h4 class="text-sm font-bold text-rose-700 dark:text-rose-400 mb-1">Danger Zone</h4>
+             <p class="text-xs text-rose-600 dark:text-rose-300 mb-3">Permanently delete this store and its history.</p>
+             <button type="button" (click)="onDelete()" class="text-xs font-bold text-rose-600 hover:text-rose-800 hover:underline">Delete Store</button>
+        </div>
+
+    </form>
+    } @else {
+        <p class="text-center py-10 text-slate-500">Record not found.</p>
+    }
+  </div>
+</div>

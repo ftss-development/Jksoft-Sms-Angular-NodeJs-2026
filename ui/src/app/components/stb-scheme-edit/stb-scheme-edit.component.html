@@ -1,0 +1,160 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Billing</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/stb-schemes">STB Schemes</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold">Edit Scheme</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit STB Scheme Details</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Update the configuration and status for the selected rental scheme.
+      </p>
+    </div>
+
+    @if (scheme) {
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Main Form -->
+        <div class="flex-1 flex flex-col gap-6">
+            <form [formGroup]="schemeForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+                
+                <!-- Configuration -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8">
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">Scheme Configuration</h3>
+                     
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                         <div>
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Scheme Name</label>
+                            <input type="text" formControlName="schemeName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-medium"/>
+                         </div>
+                         <div>
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Active Status</label>
+                            <select formControlName="isActive" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm appearance-none">
+                                <option [value]="true">Active</option>
+                                <option [value]="false">Inactive</option>
+                            </select>
+                         </div>
+                     </div>
+
+                     <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Description</label>
+                        <textarea formControlName="description" rows="4" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
+                     </div>
+
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                           <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Monthly Rental Rate ($)</label>
+                           <input type="number" formControlName="rentalRate" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-medium"/>
+                        </div>
+                        <div>
+                           <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Security Deposit ($)</label>
+                           <input type="number" formControlName="securityDeposit" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-medium"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm transition-colors dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700">Cancel</button>
+                    <button type="submit" [disabled]="isSubmitting() || schemeForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                        @if(isSubmitting()) {
+                            <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span> Saving...
+                        } @else {
+                            <span class="material-symbols-outlined !text-[18px]">save</span> Save Changes
+                        }
+                    </button>
+                </div>
+                
+                <!-- Modification History -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Modification History</h3>
+                    <div class="relative pl-3 space-y-6">
+                         <div class="absolute left-[19px] top-2 bottom-2 w-0.5 bg-slate-100 dark:bg-slate-700"></div>
+                         
+                         <!-- Sample dynamic entry based on update logic (mock for UI) -->
+                         <div class="relative pl-10">
+                             <div class="absolute left-0 top-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-primary border-4 border-white dark:border-[#1a2632]">
+                                 <span class="material-symbols-outlined !text-[18px]">edit</span>
+                             </div>
+                             <p class="text-sm font-bold text-slate-900 dark:text-white">Scheme Name Revised</p>
+                             <p class="text-xs text-slate-500 mt-1">Mar 22, 2024 - 11:45 AM by Sarah Jenkins</p>
+                             <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Updated name from "4K Rental" to "Premium 4K Rental Plan" for better marketing alignment.</p>
+                         </div>
+                         
+                         <div class="relative pl-10">
+                             <div class="absolute left-0 top-0 h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 border-4 border-white dark:border-[#1a2632]">
+                                 <span class="material-symbols-outlined !text-[18px]">payments</span>
+                             </div>
+                             <p class="text-sm font-bold text-slate-900 dark:text-white">Pricing Update</p>
+                             <p class="text-xs text-slate-500 mt-1">Feb 15, 2024 - 03:10 PM by Billing Dept</p>
+                             <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Adjusted security deposit from $40.00 to $50.00.</p>
+                         </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="w-full lg:w-80 flex flex-col gap-6">
+            <!-- Audit Info -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                <div class="flex items-center gap-2 mb-4 text-blue-600">
+                    <span class="material-symbols-outlined !text-[20px]">info</span>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Audit Information</h3>
+                </div>
+                
+                <div class="flex flex-col gap-4 text-sm">
+                    <div class="pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED BY</p>
+                        <p class="font-bold text-slate-900 dark:text-white">{{ scheme.createdBy }}</p>
+                        <p class="text-xs text-slate-500">ID: 4421</p>
+                        <p class="text-xs text-slate-500">{{ scheme.createdDate | date:'mediumDate' }}, {{ scheme.createdDate | date:'shortTime' }}</p>
+                    </div>
+                     <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LAST UPDATED BY</p>
+                        <p class="font-bold text-slate-900 dark:text-white">{{ scheme.updatedBy || 'System' }}</p>
+                        <p class="text-xs text-slate-500">ID: 5902</p>
+                        <p class="text-xs text-slate-500">{{ scheme.lastUpdated | date:'mediumDate' }}, {{ scheme.lastUpdated | date:'shortTime' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metadata -->
+            <div class="bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 p-6">
+                <div class="flex items-center gap-2 mb-4 text-primary">
+                    <span class="material-symbols-outlined !text-[20px] filled">dataset</span>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Scheme Metadata</h3>
+                </div>
+                
+                <div class="flex flex-col gap-3">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-500">Scheme UID</span>
+                        <span class="font-mono text-slate-700 dark:text-slate-300 text-xs uppercase">{{ scheme.id }}</span>
+                    </div>
+                     <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-500">Total Enrolled</span>
+                        <span class="font-bold text-slate-900 dark:text-white">{{ scheme.totalEnrolled }} Units</span>
+                    </div>
+                     <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-500">Contract Period</span>
+                        <span class="font-bold text-primary flex items-center gap-1 text-xs">
+                            <span class="material-symbols-outlined !text-[14px]">date_range</span> {{ scheme.contractPeriod }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-4 text-center">
+                 <p class="text-xs text-slate-500 italic">Note: Updating the monthly rate will only apply to new enrollments from the next billing cycle.</p>
+            </div>
+        </div>
+    </div>
+    } @else {
+        <p class="text-center py-10 text-slate-500">Record not found.</p>
+    }
+  </div>
+</div>

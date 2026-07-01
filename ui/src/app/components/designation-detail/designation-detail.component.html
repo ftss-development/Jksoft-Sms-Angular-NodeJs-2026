@@ -1,0 +1,151 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Organization</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/designations">Designations</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold">Designation Detail</span>
+    </nav>
+
+    @if (designation) {
+        <div class="flex flex-col md:flex-row items-start justify-between gap-4 pb-2">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ designation.name }}</h1>
+                <p class="text-slate-500 dark:text-slate-400 mt-1">Detailed structural profile for the {{ designation.departmentName?.toLowerCase() || 'organization' }} department designation.</p>
+            </div>
+            <a [routerLink]="['/designations/edit', designation.id]" class="bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined !text-[18px]">edit</span>
+                Edit Designation
+            </a>
+        </div>
+
+        <!-- Info Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8">
+            <div class="flex items-center gap-2 mb-6 text-primary">
+                <span class="material-symbols-outlined !text-[24px]">info</span>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">General Information</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DESIGNATION NAME</p>
+                    <p class="text-base font-semibold text-slate-900 dark:text-white">{{ designation.name }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">SHORT CODE</p>
+                    <p class="text-base font-semibold text-slate-900 dark:text-white">{{ designation.shortCode }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LEVEL</p>
+                    <div class="flex items-center gap-2">
+                         <span class="material-symbols-outlined !text-[16px] text-blue-500">stars</span>
+                         <p class="text-base font-semibold text-slate-900 dark:text-white">{{ designation.level }}</p>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">STATUS</p>
+                    <div class="flex items-center gap-1.5">
+                        <span class="h-2 w-2 rounded-full" [class.bg-emerald-500]="designation.status === 'Active'" [class.bg-slate-400]="designation.status !== 'Active'"></span>
+                        <p class="text-base font-semibold text-slate-900 dark:text-white">{{ designation.status }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">DESCRIPTION</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ designation.description || 'No description provided.' }}</p>
+                </div>
+                 <div>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DEPARTMENT</p>
+                             <p class="text-base font-semibold text-slate-900 dark:text-white">{{ designation.departmentName || 'N/A' }}</p>
+                        </div>
+                        <div>
+                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">REPORTING TO</p>
+                             <p class="text-base font-semibold text-slate-900 dark:text-white">{{ designation.reportingTo || 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Trail & History -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8">
+             <div class="flex items-center gap-2 mb-6 text-slate-500">
+                <span class="material-symbols-outlined !text-[24px]">history</span>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl flex items-center gap-4">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined !text-[20px]">add_circle</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">CREATED</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ designation.createdBy }} (HR Lead)</p>
+                        <p class="text-xs text-slate-500">{{ designation.createdDate | date:'MMM d, y, h:mm a' }}</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl flex items-center gap-4">
+                    <div class="h-10 w-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined !text-[20px]">update</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">LAST UPDATED</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ designation.updatedBy || 'System' }} (Admin)</p>
+                        <p class="text-xs text-slate-500">{{ designation.lastUpdated | date:'MMM d, y, h:mm a' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">REVISION HISTORY</h4>
+            <div class="overflow-x-auto rounded-lg border border-slate-100 dark:border-slate-700">
+                <table class="min-w-full text-left text-sm">
+                    <thead class="bg-slate-50 dark:bg-slate-800/50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-100 dark:border-slate-700">
+                        <tr>
+                            <th class="px-6 py-3">Change</th>
+                            <th class="px-6 py-3">Modified By</th>
+                            <th class="px-6 py-3 text-right">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        @for (rev of designation.revisionHistory; track rev.id) {
+                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                <td class="px-6 py-3 text-slate-700 dark:text-slate-300">{{ rev.change }}</td>
+                                <td class="px-6 py-3 text-slate-600 dark:text-slate-400">{{ rev.modifiedBy }}</td>
+                                <td class="px-6 py-3 text-right text-slate-500 font-mono text-xs">{{ rev.date | date:'mediumDate' }}</td>
+                            </tr>
+                        } @empty {
+                            <tr>
+                                <td colspan="3" class="px-6 py-4 text-center text-slate-500 italic text-xs">No revision history available.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-3 pt-2">
+            <a routerLink="/designations" class="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                Back to List
+            </a>
+             <a [routerLink]="['/designations/edit', designation.id]" class="px-6 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all">
+                Edit Designation
+            </a>
+        </div>
+
+    } @else {
+        <div class="text-center py-20 bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800">
+            <p class="text-slate-500 mb-2">Designation not found.</p>
+            <a routerLink="/designations" class="text-primary font-bold hover:underline">Back to List</a>
+        </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,117 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/particular-groups">Particular Groups</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold dark:text-white">Edit Group</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit Particular Group Details</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base">Update the configuration, status, and associated particulars for this financial grouping.</p>
+    </div>
+
+    @if (group) {
+    <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8">
+        <form [formGroup]="groupForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+            <!-- Group Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Group Name <span class="text-red-500">*</span></label>
+                    <input type="text" formControlName="groupName" class="block w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"/>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Short Name (Code) <span class="text-red-500">*</span></label>
+                    <input type="text" formControlName="shortName" class="block w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"/>
+                </div>
+            </div>
+
+            <!-- Associated Particulars Section -->
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Associated Particulars</h3>
+                    <span class="text-xs text-slate-500">{{ assignedParticulars().length }} selected</span>
+                </div>
+                
+                <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-4 bg-slate-50 dark:bg-slate-800/20 mb-4">
+                    <div class="flex flex-wrap gap-2">
+                        @for (p of assignedParticulars(); track p.id) {
+                            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                                <span class="text-sm font-medium">{{ p.name }}</span>
+                                <button type="button" (click)="removeParticular(p.id)" class="hover:text-red-500 transition-colors">
+                                    <span class="material-symbols-outlined !text-[16px]">close</span>
+                                </button>
+                            </div>
+                        } @empty {
+                            <span class="text-sm text-slate-500 italic">No particulars associated. Use search below to add.</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- Search to Add -->
+                <div class="relative">
+                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <span class="material-symbols-outlined !text-[20px]">add</span>
+                    </span>
+                    <input 
+                        type="text" 
+                        [ngModel]="searchTerm()" 
+                        (ngModelChange)="searchTerm.set($event)"
+                        [ngModelOptions]="{standalone: true}"
+                        placeholder="Search to add particulars..." 
+                        class="block w-full h-11 pl-10 pr-4 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-shadow"
+                    >
+                    <!-- Dropdown results -->
+                    @if (searchTerm() && availableParticularsFiltered().length > 0) {
+                        <div class="absolute z-10 w-full mt-1 bg-white dark:bg-[#1a2632] border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                            @for (p of availableParticularsFiltered(); track p.id) {
+                                <button type="button" (click)="addParticular(p); searchTerm.set('')" class="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-sm text-slate-700 dark:text-slate-300 flex justify-between items-center">
+                                    <span>{{ p.name }}</span>
+                                    <span class="text-xs text-slate-400">{{ p.shortName }}</span>
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Active Status -->
+            <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center justify-between border border-slate-100 dark:border-slate-700">
+                 <div>
+                     <span class="block text-sm font-bold text-slate-900 dark:text-white">Active Status</span>
+                     <span class="text-xs text-slate-500">Disabling this group will hide it from reports.</span>
+                 </div>
+                 <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+            </div>
+
+            <!-- Metadata Footer -->
+            <div class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500">
+                <div class="flex gap-4">
+                    <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[16px]">add_circle</span> Created by {{ group.createdBy }} on {{ group.createdDate | date:'mediumDate' }}</span>
+                </div>
+                <div class="flex gap-4">
+                     <span class="flex items-center gap-1"><span class="material-symbols-outlined !text-[16px]">update</span> Last updated by {{ group.updatedBy || 'System' }} on {{ group.lastUpdated | date:'mediumDate' }}</span>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="flex justify-end gap-3">
+                <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm transition-colors">Discard Changes</button>
+                <button type="submit" [disabled]="groupForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                    <span class="material-symbols-outlined !text-[18px]">save</span> Update Group
+                </button>
+            </div>
+        </form>
+    </div>
+    } @else {
+        <p class="text-center py-10 text-slate-500">Group not found.</p>
+    }
+  </div>
+</div>

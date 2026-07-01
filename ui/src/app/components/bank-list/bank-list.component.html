@@ -1,0 +1,160 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Dashboard</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Bank Management List</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="flex flex-col gap-1">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Bank Management</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal">
+        Configure and manage supported financial institutions.
+      </p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="flex flex-col sm:flex-row justify-between gap-4 mt-2">
+      <div class="relative flex-1 max-w-md group">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+          <span class="material-symbols-outlined !text-[20px]">search</span>
+        </div>
+        <input class="block w-full h-10 pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-shadow" placeholder="Search banks..." type="text"/>
+      </div>
+      <div class="flex items-center gap-3">
+        <button (click)="onGenerateData()" [disabled]="isGenerating()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium shadow-sm transition-all active:scale-95 whitespace-nowrap disabled:opacity-50">
+            @if(isGenerating()) {
+                <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>
+                <span>Generating...</span>
+            } @else {
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+                <span>Generate Data</span>
+            }
+        </button>
+        <a routerLink="/banks/add" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap">
+            <span class="material-symbols-outlined !text-[20px]">add_circle</span>
+            <span>Add Bank</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="@container w-full">
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+              <tr>
+                <th class="px-6 py-4 font-bold tracking-wider">Bank Name (Full Name)</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Short Name</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Code (Mob App)</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Status</th>
+                <th class="px-6 py-4 font-bold tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              @for (bank of paginatedBanks(); track bank.id) {
+                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors">
+                  <td class="px-6 py-4" data-label="Bank Name (Full Name)">
+                      <div class="flex items-center gap-3">
+                          <div class="h-8 w-8 rounded bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold dark:bg-blue-900/30 dark:text-blue-400">
+                              {{ bank.shortName.substring(0, 2) }}
+                          </div>
+                          <span class="font-bold text-slate-900 dark:text-white">{{ bank.bankName }}</span>
+                      </div>
+                  </td>
+                  <td class="px-6 py-4 text-slate-700 dark:text-slate-300" data-label="Short Name">{{ bank.shortName }}</td>
+                  <td class="px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400" data-label="Code (Mob App)">{{ bank.code }}</td>
+                  <td class="px-6 py-4" data-label="Status">
+                    @if (bank.isActive) {
+                      <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">Active</span>
+                    } @else {
+                      <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-400">Inactive</span>
+                    }
+                  </td>
+                  <td class="px-6 py-4 text-right" data-label="Actions">
+                     <div class="flex items-center justify-end gap-3">
+                        <a [routerLink]="['/banks/detail', bank.id]" class="text-slate-400 hover:text-primary transition-colors" title="View">
+                          <span class="material-symbols-outlined text-[20px]">visibility</span>
+                        </a>
+                        <a [routerLink]="['/banks/edit', bank.id]" class="text-slate-400 hover:text-primary transition-colors" title="Edit">
+                          <span class="material-symbols-outlined text-[20px]">edit</span>
+                        </a>
+                        <button (click)="onDelete(bank.id)" class="text-slate-400 hover:text-red-500 transition-colors" title="Delete">
+                          <span class="material-symbols-outlined text-[20px]">delete</span>
+                        </button>
+                     </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">No banks found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1a2632]">
+          <div class="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span class="font-bold text-slate-900 dark:text-white">{{ startItemIndex() }}</span> to <span class="font-bold text-slate-900 dark:text-white">{{ endItemIndex() }}</span> of <span class="font-bold text-slate-900 dark:text-white">{{ banks().length }}</span> banks
+          </div>
+          <div class="flex items-center gap-1">
+            <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1" class="px-3 py-1 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+              Previous
+            </button>
+            
+            @for(page of pages; track page) {
+               <button (click)="changePage(page)" 
+                       [class]="currentPage() === page ? 'bg-primary text-white border-primary' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700'"
+                       class="px-3 py-1 text-sm font-medium border rounded-md transition-colors">
+                  {{ page }}
+               </button>
+            }
+  
+            <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="px-3 py-1 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] flex items-center gap-4">
+            <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                <span class="material-symbols-outlined">account_balance</span>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">TOTAL BANKS</p>
+                <p class="text-3xl font-black text-slate-900 dark:text-white">{{ totalCount() | number:'2.0-0' }}</p>
+            </div>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] flex items-center gap-4">
+            <div class="h-12 w-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">ACTIVE</p>
+                <p class="text-3xl font-black text-slate-900 dark:text-white">{{ activeCount() | number:'2.0-0' }}</p>
+            </div>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] flex items-center gap-4">
+            <div class="h-12 w-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 dark:bg-rose-900/30 dark:text-rose-400">
+                <span class="material-symbols-outlined">cancel</span>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">INACTIVE</p>
+                <p class="text-3xl font-black text-slate-900 dark:text-white">{{ inactiveCount() | number:'2.0-0' }}</p>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

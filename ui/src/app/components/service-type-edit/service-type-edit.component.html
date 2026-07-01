@@ -1,0 +1,120 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Service Types</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-primary font-medium">Edit Service Type</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit Service Type Details</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Modify classification parameters for existing services.
+      </p>
+    </div>
+
+    @if (serviceType) {
+    <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+        
+        <!-- Main Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="px-8 py-5 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">General Information</h3>
+            </div>
+            
+            <div class="p-8 flex flex-col gap-8">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Service Type Name</label>
+                        <input type="text" formControlName="serviceName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                     <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Active Status</label>
+                        <select formControlName="isActive" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm appearance-none">
+                             <option [value]="true">Active</option>
+                             <option [value]="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Classification Category</label>
+                        <select formControlName="category" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm appearance-none">
+                            @for (cat of categories; track cat) {
+                                <option [value]="cat">{{ cat }}</option>
+                            }
+                        </select>
+                    </div>
+                     <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">SLA Tier</label>
+                        <select formControlName="slaTier" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm appearance-none">
+                            @for (tier of tiers; track tier) {
+                                <option [value]="tier">{{ tier }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                     <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Description</label>
+                     <textarea formControlName="description" rows="4" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Info (Read Only) -->
+        <div class="bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+            <div class="flex items-center gap-2 mb-4 text-slate-500">
+                <span class="material-symbols-outlined !text-[20px]">history</span>
+                <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">Audit Information</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-xs font-medium uppercase tracking-wide text-slate-500">
+                <div class="flex flex-col gap-1">
+                    <span>CREATED BY</span>
+                    <div class="flex items-center gap-2 text-slate-900 dark:text-white text-sm normal-case font-bold">
+                        {{ serviceType.createdBy }}
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span>LAST UPDATED BY</span>
+                    <div class="flex items-center gap-2 text-slate-900 dark:text-white text-sm normal-case font-bold">
+                        {{ serviceType.updatedBy || 'System' }}
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span>CREATION DATE</span>
+                    <div class="flex items-center gap-2 text-slate-900 dark:text-white text-sm normal-case font-bold">
+                        {{ serviceType.createdDate | date:'MMM d, y, h:mm a' }}
+                    </div>
+                </div>
+                 <div class="flex flex-col gap-1">
+                    <span>LAST UPDATE DATE</span>
+                    <div class="flex items-center gap-2 text-slate-900 dark:text-white text-sm normal-case font-bold">
+                        {{ serviceType.lastUpdated | date:'MMM d, y, h:mm a' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+             <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-slate-700 font-bold text-sm transition-colors dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
+                Cancel
+            </button>
+            <button type="submit" [disabled]="isSubmitting() || serviceForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                @if(isSubmitting()) {
+                    <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span> Saving...
+                } @else {
+                    <span class="material-symbols-outlined !text-[18px]">save</span> Save Changes
+                }
+            </button>
+        </div>
+    </form>
+    } @else {
+        <p class="text-center py-10 text-slate-500">Record not found.</p>
+    }
+  </div>
+</div>

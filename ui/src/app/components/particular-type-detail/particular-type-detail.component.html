@@ -1,0 +1,159 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-background-dark">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/particular-types">Particular Management</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold dark:text-white">{{ pt?.typeName || 'Detail' }}</span>
+    </nav>
+
+    @if (pt) {
+        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ pt.id }} - {{ pt.typeName }}</h1>
+                <div class="flex items-center gap-3 mt-2">
+                    <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> {{ pt.status }}
+                    </span>
+                    <span class="text-xs text-slate-500">Created on {{ pt.createdDate | date:'d MMM yyyy' }}</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="flex items-center gap-2 h-10 px-4 rounded-lg border border-slate-300 bg-white text-slate-700 font-bold text-sm hover:bg-slate-50 transition-colors">
+                    <span class="material-symbols-outlined !text-[18px]">history</span>
+                    History
+                </button>
+                 <a [routerLink]="['/particular-types/edit', pt.id]" class="flex items-center gap-2 h-10 px-5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit Configuration
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Info & Table -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- General Information -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined !text-[20px] text-primary">info</span> General Information
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TYPE CODE</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ pt.typeCode }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TYPE NAME</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ pt.typeName }}</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">DESCRIPTION</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">{{ pt.description }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">CATEGORY</p>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-[16px] text-slate-500">category</span>
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ pt.category }}</p>
+                            </div>
+                        </div>
+                        <div>
+                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">STATUS</p>
+                             <span class="mt-1 inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded">{{ pt.status | uppercase }}</span>
+                        </div>
+                         <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">DEFAULT GL GROUP</p>
+                            <p class="text-sm font-mono font-semibold text-slate-900 dark:text-white mt-1">{{ pt.defaultGlGroup }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TAX ELIGIBILITY</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ pt.taxEligibility }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Associated Business Units -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                         <span class="material-symbols-outlined !text-[20px] text-blue-600">domain</span>
+                         <h3 class="text-base font-bold text-slate-900 dark:text-white">Associated Business Units</h3>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-sm">
+                            <thead class="bg-slate-50 dark:bg-slate-800/50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-100 dark:border-slate-700">
+                                <tr>
+                                    <th class="px-6 py-3">REGION</th>
+                                    <th class="px-6 py-3">UNIT NAME</th>
+                                    <th class="px-6 py-3">USAGE STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @for (unit of pt.businessUnits; track unit.id) {
+                                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                                        <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">{{ unit.region }}</td>
+                                        <td class="px-6 py-4 text-slate-600 dark:text-slate-300">{{ unit.unitName }}</td>
+                                        <td class="px-6 py-4">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" 
+                                                  [class]="unit.usageStatus === 'Primary' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'">
+                                                {{ unit.usageStatus }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                } @empty {
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-6 text-center text-slate-500 italic">No business units associated.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Audit -->
+            <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 h-full">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined !text-[20px] text-slate-500">schedule</span> Full Audit Trail
+                    </h3>
+                    
+                    <div class="relative pl-3 space-y-8">
+                         <!-- Line -->
+                         <div class="absolute left-[19px] top-3 bottom-3 w-0.5 bg-slate-200 dark:bg-slate-700"></div>
+
+                         @for (log of pt.auditTrail; track log.id) {
+                             <div class="relative pl-10">
+                                 <!-- Icon Dot -->
+                                 <div [class]="log.colorClass || 'bg-slate-100 text-slate-500'" class="absolute left-0 top-0 h-10 w-10 rounded-full border-4 border-white dark:border-[#1a2632] flex items-center justify-center z-10">
+                                     <span class="material-symbols-outlined !text-[16px]">{{ log.icon }}</span>
+                                 </div>
+                                 
+                                 <div>
+                                     <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ log.title }}</h4>
+                                     <p class="text-xs text-slate-400 mt-0.5">{{ log.timestamp | date:'d MMM y, h:mm a' }}</p>
+                                     <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-snug">{{ log.description }}</p>
+                                     <div class="flex items-center gap-1 mt-1.5">
+                                         <span class="h-4 w-4 rounded-full bg-slate-200 text-[8px] flex items-center justify-center font-bold text-slate-600">{{ log.actor.charAt(0) }}</span>
+                                         <span class="text-xs text-slate-500 font-medium">{{ log.actor }}</span>
+                                     </div>
+                                 </div>
+                             </div>
+                         }
+                    </div>
+
+                    <button class="w-full mt-8 py-2 text-sm font-bold text-primary hover:bg-slate-50 rounded-lg transition-colors">
+                        View Full Activity Log
+                    </button>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Record not found.</p>
+    }
+  </div>
+</div>

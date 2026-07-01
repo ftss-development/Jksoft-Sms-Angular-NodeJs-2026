@@ -1,0 +1,124 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="#">Settings</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/particular-groups">Particular Groups</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold dark:text-white">Add New</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Add Particular Group</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base">Create a new grouping for financial reporting and analysis.</p>
+    </div>
+
+    <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8">
+        <form [formGroup]="groupForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+            <!-- Group Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white">Group Name <span class="text-red-500">*</span></label>
+                        <span class="text-[10px] text-slate-400">0/50</span>
+                    </div>
+                    <input type="text" formControlName="groupName" class="block w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm" placeholder="e.g., Operating Expenses"/>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white">Short Name <span class="text-red-500">*</span></label>
+                        <span class="text-[10px] text-slate-400">0/50</span>
+                    </div>
+                    <input type="text" formControlName="shortName" class="block w-full h-11 px-4 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm" placeholder="e.g., OPEX"/>
+                </div>
+            </div>
+
+            <!-- Assign Particulars Section -->
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Assign Particulars</h3>
+                <p class="text-slate-500 text-sm mb-4">Select financial particulars from the left to include in this group.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-[400px]">
+                    <!-- Available List -->
+                    <div class="flex flex-col border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800/30">
+                        <div class="p-3 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-[#1a2632]">
+                            <span class="font-bold text-sm text-slate-700 dark:text-slate-200">Available Particulars</span>
+                            <span class="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded dark:bg-slate-700 dark:text-slate-300">{{ availableParticularsFiltered().length }}</span>
+                        </div>
+                        <div class="p-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a2632]">
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-slate-400">
+                                    <span class="material-symbols-outlined !text-[18px]">search</span>
+                                </span>
+                                <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" [ngModelOptions]="{standalone: true}" placeholder="Search..." class="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-300 rounded focus:ring-primary focus:border-primary dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                            </div>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-2 space-y-1">
+                            @for (p of availableParticularsFiltered(); track p.id) {
+                                <div class="flex items-center justify-between p-3 bg-white dark:bg-[#1a2632] border border-slate-200 dark:border-slate-700 rounded hover:border-primary cursor-pointer group transition-colors" (click)="addParticular(p)">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-slate-900 dark:text-white">{{ p.name }}</span>
+                                        <span class="text-[10px] text-slate-500">Code: {{ p.shortName }}</span>
+                                    </div>
+                                    <span class="material-symbols-outlined text-slate-300 group-hover:text-primary !text-[20px]">add_circle</span>
+                                </div>
+                            } @empty {
+                                <div class="p-4 text-center text-slate-500 text-sm">No particulars found.</div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Selected List -->
+                    <div class="flex flex-col border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800/30">
+                        <div class="p-3 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-[#1a2632]">
+                            <span class="font-bold text-sm text-slate-700 dark:text-slate-200">Selected for Group</span>
+                            <span class="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded font-bold dark:bg-blue-900/30 dark:text-blue-400">{{ assignedParticulars().length }}</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-2 space-y-1">
+                            @for (p of assignedParticulars(); track p.id) {
+                                <div class="flex items-center justify-between p-3 bg-white dark:bg-[#1a2632] border border-slate-200 dark:border-slate-700 rounded hover:border-red-400 cursor-pointer group transition-colors" (click)="removeParticular(p.id)">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-slate-900 dark:text-white">{{ p.name }}</span>
+                                        <span class="text-[10px] text-slate-500">Code: {{ p.shortName }}</span>
+                                    </div>
+                                    <span class="material-symbols-outlined text-slate-300 group-hover:text-red-500 !text-[20px]">cancel</span>
+                                </div>
+                            } @empty {
+                                <div class="flex flex-col items-center justify-center h-full text-slate-400">
+                                    <span class="material-symbols-outlined !text-[40px] mb-2 text-slate-300">playlist_add</span>
+                                    <span class="text-sm">Select items to add</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="p-3 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a2632] text-center text-xs text-slate-500">
+                            Drag and drop reordering coming soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-3">
+                     <span class="text-sm font-bold text-slate-900 dark:text-white">Is Active</span>
+                     <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                    <p class="text-xs text-slate-500">Set whether this group is available for reporting.</p>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 font-bold text-sm hover:bg-slate-50 transition-colors">Cancel</button>
+                    <button type="submit" [disabled]="groupForm.invalid || groupForm.pristine" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all disabled:opacity-50">Create Group</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Finance</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/note-types">Note Types</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-primary font-medium">Add New</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Add New Note Type</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Configure a new transaction category for the financial ledger.
+      </p>
+    </div>
+
+    <form [formGroup]="noteTypeForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+        
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-8">
+             <div class="flex flex-col gap-6">
+                 <!-- Header with Icon in Card -->
+                 <div class="flex items-center gap-4 mb-2">
+                     <div class="h-16 w-16 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center text-primary">
+                         <span class="material-symbols-outlined !text-[32px]">edit_document</span>
+                     </div>
+                     <div>
+                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">Note Type Details</h3>
+                         <p class="text-sm text-slate-500 dark:text-slate-400">Define the label used to tag credit and debit transactions for reporting.</p>
+                     </div>
+                 </div>
+
+                 <div class="border-t border-slate-100 dark:border-slate-700 pt-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white">Type Name</label>
+                        <span class="text-[10px] text-slate-400">0 / 30</span>
+                    </div>
+                    <input type="text" formControlName="typeName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm placeholder-slate-400" placeholder="e.g. Refund, Interest, Payment"/>
+                    <p class="text-xs text-slate-500 italic mt-2">Avoid special characters for database compatibility.</p>
+                    @if (noteTypeForm.get('typeName')?.invalid && noteTypeForm.get('typeName')?.touched) {
+                        <p class="text-xs text-red-500 mt-1">Type name is required.</p>
+                    }
+                 </div>
+
+                 <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center justify-between border border-slate-100 dark:border-slate-700">
+                     <div>
+                         <span class="block text-sm font-bold text-slate-900 dark:text-white">Is Active</span>
+                         <span class="text-xs text-slate-500">If inactive, this note type won't appear in transaction picklists.</span>
+                     </div>
+                     <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                 </div>
+             </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+            <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm transition-colors dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700">Cancel</button>
+            <button type="submit" [disabled]="isSubmitting() || noteTypeForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                @if(isSubmitting()) {
+                    <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span>
+                } 
+                Submit Note Type
+            </button>
+        </div>
+        
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/30 rounded-lg p-4 flex gap-3 text-sm text-blue-800 dark:text-blue-300 items-start">
+            <span class="material-symbols-outlined !text-[20px] filled mt-0.5">info</span>
+            <div>
+                <span class="font-bold">Security Note:</span>
+                <p class="mt-1">All new note types are logged and audited. Ensure the naming convention aligns with the Corporate Finance Compliance Handbook (v2.4).</p>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>

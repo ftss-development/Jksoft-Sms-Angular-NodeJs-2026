@@ -1,0 +1,145 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Note Types</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold">{{ noteType?.typeName }}</span>
+    </nav>
+
+    @if (noteType) {
+        <div class="flex flex-col gap-6">
+             <!-- Header Section -->
+             <div class="flex flex-col md:flex-row items-start justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+                <div>
+                    <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Note Type Details</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl mt-1">
+                        Manage and review configuration for credit/debit transaction types.
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                     <a routerLink="/note-types" class="flex items-center gap-2 bg-white border border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-lg shadow-sm hover:bg-slate-50 transition-colors text-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white dark:hover:bg-slate-700">
+                        <span class="material-symbols-outlined !text-[18px]">arrow_back</span>
+                        Back to List
+                    </a>
+                     <a [routerLink]="['/note-types/edit', noteType.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                        <span class="material-symbols-outlined !text-[18px]">edit</span>
+                        Edit
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- General Info Card -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8 relative overflow-hidden">
+                     <div class="flex items-start justify-between mb-6">
+                         <div class="flex items-center gap-2 text-primary">
+                             <span class="material-symbols-outlined !text-[24px]">info</span>
+                             <h3 class="text-lg font-bold text-slate-900 dark:text-white">General Information</h3>
+                         </div>
+                         <div class="h-12 w-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-400">
+                             <span class="material-symbols-outlined !text-[28px]">{{ noteType.icon }}</span>
+                         </div>
+                     </div>
+                     
+                     <div class="space-y-6">
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">TYPE NAME</p>
+                             <p class="text-lg font-bold text-slate-900 dark:text-white">{{ noteType.typeName }}</p>
+                         </div>
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">STATUS</p>
+                             @if (noteType.isActive) {
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase dark:bg-emerald-900/30 dark:text-emerald-400">Active</span>
+                             } @else {
+                                <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full uppercase dark:bg-slate-700 dark:text-slate-400">Inactive</span>
+                             }
+                         </div>
+                         @if (noteType.description) {
+                             <div>
+                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">DESCRIPTION</p>
+                                 <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ noteType.description }}</p>
+                             </div>
+                         }
+                     </div>
+                </div>
+
+                <!-- Audit Trail Card -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+                    <div class="flex items-center justify-between mb-6">
+                         <div class="flex items-center gap-2 text-slate-500">
+                             <span class="material-symbols-outlined !text-[24px]">history</span>
+                             <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+                         </div>
+                         <div class="h-12 w-12 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400">
+                             <span class="material-symbols-outlined !text-[28px]">fingerprint</span>
+                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED AT</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ noteType.createdDate | date:'MMM d, y, h:mm a' }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">by {{ noteType.createdBy }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LAST UPDATED</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ noteType.lastUpdated | date:'MMM d, y, h:mm a' }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">by {{ noteType.updatedBy || 'System' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Associated Particulars Table -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-slate-900 dark:text-white">
+                        <span class="material-symbols-outlined !text-[22px] text-blue-600">list_alt</span>
+                        <h3 class="text-lg font-bold">Associated Particulars</h3>
+                    </div>
+                    <span class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-2 py-1 rounded">
+                        {{ noteType.associatedParticulars?.length || 0 }} Items total
+                    </span>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+                        <thead class="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase font-bold text-slate-400 border-b border-slate-100 dark:border-slate-700">
+                            <tr>
+                                <th class="px-6 py-4">PARTICULAR NAME</th>
+                                <th class="px-6 py-4">DESCRIPTION</th>
+                                <th class="px-6 py-4 text-right">ACCOUNTING CODE</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                            @for (item of noteType.associatedParticulars; track item.id) {
+                                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors">
+                                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">
+                                        {{ item.name }}
+                                        <p class="text-[10px] text-slate-400 font-normal mt-0.5">Ref: {{ item.id }}</p>
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">{{ item.description }}</td>
+                                    <td class="px-6 py-4 text-right font-mono text-blue-600 dark:text-blue-400">{{ item.accountingCode }}</td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="3" class="px-6 py-8 text-center text-slate-500 italic">No associated particulars found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/30 rounded-lg p-4 flex gap-3 text-sm text-blue-800 dark:text-blue-300 items-center justify-center">
+                <span class="material-symbols-outlined !text-[20px] filled">help</span>
+                <span>Need help? Read the <a href="#" class="font-bold underline">documentation</a> on configuring note types or contact system support.</span>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Note Type not found.</p>
+    }
+  </div>
+</div>

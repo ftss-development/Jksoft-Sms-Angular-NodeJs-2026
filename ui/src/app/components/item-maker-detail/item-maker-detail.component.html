@@ -1,0 +1,112 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <span class="material-symbols-outlined text-slate-500 text-[18px]">inventory_2</span>
+      <span class="text-slate-500 dark:text-slate-400 font-medium">Inventory</span>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/item-makers">Item Makers</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Maker Detail</span>
+    </nav>
+
+    @if (maker) {
+        <div class="flex flex-col md:flex-row items-start justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ maker.makerName }}</h1>
+                <p class="text-slate-500 dark:text-slate-400 mt-1">Detailed profile and operational status of the item manufacturer.</p>
+            </div>
+            <div class="flex gap-3">
+                <a routerLink="/item-makers" class="inline-flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white font-bold py-2.5 px-5 rounded-lg shadow-sm transition-all text-sm hover:bg-slate-50">
+                    Back to List
+                </a>
+                <a [routerLink]="['/item-makers/edit', maker.id]" class="inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit Maker
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex items-center gap-2 mb-6 text-primary">
+                 <span class="material-symbols-outlined !text-[22px]">info</span>
+                 <h3 class="text-lg font-bold">General Information</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-12 mb-8">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">MAKER NAME</p>
+                    <p class="text-base font-bold text-slate-900 dark:text-white">{{ maker.makerName }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">SHORT NAME</p>
+                    <p class="text-base font-bold text-slate-900 dark:text-white font-mono">{{ maker.shortName }}</p>
+                </div>
+                 <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">STATUS</p>
+                    <div class="flex items-center gap-2">
+                        <span class="h-2.5 w-2.5 rounded-full" [class.bg-emerald-500]="maker.status === 'Active'" [class.bg-slate-400]="maker.status !== 'Active'"></span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-xs uppercase">{{ maker.status }}</span>
+                    </div>
+                </div>
+                 <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">MAKER ID</p>
+                    <p class="text-base font-bold text-primary font-mono">{{ maker.id }}</p>
+                </div>
+                <div class="lg:col-span-4">
+                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DESCRIPTION</p>
+                     <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">{{ maker.description || 'No description provided.' }}</p>
+                </div>
+                 <div class="lg:col-span-2">
+                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">HEADQUARTERS</p>
+                     <p class="text-sm text-slate-600 dark:text-slate-300">{{ maker.headquarters || 'N/A' }}</p>
+                </div>
+                 <div class="lg:col-span-2">
+                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">WEBSITE</p>
+                     <a href="#" class="text-sm text-primary hover:underline">{{ maker.website || 'N/A' }}</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Trail Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex items-center gap-2 mb-6 text-slate-500">
+                 <span class="material-symbols-outlined !text-[22px]">history</span>
+                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+            </div>
+
+            <!-- Creation Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center gap-4 border border-slate-100 dark:border-slate-700">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold">
+                        <span class="material-symbols-outlined !text-[20px]">add</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">CREATED AT</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ maker.createdDate | date:'MMM d, yyyy' }}</p>
+                        <p class="text-xs text-slate-500">{{ maker.createdDate | date:'shortTime' }} by {{ maker.createdBy }}</p>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center gap-4 border border-slate-100 dark:border-slate-700">
+                    <div class="h-10 w-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+                        <span class="material-symbols-outlined !text-[20px]">update</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">LAST UPDATED AT</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ maker.lastUpdated | date:'MMM d, yyyy' }}</p>
+                        <p class="text-xs text-slate-500">{{ maker.lastUpdated | date:'shortTime' }} by {{ maker.updatedBy || 'System' }}</p>
+                    </div>
+                </div>
+            </div>
+
+             <p class="text-xs text-center text-slate-400 italic">This is a read-only view. To modify any information, please click on the 'Edit Maker' button above.</p>
+        </div>
+
+    } @else {
+        <div class="text-center py-20">
+            <p class="text-slate-500">Item Maker not found.</p>
+            <a routerLink="/item-makers" class="text-primary hover:underline mt-2 inline-block">Back to List</a>
+        </div>
+    }
+  </div>
+</div>

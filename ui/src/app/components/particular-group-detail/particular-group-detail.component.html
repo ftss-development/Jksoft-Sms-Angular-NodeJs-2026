@@ -1,0 +1,207 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/particular-groups">Particular Groups</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold dark:text-white">{{ group() ? 'PG-' + group()!.id : 'Detail' }}</span>
+    </nav>
+
+    @if (group(); as grp) {
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ grp.groupName }} #{{ grp.id }}</h1>
+                <div class="flex items-center gap-3 mt-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide" [class.bg-emerald-100]="grp.isActive" [class.text-emerald-800]="grp.isActive" [class.bg-slate-100]="!grp.isActive" [class.text-slate-600]="!grp.isActive">
+                         <span class="w-2 h-2 rounded-full" [class.bg-emerald-500]="grp.isActive" [class.bg-slate-500]="!grp.isActive"></span>
+                         {{ grp.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                    <span class="text-sm text-slate-500">Created: {{ grp.createdDate | date:'MMM d, yyyy' }}</span>
+                    <span class="text-slate-300">|</span>
+                    <span class="text-sm text-slate-500">ID: PG-{{ grp.createdDate | date:'yyyy' }}-{{ grp.id }}</span>
+                </div>
+            </div>
+            <a [routerLink]="['/particular-groups/edit', grp.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                <span class="material-symbols-outlined !text-[18px]">edit</span>
+                Edit Group
+            </a>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Total Value -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                <div class="flex items-start gap-4">
+                    <div class="h-10 w-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center dark:bg-blue-900/30 dark:text-blue-400">
+                        <span class="material-symbols-outlined">attach_money</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Value</p>
+                        <p class="text-2xl font-black text-slate-900 dark:text-white">{{ totalValue() | currency }}</p>
+                        <p class="text-xs font-medium text-emerald-600 flex items-center gap-1 mt-1">
+                            <span class="material-symbols-outlined !text-[14px]">trending_up</span> +{{ valueChangePercent() | number:'1.1-1' }}% vs last month
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assigned Manager -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                <div class="flex items-start gap-4">
+                    <div class="h-10 w-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center dark:bg-purple-900/30 dark:text-purple-400">
+                        <span class="material-symbols-outlined">person</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Manager</p>
+                        <p class="text-lg font-bold text-slate-900 dark:text-white">{{ grp.assignedManager || 'Unassigned' }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Finance Dept.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Level -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                <div class="flex items-start gap-4">
+                    <div class="h-10 w-10 rounded-lg flex items-center justify-center" [class]="getRiskColor(grp.riskLevel)">
+                        <span class="material-symbols-outlined">{{ getRiskIcon(grp.riskLevel) }}</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Risk Level</p>
+                        <p class="text-2xl font-black text-slate-900 dark:text-white">{{ grp.riskLevel || 'Low' }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Audit Score: 98/100</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Review -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                <div class="flex items-start gap-4">
+                    <div class="h-10 w-10 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center dark:bg-slate-700 dark:text-slate-300">
+                        <span class="material-symbols-outlined">event</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Next Review</p>
+                        <p class="text-lg font-bold text-slate-900 dark:text-white">{{ grp.nextReviewDate | date:'MMM d, yyyy' }}</p>
+                        <p class="text-xs text-orange-500 font-medium mt-1">Due in 4 days</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Associated Particulars -->
+            <div class="lg:col-span-2">
+                 <div class="flex items-center justify-between mb-4">
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">Associated Particulars</h3>
+                     <div class="flex gap-2">
+                        <button class="p-2 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">filter_list</span></button>
+                        <button class="p-2 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">download</span></button>
+                     </div>
+                 </div>
+
+                 <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                     <div class="p-4 border-b border-slate-100 dark:border-slate-800">
+                         <div class="relative w-full">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <span class="material-symbols-outlined !text-[18px]">search</span>
+                            </span>
+                            <input type="text" placeholder="Search particulars by name, code or ID..." class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-800/50 border-0 rounded-lg focus:ring-1 focus:ring-primary placeholder-slate-400">
+                         </div>
+                     </div>
+                     <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-sm">
+                            <thead class="bg-slate-50 dark:bg-slate-800/50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-100 dark:border-slate-800">
+                                <tr>
+                                    <th class="px-6 py-3">Code</th>
+                                    <th class="px-6 py-3">Particular Name</th>
+                                    <th class="px-6 py-3">Category</th>
+                                    <th class="px-6 py-3 text-right">Allocation</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @for (p of assignedParticulars(); track p.id) {
+                                    <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors">
+                                        <td class="px-6 py-4 font-mono text-xs text-primary font-bold">
+                                            <a [routerLink]="['/particulars/detail', p.id]" class="hover:underline">{{ p.id }}</a>
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">{{ p.name }}</td>
+                                        <td class="px-6 py-4 text-slate-600 dark:text-slate-400">{{ p.particularType }}</td>
+                                        <td class="px-6 py-4 text-right font-bold text-slate-900 dark:text-white">
+                                            {{ (100 / assignedParticulars().length) | number:'1.0-0' }}%
+                                        </td>
+                                    </tr>
+                                } @empty {
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-10 text-center text-slate-500 italic">No particulars associated with this group.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                             <tfoot class="bg-slate-50/50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800">
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Total Allocated: 100%</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                     <div class="p-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-[#1a2632]">
+                        <span class="text-xs text-slate-500">Showing {{ assignedParticulars().length }} of {{ assignedParticulars().length }} particulars</span>
+                        <div class="flex gap-1">
+                            <button class="px-3 py-1 text-xs border border-slate-200 rounded hover:bg-slate-50 disabled:opacity-50" disabled>Previous</button>
+                            <button class="px-3 py-1 text-xs border border-slate-200 rounded hover:bg-slate-50 disabled:opacity-50" disabled>Next</button>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Right Column: Activity Log -->
+            <div class="lg:col-span-1">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Activity Log</h3>
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="relative pl-3 space-y-8">
+                         <div class="absolute left-[9px] top-2 bottom-2 w-0.5 bg-slate-100 dark:bg-slate-700"></div>
+                         
+                         <!-- Mock Logs -->
+                         <div class="relative pl-8">
+                             <div class="absolute left-0 top-1 h-5 w-5 rounded-full bg-blue-500 border-4 border-white dark:border-[#1a2632]"></div>
+                             <p class="text-sm font-bold text-slate-900 dark:text-white">Particular Group Updated</p>
+                             <p class="text-xs text-slate-500 mt-1">Jane Doe updated the risk level from 'Medium' to 'Low'.</p>
+                             <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold">Today, 10:42 AM</p>
+                         </div>
+
+                         <div class="relative pl-8">
+                             <div class="absolute left-0 top-1 h-5 w-5 rounded-full bg-slate-300 border-4 border-white dark:border-[#1a2632]"></div>
+                             <p class="text-sm font-bold text-slate-900 dark:text-white">New Particular Added</p>
+                             <p class="text-xs text-slate-500 mt-1">System added 'PT-005' via batch import.</p>
+                             <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold">Oct 23, 09:15 AM</p>
+                         </div>
+
+                         <div class="relative pl-8">
+                             <div class="absolute left-0 top-1 h-5 w-5 rounded-full bg-slate-300 border-4 border-white dark:border-[#1a2632]"></div>
+                             <p class="text-sm font-bold text-slate-900 dark:text-white">Review Completed</p>
+                             <p class="text-xs text-slate-500 mt-1">Michael Scott marked the group as 'Reviewed'.</p>
+                             <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold">Oct 21, 04:30 PM</p>
+                         </div>
+
+                         <div class="relative pl-8">
+                             <div class="absolute left-0 top-1 h-5 w-5 rounded-full bg-slate-300 border-4 border-white dark:border-[#1a2632]"></div>
+                             <p class="text-sm font-bold text-slate-900 dark:text-white">Group Created</p>
+                             <p class="text-xs text-slate-500 mt-1">Group initialized by Admin.</p>
+                             <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold">Oct 20, 11:00 AM</p>
+                         </div>
+                    </div>
+                    
+                    <button class="w-full mt-8 py-2.5 rounded-lg border border-dashed border-primary text-primary font-bold text-xs hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors">
+                        View Full History
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    } @else {
+        <p class="text-center py-20 text-slate-500">Group not found.</p>
+    }
+  </div>
+</div>

@@ -1,0 +1,244 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    
+    <!-- Top Navigation -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-primary font-medium hover:underline" routerLink="/dashboard">Organization</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">
+         <span class="material-symbols-outlined text-[16px] pt-1">chevron_right</span>
+      </span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/departments">Corporate HQ</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">
+         <span class="material-symbols-outlined text-[16px] pt-1">chevron_right</span>
+      </span>
+      <span class="text-slate-600 dark:text-slate-300 font-medium">{{ department()?.departmentName }}</span>
+    </nav>
+
+    @if (department(); as dept) {
+        <!-- Header -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8">
+            <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <h1 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">{{ dept.departmentName }}</h1>
+                        @if (dept.status === 'Active') {
+                            <span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase flex items-center gap-1">
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Active
+                            </span>
+                        } @else {
+                            <span class="bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase">Inactive</span>
+                        }
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">
+                        Created on {{ dept.createdDate | date:'MMMM d, yyyy' }} • {{ dept.description || 'Main Branch' }}
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a [routerLink]="['/departments/edit', dept.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md shadow-blue-500/20 transition-all active:scale-95 text-sm">
+                        <span class="material-symbols-outlined !text-[18px]">edit</span>
+                        Edit Department
+                    </a>
+                    <button class="flex items-center justify-center h-10 w-10 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 transition-colors text-slate-500">
+                        <span class="material-symbols-outlined">more_horiz</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- ID Card -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm flex flex-col gap-3 hover:border-primary/30 transition-colors group">
+                <div class="flex items-center gap-2 text-slate-400 group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined !text-[20px]">fingerprint</span>
+                    <span class="text-xs font-bold uppercase tracking-wider">Department ID</span>
+                </div>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">{{ dept.id }}</p>
+            </div>
+            
+            <!-- Head Card -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm flex flex-col gap-3 hover:border-primary/30 transition-colors group">
+                <div class="flex items-center gap-2 text-slate-400 group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined !text-[20px]">person</span>
+                    <span class="text-xs font-bold uppercase tracking-wider">Head of Dept</span>
+                </div>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">{{ dept.headOfDepartment }}</p>
+            </div>
+
+            <!-- Location Card -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm flex flex-col gap-3 hover:border-primary/30 transition-colors group">
+                <div class="flex items-center gap-2 text-slate-400 group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined !text-[20px]">location_on</span>
+                    <span class="text-xs font-bold uppercase tracking-wider">Location</span>
+                </div>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">{{ dept.location }}</p>
+            </div>
+
+            <!-- Budget Card -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm flex flex-col gap-3 hover:border-primary/30 transition-colors group">
+                <div class="flex items-center gap-2 text-slate-400 group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined !text-[20px]">payments</span>
+                    <span class="text-xs font-bold uppercase tracking-wider">Budget Code</span>
+                </div>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">{{ dept.budgetCode }}</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Sub-Departments -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-3">
+                             <h3 class="text-lg font-bold text-slate-900 dark:text-white">Sub-Departments</h3>
+                             <span class="bg-slate-100 text-slate-600 text-xs font-bold px-2 py-1 rounded dark:bg-slate-700 dark:text-slate-300">{{ relatedSubDepartments().length }}</span>
+                        </div>
+                        <a routerLink="/sub-departments/add" class="text-sm font-bold text-primary hover:text-blue-600 transition-colors">Add New</a>
+                    </div>
+                    
+                    @if (relatedSubDepartments().length > 0) {
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase text-slate-500 font-semibold border-b border-slate-100 dark:border-slate-800">
+                                    <tr>
+                                        <th class="px-6 py-4">Sub-Dept Name</th>
+                                        <th class="px-6 py-4">Short Name</th>
+                                        <th class="px-6 py-4">Region</th>
+                                        <th class="px-6 py-4">Status</th>
+                                        <th class="px-6 py-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                    @for (sub of relatedSubDepartments(); track sub.id) {
+                                        <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors group">
+                                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">{{ sub.name }}</td>
+                                            <td class="px-6 py-4 text-slate-600 dark:text-slate-400 font-mono text-xs">{{ sub.shortName }}</td>
+                                            <td class="px-6 py-4 text-slate-600 dark:text-slate-400">{{ sub.region || 'Global' }}</td>
+                                            <td class="px-6 py-4">
+                                                @if (sub.status === 'Active') {
+                                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                                        Active
+                                                    </span>
+                                                } @else {
+                                                     <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-400">
+                                                        Inactive
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td class="px-6 py-4 text-right text-slate-400">
+                                                <a [routerLink]="['/sub-departments/detail', sub.id]" class="hover:text-primary transition-colors">
+                                                    <span class="material-symbols-outlined !text-[20px]">visibility</span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    } @else {
+                        <div class="p-8 text-center text-slate-500">
+                            No sub-departments configured yet.
+                        </div>
+                    }
+                </div>
+
+                <!-- Add Sub-Dept CTA -->
+                <a routerLink="/sub-departments/add" class="rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 p-8 flex flex-col items-center justify-center gap-3 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+                    <div class="h-12 w-12 rounded-full bg-blue-100 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined !text-[24px]">add</span>
+                    </div>
+                    <div>
+                        <h4 class="text-base font-bold text-slate-900 dark:text-white">Add Sub-Department</h4>
+                        <p class="text-sm text-slate-500 mt-1">Create a new organizational unit nested under {{ dept.departmentName }}.</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Right Column: Audit & Hierarchy -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                <!-- Audit Trail -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Audit Trail</h3>
+                    
+                    <div class="relative pl-3 space-y-8">
+                        <!-- Vertical Line -->
+                        <div class="absolute left-[19px] top-3 bottom-3 w-0.5 bg-slate-100 dark:bg-slate-700"></div>
+
+                        @for (audit of dept.auditTrail; track audit.id) {
+                            <div class="relative pl-10">
+                                <div [class]="audit.colorClass" class="absolute left-0 top-0 h-10 w-10 rounded-full flex items-center justify-center border-4 border-white dark:border-[#1a2632] z-10">
+                                    <span class="material-symbols-outlined !text-[18px]">{{ audit.icon }}</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white">{{ audit.title }}</p>
+                                    <p class="text-xs text-slate-500 mt-0.5 leading-snug">{{ audit.description }}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 mt-1.5 uppercase">{{ audit.timestamp | date:'MMM d, y, h:mm a' }}</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <button class="w-full mt-8 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                        View Full History
+                    </button>
+                </div>
+
+                <!-- Hierarchy Context -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-4 text-blue-600">
+                        <span class="material-symbols-outlined !text-[20px]">account_tree</span>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">Hierarchy Context</h3>
+                    </div>
+
+                    <div class="flex flex-col gap-2 relative">
+                        <!-- Root -->
+                        <div class="flex items-center gap-3 text-slate-500">
+                            <span class="material-symbols-outlined !text-[10px] text-slate-300">circle</span>
+                            <span class="text-sm">Corporate HQ</span>
+                        </div>
+                        
+                        <!-- Connector -->
+                        <div class="ml-[5px] w-px h-4 bg-slate-200 dark:bg-slate-700"></div>
+
+                        <!-- Current -->
+                        <div class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg -ml-2">
+                             <div class="h-2 w-2 rounded-full bg-primary"></div>
+                             <span class="text-sm font-bold text-slate-900 dark:text-white">{{ dept.departmentName }}</span>
+                        </div>
+
+                        <!-- Children Connector -->
+                        <div class="ml-[5px] w-px h-4 bg-slate-200 dark:bg-slate-700"></div>
+
+                        <!-- Children (First few from real data) -->
+                        <div class="ml-4 flex flex-col gap-2">
+                             @for (sub of relatedSubDepartments().slice(0, 3); track sub.id) {
+                                <div class="flex items-center gap-3 text-slate-500">
+                                    <span class="material-symbols-outlined !text-[10px] text-slate-300">circle</span>
+                                    <span class="text-xs">{{ sub.name }}</span>
+                                </div>
+                             }
+                             @if (relatedSubDepartments().length > 3) {
+                                 <div class="flex items-center gap-3 text-slate-400 pl-6">
+                                    <span class="text-xs italic">+ {{ relatedSubDepartments().length - 3 }} more...</span>
+                                </div>
+                             }
+                             @if (relatedSubDepartments().length === 0) {
+                                <div class="flex items-center gap-3 text-slate-400 pl-1">
+                                    <span class="text-xs italic">No sub-departments</span>
+                                </div>
+                             }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    } @else {
+        <div class="text-center py-20 bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800">
+            <p class="text-slate-500 dark:text-slate-400 mb-4">Department not found.</p>
+            <a routerLink="/departments" class="text-primary font-bold hover:underline">Back to List</a>
+        </div>
+    }
+  </div>
+</div>

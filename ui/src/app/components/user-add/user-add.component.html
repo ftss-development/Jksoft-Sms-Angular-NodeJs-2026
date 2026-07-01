@@ -1,0 +1,161 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Dashboard</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/users">Users</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Add User</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Add New User</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Create a new user account with role assignments and security credentials.
+      </p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="border-b border-slate-200 dark:border-slate-800">
+        <nav class="flex gap-8" aria-label="Tabs">
+            <button (click)="setActiveTab('profile')" 
+                    class="pb-4 text-sm font-bold border-b-2 transition-colors px-1"
+                    [class.border-primary]="activeTab() === 'profile'"
+                    [class.text-primary]="activeTab() === 'profile'"
+                    [class.border-transparent]="activeTab() !== 'profile'"
+                    [class.text-slate-500]="activeTab() !== 'profile'"
+                    [class.hover:text-slate-700]="activeTab() !== 'profile'">
+                Profile Details
+            </button>
+            <button (click)="setActiveTab('security')" 
+                    class="pb-4 text-sm font-bold border-b-2 transition-colors px-1"
+                    [class.border-primary]="activeTab() === 'security'"
+                    [class.text-primary]="activeTab() === 'security'"
+                    [class.border-transparent]="activeTab() !== 'security'"
+                    [class.text-slate-500]="activeTab() !== 'security'"
+                    [class.hover:text-slate-700]="activeTab() !== 'security'">
+                Security Credentials
+            </button>
+        </nav>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 mt-6">
+        
+        @if (activeTab() === 'profile') {
+            <!-- Primary Information -->
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8 animate-in fade-in slide-in-from-left-4 duration-300">
+                <div class="flex items-center gap-2 mb-6 text-primary">
+                    <span class="material-symbols-outlined">person</span>
+                    <h3 class="text-sm font-bold uppercase tracking-wider">PRIMARY INFORMATION</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">First Name</label>
+                        <input type="text" formControlName="firstName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                        @if (userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched) {
+                            <p class="text-xs text-red-500 mt-1">Required field.</p>
+                        }
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Last Name</label>
+                        <input type="text" formControlName="lastName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                        @if (userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched) {
+                            <p class="text-xs text-red-500 mt-1">Required field.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Email Address</label>
+                    <input type="email" formControlName="email" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+                        <p class="text-xs text-red-500 mt-1">Valid email required.</p>
+                    }
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Username</label>
+                        <input type="text" formControlName="username" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Role</label>
+                        <select formControlName="role" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <option value="Administrator">Administrator</option>
+                            <option value="Manager">Manager</option>
+                            <option value="User">User</option>
+                            <option value="Viewer">Viewer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                     <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Department</label>
+                     <input type="text" formControlName="department" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. Engineering"/>
+                </div>
+            </div>
+        } @else if (activeTab() === 'security') {
+            <!-- Security -->
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div class="flex items-center gap-2 mb-6 text-blue-600 dark:text-blue-400">
+                    <span class="material-symbols-outlined">shield</span>
+                    <h3 class="text-sm font-bold uppercase tracking-wider">SECURITY & CREDENTIALS</h3>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white">Password</label>
+                    </div>
+                    <div class="relative">
+                        <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 pr-10 shadow-sm focus:border-primary focus:ring-primary sm:text-sm placeholder-slate-400" placeholder="••••••••••••"/>
+                        <button type="button" (click)="togglePasswordVisibility()" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
+                            <span class="material-symbols-outlined !text-[20px]">{{ showPassword() ? 'visibility' : 'visibility_off' }}</span>
+                        </button>
+                    </div>
+                    @if (userForm.get('password')?.invalid && userForm.get('password')?.touched) {
+                         <p class="text-xs text-red-500 mt-1">Min 8 characters required.</p>
+                    }
+                    
+                    <!-- Simple Strength Meter Mock -->
+                    <div class="mt-2 h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 w-3/4"></div>
+                    </div>
+                    <p class="text-xs text-emerald-600 mt-1 font-medium">Password strength: Strong</p>
+                </div>
+
+                <div class="mb-6">
+                     <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Confirm Password</label>
+                     <input [type]="showPassword() ? 'text' : 'password'" formControlName="confirmPassword" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="••••••••••••"/>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
+                    <div>
+                        <span class="block text-sm font-bold text-slate-900 dark:text-white">Force Password Change</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">User must reset password on first login</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" formControlName="forcePasswordChange" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    </label>
+                </div>
+            </div>
+        }
+
+        <div class="flex justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button type="button" (click)="onCancel()" class="px-6 py-2.5 text-sm font-bold text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors border border-slate-300 dark:border-slate-600 rounded-lg">
+                Cancel
+            </button>
+            <button type="submit" [disabled]="userForm.invalid || isSubmitting()" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                @if(isSubmitting()) {
+                    <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span> Saving...
+                } @else {
+                    <span class="material-symbols-outlined !text-[18px]">save</span> Save User
+                }
+            </button>
+        </div>
+    </form>
+  </div>
+</div>

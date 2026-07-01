@@ -1,0 +1,223 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Hierarchy</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/employees">Employees</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Profile View</span>
+    </nav>
+
+    @if (employee) {
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ employee.firstName }} {{ employee.lastName }}</h1>
+                <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase flex items-center gap-1 dark:bg-blue-900/30 dark:text-blue-400">
+                    <span class="material-symbols-outlined !text-[14px] filled">verified</span> FULL-TIME
+                </span>
+            </div>
+            <a [routerLink]="['/employees/edit', employee.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                <span class="material-symbols-outlined !text-[18px]">edit</span>
+                Edit Profile
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Details -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- Personal Information -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6 text-primary">
+                        <span class="material-symbols-outlined">person</span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">PERSONAL INFORMATION</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">FULL NAME</p>
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">{{ employee.firstName }} {{ employee.lastName }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">EMPLOYEE ID</p>
+                            <p class="text-base font-mono font-medium text-slate-900 dark:text-white">{{ employee.employeeCode }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">EMAIL ADDRESS</p>
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">{{ employee.email }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">JOINING DATE</p>
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">{{ employee.joiningDate | date:'MMMM d, y' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Position & Reporting -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6 text-blue-600 dark:text-blue-400">
+                        <span class="material-symbols-outlined">work</span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">POSITION & REPORTING</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">JOB TITLE</p>
+                            <p class="text-base font-bold text-slate-900 dark:text-white">{{ employee.jobTitle }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">GRADE LEVEL</p>
+                            <p class="text-base font-bold text-slate-900 dark:text-white">{{ employee.level }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">REPORTS TO</p>
+                            @if (manager) {
+                                <a [routerLink]="['/employees/detail', manager.id]" class="flex items-center gap-2 group cursor-pointer mt-1">
+                                    <span class="bg-slate-100 text-slate-600 text-xs font-bold px-1.5 py-0.5 rounded group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">SM</span>
+                                    <span class="text-sm font-semibold text-blue-600 dark:text-blue-400 group-hover:underline">{{ manager.firstName }} {{ manager.lastName }}</span>
+                                </a>
+                            } @else {
+                                <p class="text-base font-medium text-slate-500 italic mt-1">No Manager Assigned</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employment Status -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6 text-blue-600 dark:text-blue-400">
+                        <span class="material-symbols-outlined">info</span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">EMPLOYMENT STATUS</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">DEPARTMENT</p>
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">{{ employee.department }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">CURRENT STATUS</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="h-2.5 w-2.5 rounded-full" [class.bg-emerald-500]="employee.status === 'Active'" [class.bg-slate-400]="employee.status !== 'Active'"></span>
+                                <p class="text-sm font-bold text-emerald-600 dark:text-emerald-400 uppercase">{{ employee.status }} / IN OFFICE</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">WORK LOCATION</p>
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">{{ employee.workLocation }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">REPORTING PERIOD</p>
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">Q4 Fiscal Year 2024</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Direct Reports -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-2 text-slate-600 dark:text-slate-300">
+                            <span class="material-symbols-outlined">groups</span>
+                            <h3 class="text-xs font-bold uppercase tracking-widest">DIRECT REPORTS</h3>
+                        </div>
+                        <span class="bg-slate-100 text-slate-600 text-xs font-bold px-2 py-1 rounded dark:bg-slate-700 dark:text-slate-300">{{ directReports.length }} Employees</span>
+                    </div>
+                    
+                    @if (directReports.length > 0) {
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-left text-sm">
+                                <thead class="border-b border-slate-100 dark:border-slate-700">
+                                    <tr>
+                                        <th class="py-2 font-bold text-slate-500 uppercase text-xs">Name</th>
+                                        <th class="py-2 font-bold text-slate-500 uppercase text-xs">Title</th>
+                                        <th class="py-2 font-bold text-slate-500 uppercase text-xs">Level</th>
+                                        <th class="py-2 font-bold text-slate-500 uppercase text-xs text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                                    @for (report of directReports; track report.id) {
+                                        <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                            <td class="py-3">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
+                                                        {{ report.firstName.charAt(0) }}{{ report.lastName.charAt(0) }}
+                                                    </div>
+                                                    <span class="font-bold text-slate-900 dark:text-white">{{ report.firstName }} {{ report.lastName }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 text-slate-600 dark:text-slate-400">{{ report.jobTitle }}</td>
+                                            <td class="py-3 text-slate-600 dark:text-slate-400">{{ report.level }}</td>
+                                            <td class="py-3 text-right">
+                                                <a [routerLink]="['/employees/detail', report.id]" class="text-primary hover:underline text-xs font-bold">View Profile</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                         <div class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800 text-center">
+                            <button class="text-xs font-bold text-primary hover:text-blue-700 uppercase tracking-wider">
+                                SHOW ALL {{ directReports.length }} REPORTS
+                            </button>
+                        </div>
+                    } @else {
+                        <p class="text-sm text-slate-500 italic">No direct reports assigned.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Right Sidebar: Timeline -->
+            <div class="lg:col-span-1">
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] h-full">
+                    <div class="flex items-center gap-2 mb-8">
+                        <span class="material-symbols-outlined text-slate-900 dark:text-white">history</span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">HIERARCHY AUDIT</h3>
+                    </div>
+
+                    <div class="relative pl-2">
+                        <!-- Vertical line -->
+                        <div class="absolute left-[9px] top-2 bottom-4 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+
+                        <div class="flex flex-col gap-10">
+                            @for (event of employee.auditTimeline; track $index) {
+                                <div class="relative pl-8">
+                                    <!-- Dot -->
+                                    <div class="absolute left-0 top-1.5 h-5 w-5 rounded-full border-4 border-white bg-white dark:border-[#1a2632] dark:bg-[#1a2632] flex items-center justify-center z-10">
+                                        <div class="h-3 w-3 rounded-full" [class]="$index === 0 ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'"></div>
+                                    </div>
+                                    
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ event.action }}</p>
+                                        
+                                        @if (event.description) {
+                                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 mb-1">
+                                                {{ event.description }}
+                                            </p>
+                                        }
+
+                                        <!-- Date logic -->
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                                            {{ event.timestamp | date:'MMM d, yyyy' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            } @empty {
+                                <p class="text-sm text-slate-500 pl-8 italic">No audit events logged yet.</p>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12 border-t border-slate-100 dark:border-slate-800 pt-6 text-center">
+                        <button class="text-xs font-bold text-slate-500 hover:text-primary flex items-center justify-center gap-1 w-full uppercase tracking-wider transition-colors">
+                            View Full History <span class="material-symbols-outlined !text-[16px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center text-slate-500 py-10">Employee not found.</p>
+    }
+  </div>
+</div>

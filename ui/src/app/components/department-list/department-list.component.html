@@ -1,0 +1,133 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Departments</span>
+    </nav>
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-gray-200 dark:border-gray-800">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Department Management</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+          Manage and view your organizational hierarchy.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button (click)="onGenerateData()" [disabled]="isGenerating()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium shadow-sm transition-all active:scale-95 whitespace-nowrap disabled:opacity-50">
+            @if(isGenerating()) {
+                <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>
+                <span>Generating...</span>
+            } @else {
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+                <span>Generate Data</span>
+            }
+        </button>
+        <a routerLink="/departments/add" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            <span>Add Department</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="bg-white dark:bg-[#1a2632] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4">
+        <div class="relative w-full">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                <span class="material-symbols-outlined">search</span>
+            </div>
+            <input 
+                type="text" 
+                [value]="searchTerm()"
+                (input)="searchTerm.set($any($event.target).value); currentPage.set(1)"
+                class="block w-full h-11 pl-10 pr-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                placeholder="Search departments by name or ID..."
+            />
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="@container w-full">
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+              <tr>
+                <th class="px-6 py-4 font-bold tracking-wider">DEPARTMENT ID</th>
+                <th class="px-6 py-4 font-bold tracking-wider">DEPARTMENT NAME</th>
+                <th class="px-6 py-4 font-bold tracking-wider">SHORT NAME</th>
+                <th class="px-6 py-4 font-bold tracking-wider">ACTIVE STATUS</th>
+                <th class="px-6 py-4 font-bold tracking-wider text-right">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              @for (dept of paginatedDepartments(); track dept.id) {
+                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors group">
+                  <td class="px-6 py-4 text-slate-600 dark:text-slate-400" data-label="DEPARTMENT ID">{{ dept.id }}</td>
+                  <td class="px-6 py-4 font-bold text-slate-900 dark:text-white" data-label="DEPARTMENT NAME">{{ dept.departmentName }}</td>
+                  <td class="px-6 py-4 text-slate-600 dark:text-slate-400" data-label="SHORT NAME">{{ dept.shortName }}</td>
+                  <td class="px-6 py-4" data-label="ACTIVE STATUS">
+                    @if (dept.status === 'Active') {
+                      <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Active
+                      </span>
+                    } @else {
+                      <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                          <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span> Inactive
+                      </span>
+                    }
+                  </td>
+                  <td class="px-6 py-4 text-right" data-label="ACTIONS">
+                     <div class="flex items-center justify-end gap-3">
+                        <a [routerLink]="['/departments/detail', dept.id]" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" title="View">
+                          <span class="material-symbols-outlined !text-[20px]">visibility</span>
+                        </a>
+                        <a [routerLink]="['/departments/edit', dept.id]" class="text-slate-400 hover:text-primary transition-colors" title="Edit">
+                          <span class="material-symbols-outlined !text-[20px]">edit</span>
+                        </a>
+                        <button (click)="onDelete(dept.id)" class="text-slate-400 hover:text-red-500 transition-colors" title="Delete">
+                          <span class="material-symbols-outlined !text-[20px]">delete</span>
+                        </button>
+                     </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">No departments found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1a2632]">
+          <div class="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span class="font-bold text-slate-900 dark:text-white">{{ startItemIndex() }}</span> to <span class="font-bold text-slate-900 dark:text-white">{{ endItemIndex() }}</span> of <span class="font-bold text-slate-900 dark:text-white">{{ filteredDepartments().length }}</span> departments
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1" class="flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a2632] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#23303e] disabled:opacity-50 transition-colors">
+              <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+            </button>
+            
+            @for(page of pages; track page) {
+               <button (click)="changePage(page)" 
+                       [class]="currentPage() === page ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 dark:bg-[#1a2632] dark:border-slate-700 dark:text-slate-400 dark:hover:bg-[#23303e]'"
+                       class="flex items-center justify-center w-9 h-9 rounded-lg border text-sm font-bold transition-colors">
+                  {{ page }}
+               </button>
+            }
+  
+            <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a2632] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#23303e] disabled:opacity-50 transition-colors">
+               <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

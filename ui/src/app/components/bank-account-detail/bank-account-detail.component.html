@@ -1,0 +1,173 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Dashboard</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/bank-accounts">Bank Accounts</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Profile View</span>
+    </nav>
+
+    @if (account) {
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ account.accountName }}</h1>
+                @if (account.isDefault) {
+                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase flex items-center gap-1 dark:bg-blue-900/30 dark:text-blue-400">
+                        <span class="material-symbols-outlined !text-[14px] filled">star</span> DEFAULT
+                    </span>
+                }
+            </div>
+            <a [routerLink]="['/bank-accounts/edit', account.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                <span class="material-symbols-outlined !text-[18px]">edit</span>
+                Edit Account
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Details -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- Account Identification Card -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6 text-primary">
+                        <span class="material-symbols-outlined">badge</span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">ACCOUNT IDENTIFICATION</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">ACCOUNT HOLDER NAME</p>
+                            <!-- Using hardcoded mock value from screenshot if it's the main account, otherwise mock -->
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">
+                                {{ account.id === '1' ? 'Global Logistics Solutions Ltd.' : companyName }}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">ACCOUNT NUMBER</p>
+                            <p class="text-base font-mono font-medium text-slate-900 dark:text-white">{{ getMaskedAccountNumber(account.accountNumber) }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">BANK NAME</p>
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">{{ bankName }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">ACCOUNT TYPE</p>
+                            <p class="text-base font-semibold text-slate-900 dark:text-white">{{ account.accountType }} - Corporate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banking Codes Card -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6 text-blue-600 dark:text-blue-400">
+                        <span class="material-symbols-outlined">qr_code</span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">BANKING CODES</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">IFSC CODE</p>
+                            <p class="text-base font-bold font-mono text-slate-900 dark:text-white">{{ account.ifscCode }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">SWIFT CODE</p>
+                            <p class="text-base font-bold font-mono text-slate-900 dark:text-white">{{ account.swiftCode || 'N/A' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">MICR CODE</p>
+                            <p class="text-base font-bold font-mono text-slate-900 dark:text-white">{{ account.micrCode || 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Organizational Context -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6 text-slate-600 dark:text-slate-300">
+                        <span class="material-symbols-outlined">domain</span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">ORGANIZATIONAL CONTEXT</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">ASSOCIATED COMPANY</p>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold px-1.5 py-0.5 rounded">GL</span>
+                                <p class="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+                                    {{ account.id === '1' ? 'Global Logistics Inc. (USA)' : companyName }}
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">STATUS</p>
+                            <div class="flex items-center gap-2">
+                                <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                                <p class="text-sm font-bold text-emerald-600 dark:text-emerald-400 uppercase">{{ account.status }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">CURRENCY</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ account.currency }} - United States Dollar</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">REGION / BRANCH</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ account.branchName }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar: Timeline -->
+            <div class="lg:col-span-1">
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] h-full">
+                    <div class="flex items-center gap-2 mb-8">
+                        <span class="material-symbols-outlined text-slate-900 dark:text-white">history</span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">AUDIT TIMELINE</h3>
+                    </div>
+
+                    <div class="relative pl-2">
+                        <!-- Vertical line -->
+                        <div class="absolute left-[9px] top-2 bottom-4 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+
+                        <div class="flex flex-col gap-10">
+                            @for (event of account.auditTimeline; track $index) {
+                                <div class="relative pl-8">
+                                    <!-- Dot -->
+                                    <div class="absolute left-0 top-1.5 h-5 w-5 rounded-full border-4 border-white bg-white dark:border-[#1a2632] dark:bg-[#1a2632] flex items-center justify-center z-10">
+                                        <div class="h-3 w-3 rounded-full" [class]="$index === 0 ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'"></div>
+                                    </div>
+                                    
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ event.action }}</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">By {{ event.actor }}</p>
+                                        
+                                        <!-- Custom logic to show TODAY for latest event if close to now, otherwise date -->
+                                        <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wide">
+                                            {{ event.timestamp | date:'MMM d, yyyy' }}
+                                        </p>
+                                        
+                                        @if (event.description) {
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                                {{ event.description }}
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12 border-t border-slate-100 dark:border-slate-800 pt-6 text-center">
+                        <button class="text-xs font-bold text-slate-500 hover:text-primary flex items-center justify-center gap-1 w-full uppercase tracking-wider transition-colors">
+                            View Full History <span class="material-symbols-outlined !text-[16px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center text-slate-500 py-10">Account not found.</p>
+    }
+  </div>
+</div>

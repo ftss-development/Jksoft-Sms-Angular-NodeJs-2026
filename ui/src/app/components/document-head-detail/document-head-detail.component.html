@@ -1,0 +1,135 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <span class="material-symbols-outlined text-slate-500 text-[18px]">folder</span>
+      <span class="text-slate-500 dark:text-slate-400 font-medium">Documents</span>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/heads">Document Heads</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Head Detail</span>
+    </nav>
+
+    @if (head) {
+        <div class="flex flex-col md:flex-row items-start justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ head.headName }}</h1>
+                <p class="text-slate-500 dark:text-slate-400 mt-1">Management head for technical inspections and standard operating procedures.</p>
+            </div>
+            <a [routerLink]="['/heads/edit', head.id]" class="inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                <span class="material-symbols-outlined !text-[18px]">edit</span>
+                Edit Head
+            </a>
+        </div>
+
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex items-center gap-2 mb-6 text-primary">
+                 <span class="material-symbols-outlined !text-[22px]">info</span>
+                 <h3 class="text-lg font-bold">General Information</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-y-8 gap-x-12 mb-8">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">HEAD NAME</p>
+                    <p class="text-base font-bold text-slate-900 dark:text-white">{{ head.headName }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">SHORT NAME</p>
+                    <p class="text-base font-bold text-slate-900 dark:text-white font-mono">{{ head.shortName }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">PARENT CATEGORY</p>
+                    <p class="text-base font-bold text-slate-900 dark:text-white">{{ head.parentCategoryName || 'N/A' }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">STATUS</p>
+                    <div class="flex items-center gap-2">
+                        <span class="h-2.5 w-2.5 rounded-full" [class.bg-emerald-500]="head.status === 'Active'" [class.bg-slate-400]="head.status !== 'Active'"></span>
+                        <p class="text-base font-bold text-slate-900 dark:text-white">{{ head.status }}</p>
+                    </div>
+                </div>
+                <div class="col-span-4">
+                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DESCRIPTION</p>
+                     <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">{{ head.description || 'No description provided.' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Trail Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex items-center gap-2 mb-6 text-slate-500">
+                 <span class="material-symbols-outlined !text-[22px]">history</span>
+                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+            </div>
+
+            <!-- Creation Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center gap-4">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold">
+                        <span class="material-symbols-outlined !text-[20px]">add</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">CREATED</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ head.createdBy }} (Ops Director)</p>
+                        <p class="text-xs text-slate-500">{{ head.createdDate | date:'MMM dd, yyyy' }} at {{ head.createdDate | date:'shortTime' }}</p>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg flex items-center gap-4">
+                    <div class="h-10 w-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+                        <span class="material-symbols-outlined !text-[20px]">update</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">LAST UPDATED</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">{{ head.updatedBy || 'System' }} (System Admin)</p>
+                        <p class="text-xs text-slate-500">{{ head.lastUpdated | date:'MMM dd, yyyy' }} at {{ head.lastUpdated | date:'shortTime' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revision History Table -->
+            <div>
+                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">REVISION HISTORY</p>
+                 <div class="rounded-lg border border-slate-100 dark:border-slate-700 overflow-hidden">
+                     <table class="min-w-full text-left text-sm">
+                         <thead class="bg-slate-50 dark:bg-slate-800/50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-100 dark:border-slate-700">
+                             <tr>
+                                 <th class="px-6 py-3">Change Description</th>
+                                 <th class="px-6 py-3">Modified By</th>
+                                 <th class="px-6 py-3">Date</th>
+                             </tr>
+                         </thead>
+                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                             @for (rev of head.revisionHistory; track rev.id) {
+                                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                                     <td class="px-6 py-4 text-slate-700 dark:text-slate-300">{{ rev.changeDescription }}</td>
+                                     <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">{{ rev.modifiedBy }}</td>
+                                     <td class="px-6 py-4 text-slate-500">{{ rev.date | date:'mediumDate' }}</td>
+                                 </tr>
+                             } @empty {
+                                 <tr>
+                                     <td colspan="3" class="px-6 py-6 text-center text-slate-500 italic">No revision history found.</td>
+                                 </tr>
+                             }
+                         </tbody>
+                     </table>
+                 </div>
+            </div>
+        </div>
+        
+        <div class="mt-8 flex justify-end gap-3">
+             <button [routerLink]="['/heads']" class="px-6 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 font-bold text-sm hover:bg-slate-50 transition-colors">
+                 Back to List
+             </button>
+             <button [routerLink]="['/heads/edit', head.id]" class="px-6 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all">
+                Edit Head
+            </button>
+        </div>
+
+    } @else {
+        <div class="text-center py-20">
+            <p class="text-slate-500">Document Head not found.</p>
+            <a routerLink="/heads" class="text-primary hover:underline mt-2 inline-block">Back to List</a>
+        </div>
+    }
+  </div>
+</div>

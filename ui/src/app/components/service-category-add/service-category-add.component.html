@@ -1,0 +1,77 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Service Types</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-primary font-medium">Add New</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Add Service Category</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Define a new classification for service offerings within the system.
+      </p>
+    </div>
+
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+        
+        <!-- Form Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-8">
+             <div class="flex flex-col gap-8">
+                 <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white">Category Name</label>
+                        <span class="text-[10px] text-slate-400">0 / 50</span>
+                    </div>
+                    <input type="text" formControlName="categoryName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm placeholder-slate-400" placeholder="e.g., Professional Services"/>
+                    <p class="text-xs text-slate-500 mt-2">The full descriptive name of the service category.</p>
+                    @if (categoryForm.get('categoryName')?.invalid && categoryForm.get('categoryName')?.touched) {
+                        <p class="text-xs text-red-500 mt-1">Category name is required.</p>
+                    }
+                 </div>
+
+                 <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white">Short Name</label>
+                        <span class="text-[10px] text-slate-400">0 / 30</span>
+                    </div>
+                    <input type="text" formControlName="shortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm placeholder-slate-400" placeholder="e.g., PROF-SERV"/>
+                    <p class="text-xs text-slate-500 mt-2">Internal shorthand code used for reporting and identifiers.</p>
+                    @if (categoryForm.get('shortName')?.invalid && categoryForm.get('shortName')?.touched) {
+                        <p class="text-xs text-red-500 mt-1">Short name is required.</p>
+                    }
+                 </div>
+
+                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700">
+                     <div class="flex items-center justify-between">
+                         <div>
+                             <span class="block text-sm font-bold text-slate-900 dark:text-white">Is Active</span>
+                             <span class="text-xs text-slate-500">Enable or disable this category globally.</span>
+                         </div>
+                         <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+            <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm transition-colors dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">Cancel</button>
+            <button type="submit" [disabled]="isSubmitting() || categoryForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                @if(isSubmitting()) {
+                    <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span>
+                } 
+                Submit
+            </button>
+        </div>
+        
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg p-4 flex gap-3 text-sm text-blue-800 dark:text-blue-300 items-center justify-center">
+            <span class="material-symbols-outlined !text-[20px] filled">verified</span>
+            All changes are logged in the system audit trail for compliance monitoring.
+        </div>
+    </form>
+  </div>
+</div>

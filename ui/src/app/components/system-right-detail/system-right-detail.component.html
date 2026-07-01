@@ -1,0 +1,84 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Security</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/system-rights">System Rights</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold dark:text-white">Right Detail</span>
+    </nav>
+
+    @if (systemRight) {
+        <div class="flex flex-col md:flex-row items-start justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ systemRight.name }}</h1>
+                <div class="flex items-center gap-3 mt-2">
+                    <span class="font-mono text-xs text-primary bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded">{{ systemRight.code }}</span>
+                    @if (systemRight.status === 'Active') {
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full uppercase dark:bg-emerald-900/30 dark:text-emerald-400">Active</span>
+                    } @else {
+                        <span class="bg-slate-100 text-slate-600 text-xs font-bold px-2 py-0.5 rounded-full uppercase dark:bg-slate-700 dark:text-slate-400">Inactive</span>
+                    }
+                </div>
+            </div>
+            <div class="flex gap-3">
+                 <a [routerLink]="['/system-rights/edit', systemRight.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit
+                </a>
+                <button (click)="onDelete()" class="flex items-center gap-2 bg-white border border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-lg shadow-sm hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors text-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white dark:hover:bg-red-900/20 dark:hover:text-red-400">
+                    <span class="material-symbols-outlined !text-[18px]">delete</span>
+                    Delete
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex items-center gap-2 mb-6 text-primary">
+                 <span class="material-symbols-outlined !text-[24px]">verified_user</span>
+                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">Permission Details</h3>
+            </div>
+            
+            <div class="flex flex-col gap-6">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">MODULE / CATEGORY</p>
+                    <p class="text-base font-bold text-slate-900 dark:text-white">{{ systemRight.module }}</p>
+                </div>
+                
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DESCRIPTION</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ systemRight.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Trail Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+            <div class="flex items-center gap-2 mb-6 text-slate-500">
+                 <span class="material-symbols-outlined !text-[24px]">history</span>
+                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit History</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED BY</p>
+                    <p class="font-bold text-slate-900 dark:text-white">{{ systemRight.createdBy }}</p>
+                    <p class="text-xs text-slate-500">{{ systemRight.createdDate | date:'medium' }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LAST UPDATED BY</p>
+                    <p class="font-bold text-slate-900 dark:text-white">{{ systemRight.updatedBy || 'System' }}</p>
+                    <p class="text-xs text-slate-500">{{ systemRight.lastUpdated | date:'medium' }}</p>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <div class="text-center py-20">
+            <p class="text-slate-500">System Right not found.</p>
+            <a routerLink="/system-rights" class="text-primary hover:underline mt-2 inline-block">Back to List</a>
+        </div>
+    }
+  </div>
+</div>

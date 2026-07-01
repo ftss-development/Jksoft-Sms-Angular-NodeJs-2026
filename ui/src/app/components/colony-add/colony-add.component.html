@@ -1,0 +1,121 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Management</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/colonies">Colonies</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Add Colony</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Add New Colony</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Register a new colony entity under a specific area.
+      </p>
+    </div>
+
+    <form [formGroup]="colonyForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+        <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+          <span class="material-symbols-outlined text-primary text-2xl">home_work</span>
+          <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Colony Details</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Colony Name</label>
+                <input type="text" formControlName="name" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                @if (colonyForm.get('name')?.invalid && colonyForm.get('name')?.touched) {
+                    <p class="mt-1 text-xs text-red-500">Name is required.</p>
+                }
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Short Name</label>
+                <input type="text" formControlName="shortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. GWH"/>
+            </div>
+
+            <!-- Cascading Dropdowns -->
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Country</label>
+                <select formControlName="countryId" (change)="onCountryChange($event)" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                    <option value="" disabled>Select Country</option>
+                    @for (country of countries(); track country.id) {
+                        <option [value]="country.id">{{ country.fullName }}</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">State</label>
+                <select formControlName="stateId" (change)="onStateChange($event)" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" [attr.disabled]="filteredStates().length === 0 ? true : null">
+                    <option value="" disabled>Select State</option>
+                    @for (state of filteredStates(); track state.id) {
+                        <option [value]="state.id">{{ state.stateName }}</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">City</label>
+                <select formControlName="cityId" (change)="onCityChange($event)" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" [attr.disabled]="filteredCities().length === 0 ? true : null">
+                    <option value="" disabled>Select City</option>
+                    @for (city of filteredCities(); track city.id) {
+                        <option [value]="city.id">{{ city.cityName }}</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">District</label>
+                <select formControlName="districtId" (change)="onDistrictChange($event)" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" [attr.disabled]="filteredDistricts().length === 0 ? true : null">
+                    <option value="" disabled>Select District</option>
+                    @for (district of filteredDistricts(); track district.id) {
+                        <option [value]="district.id">{{ district.name }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Area</label>
+                <select formControlName="areaId" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" [attr.disabled]="filteredAreas().length === 0 ? true : null">
+                    <option value="" disabled>Select Area</option>
+                    @for (area of filteredAreas(); track area.id) {
+                        <option [value]="area.id">{{ area.name }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="pt-6">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    <span class="ms-3 text-sm font-medium text-slate-900 dark:text-slate-300">Active</span>
+                </label>
+            </div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end gap-3">
+        <button type="button" (click)="onCancel()"
+                class="inline-flex items-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+          Cancel
+        </button>
+        <button type="submit"
+                class="inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all active:scale-95 disabled:opacity-50"
+                [disabled]="colonyForm.invalid || colonyForm.pristine || isSubmitting()">
+          @if(isSubmitting()) {
+            <span class="material-symbols-outlined animate-spin text-sm mr-2">progress_activity</span>
+            Saving...
+          } @else {
+            Add Colony
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

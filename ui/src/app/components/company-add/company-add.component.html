@@ -1,0 +1,242 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/companies">Companies</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Add New Company</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Add New Company</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Register a new legal corporate entity into the management system.
+      </p>
+    </div>
+
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+        <!-- Stepper Header -->
+        <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
+            <div class="flex-1 flex flex-col items-center py-4 relative">
+                <span class="text-xs font-bold uppercase tracking-wider" [class.text-primary]="currentStep() >= 1" [class.text-slate-400]="currentStep() < 1">Step 01</span>
+                <span class="text-sm font-semibold" [class.text-slate-900]="currentStep() >= 1" [class.dark:text-white]="currentStep() >= 1" [class.text-slate-500]="currentStep() < 1">General Info</span>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-primary transition-all duration-300" [style.opacity]="currentStep() >= 1 ? '1' : '0'"></div>
+            </div>
+            <div class="w-px h-12 bg-gray-200 dark:bg-gray-800"></div>
+            <div class="flex-1 flex flex-col items-center py-4 relative">
+                <span class="text-xs font-bold uppercase tracking-wider" [class.text-primary]="currentStep() >= 2" [class.text-slate-400]="currentStep() < 2">Step 02</span>
+                <span class="text-sm font-semibold" [class.text-slate-900]="currentStep() >= 2" [class.dark:text-white]="currentStep() >= 2" [class.text-slate-500]="currentStep() < 2">Contact Info</span>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-primary transition-all duration-300" [style.opacity]="currentStep() >= 2 ? '1' : '0'"></div>
+            </div>
+            <div class="w-px h-12 bg-gray-200 dark:bg-gray-800"></div>
+            <div class="flex-1 flex flex-col items-center py-4 relative">
+                <span class="text-xs font-bold uppercase tracking-wider" [class.text-primary]="currentStep() >= 3" [class.text-slate-400]="currentStep() < 3">Step 03</span>
+                <span class="text-sm font-semibold" [class.text-slate-900]="currentStep() >= 3" [class.dark:text-white]="currentStep() >= 3" [class.text-slate-500]="currentStep() < 3">Legal/Financial</span>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-primary transition-all duration-300" [style.opacity]="currentStep() >= 3 ? '1' : '0'"></div>
+            </div>
+        </div>
+
+        <form [formGroup]="companyForm" class="p-6 md:p-8">
+            <!-- Step 1: General -->
+            @if (currentStep() === 1) {
+                <div formGroupName="general" class="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Company Name (As per registration)</label>
+                        <input type="text" formControlName="companyName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. Acme Corporation Pvt Ltd"/>
+                        @if (companyForm.get('general.companyName')?.invalid && companyForm.get('general.companyName')?.touched) {
+                            <p class="mt-1 text-xs text-red-500">Company Name is required.</p>
+                        }
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Short Name</label>
+                            <input type="text" formControlName="shortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. ACME"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">CIN (Corporate ID Number)</label>
+                            <input type="text" formControlName="cin" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="L12345MH2023PTC123456"/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Status</label>
+                            <select formControlName="status" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Company Level</label>
+                            <select formControlName="companyLevel" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                @for (level of levels; track level) {
+                                    <option [value]="level">{{ level }}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    
+                    @if (companyForm.get('general.companyLevel')?.value !== 'Holding Company') {
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Parent Company Name</label>
+                            <input type="text" formControlName="parentCompanyName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Step 2: Contact -->
+            @if (currentStep() === 2) {
+                <div formGroupName="contact" class="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b pb-2 dark:border-gray-700">Contact & Hierarchy</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Primary Address</label>
+                        <input type="text" formControlName="addressLine1" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm mb-3" placeholder="Street Address Line 1"/>
+                        <input type="text" formControlName="addressLine2" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Suite, Unit, Floor (Optional)"/>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Country</label>
+                            <select formControlName="country" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                <option value="" disabled>Select Country</option>
+                                @for (country of countries; track country) {
+                                    <option [value]="country">{{ country }}</option>
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">State / Province</label>
+                            <select formControlName="state" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                <option value="" disabled>Select State</option>
+                                @for (state of states; track state) {
+                                    <option [value]="state">{{ state }}</option>
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">City</label>
+                            <select formControlName="city" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                <option value="" disabled>Select City</option>
+                                @for (city of cities; track city) {
+                                    <option [value]="city">{{ city }}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Pin Code / Zip</label>
+                            <input type="text" formControlName="pinCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="400001"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
+                            <input type="email" formControlName="email" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="corporate@company.com"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Phone Number</label>
+                            <input type="text" formControlName="phone" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="+1 (555) 000-0000"/>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Step 3: Legal -->
+            @if (currentStep() === 3) {
+                <div formGroupName="legal" class="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b pb-2 dark:border-gray-700">Tax & Legal Compliance</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">GST Number</label>
+                            <input type="text" formControlName="gstNo" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="22AAAAA0000A1Z5"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">PAN (Permanent Account Number)</label>
+                            <input type="text" formControlName="panNo" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="ABCDE1234F"/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Financial Year Cycle</label>
+                            <select formControlName="financialYearCycle" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                @for (cycle of cycles; track cycle) {
+                                    <option [value]="cycle">{{ cycle }}</option>
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Business License No.</label>
+                            <input type="text" formControlName="businessLicenseNo" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-2.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="LIC-9988-7766"/>
+                        </div>
+                    </div>
+                </div>
+            }
+        </form>
+
+        <!-- Footer Actions -->
+        <div class="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-slate-800/50 rounded-b-xl">
+            <button type="button" (click)="onCancel()" class="text-slate-600 dark:text-slate-400 font-semibold hover:underline px-4">Cancel</button>
+            <div class="flex gap-3">
+                @if (currentStep() > 1) {
+                    <button type="button" (click)="prevStep()" class="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-700 dark:text-white font-bold text-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                        Previous
+                    </button>
+                }
+                
+                @if (currentStep() < 3) {
+                    <button type="button" (click)="nextStep()" class="px-6 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2">
+                        Next Step <span class="material-symbols-outlined !text-[18px]">arrow_forward</span>
+                    </button>
+                } @else {
+                    <button type="button" (click)="onSubmit()" [disabled]="isSubmitting() || companyForm.invalid" class="px-6 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        @if(isSubmitting()) {
+                            <span class="material-symbols-outlined animate-spin !text-[18px]">progress_activity</span> Saving...
+                        } @else {
+                            Submit Company
+                        }
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50 rounded-xl p-4 flex gap-4">
+            <div class="min-w-[40px] h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-200">
+                <span class="material-symbols-outlined">info</span>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-blue-800 dark:text-blue-300">Tax Identification</h4>
+                <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">Ensure all GST and PAN details match the legal incorporation documents to avoid rejection during verification.</p>
+            </div>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-xl p-4 flex gap-4">
+            <div class="min-w-[40px] h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300">
+                <span class="material-symbols-outlined">lock</span>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Data Privacy</h4>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">All registration data is encrypted and stored according to corporate compliance standards.</p>
+            </div>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-xl p-4 flex gap-4">
+            <div class="min-w-[40px] h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300">
+                <span class="material-symbols-outlined">help</span>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Need Help?</h4>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Contact the compliance desk at help@corpadmin.com for assistance with CIN/TIN formats.</p>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+{
+  "name": "JKSOFT-SMS-Angular Dashboard",
+  "description": "A modern, responsive dashboard layout built with Angular and Tailwind CSS, featuring a sidebar, top navigation, statistics cards, a traffic overview chart, recent activity list, a transactions table, and comprehensive Country Management functionality (list, add, edit, detail views).",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

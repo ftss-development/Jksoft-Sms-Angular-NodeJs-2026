@@ -1,0 +1,200 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">›</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/ticket-heads">Configuration</a>
+      <span class="text-slate-400">›</span>
+      <span class="text-slate-900 font-bold dark:text-white">Edit</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <div class="flex items-center justify-between">
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit Ticket Head: {{ ticketHead?.name }}</h1>
+          @if (ticketHead?.status === 'Active') {
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 dark:bg-emerald-900/30 dark:text-emerald-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+            </span>
+          }
+      </div>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Manage classification parameters, SLA timings, and automated resolution rules for this ticket type.
+      </p>
+    </div>
+
+    @if (ticketHead) {
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Main Form -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                
+                <!-- General Info -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-6 text-blue-600">
+                         <span class="material-symbols-outlined !text-[24px]">description</span>
+                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">General Information</h3>
+                    </div>
+                    <form [formGroup]="headForm" (ngSubmit)="onSubmit()" id="headForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Ticket Head Name</label>
+                                <input type="text" formControlName="name" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Short Name (Code)</label>
+                                <input type="text" formControlName="shortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 shadow-sm font-mono sm:text-sm"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- SLA Config -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                     <div class="flex items-center gap-2 mb-6 text-orange-600">
+                         <span class="material-symbols-outlined !text-[24px]">timer</span>
+                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">SLA & Timing Configuration</h3>
+                     </div>
+                     
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6" [formGroup]="headForm">
+                         <div>
+                             <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Response Time (SLA)</label>
+                             <div class="relative">
+                                <input type="number" formControlName="resolutionTime" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 pr-16 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 text-sm pointer-events-none">Minutes</span>
+                             </div>
+                         </div>
+                         <div>
+                             <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Resolution Time (SLA)</label>
+                             <div class="relative">
+                                <input type="number" formControlName="slaTargetHours" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 pr-16 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 text-sm pointer-events-none">Hours</span>
+                             </div>
+                         </div>
+                         <div class="md:col-span-2">
+                             <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Business Hours Calendar</label>
+                             <select formControlName="businessHours" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm appearance-none">
+                                 <option>Global 24/7 Support</option>
+                                 <option>US East (9-5 EST)</option>
+                                 <option>EU Central (9-5 CET)</option>
+                             </select>
+                         </div>
+                     </div>
+                </div>
+
+                <!-- Classification -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-6 text-purple-600">
+                         <span class="material-symbols-outlined !text-[24px]">category</span>
+                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">Classification</h3>
+                     </div>
+
+                     <div>
+                         <label class="block text-sm font-bold text-slate-900 dark:text-white mb-3">Categories</label>
+                         <div class="flex flex-wrap gap-2 mb-3">
+                             @for (cat of categories; track cat) {
+                                 <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-700 dark:text-slate-300">
+                                     {{ cat }}
+                                     <button type="button" class="text-slate-400 hover:text-red-500"><span class="material-symbols-outlined !text-[14px]">close</span></button>
+                                 </span>
+                             }
+                         </div>
+                         <div class="flex">
+                             <input type="text" placeholder="Add category..." class="flex-1 rounded-l-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] p-2 text-sm focus:ring-0 focus:border-gray-300"/>
+                             <button type="button" class="bg-slate-100 dark:bg-slate-800 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-lg px-4 text-sm font-bold text-slate-600 hover:bg-slate-200 transition-colors">Add</button>
+                         </div>
+                     </div>
+                </div>
+
+                <!-- Rich Text Description -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-3">Description / Resolution Rules</label>
+                    <div class="border border-slate-300 dark:border-slate-600 rounded-lg overflow-hidden">
+                        <!-- Fake Toolbar -->
+                        <div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-600 p-2 flex gap-2">
+                            <button type="button" class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined !text-[18px]">format_bold</span></button>
+                            <button type="button" class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined !text-[18px]">format_italic</span></button>
+                            <button type="button" class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined !text-[18px]">format_underlined</span></button>
+                            <div class="w-px bg-slate-300 dark:bg-slate-600 h-6 mx-1"></div>
+                            <button type="button" class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined !text-[18px]">format_list_bulleted</span></button>
+                            <button type="button" class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined !text-[18px]">format_list_numbered</span></button>
+                        </div>
+                        <textarea [formGroup]="headForm" formControlName="description" rows="6" class="w-full p-4 bg-white dark:bg-[#23303e] border-0 focus:ring-0 text-slate-900 dark:text-white text-sm leading-relaxed resize-y" placeholder="Enter standard operating procedures..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                <!-- Audit Information -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-4 text-slate-500">
+                        <span class="material-symbols-outlined !text-[20px]">history</span>
+                        <h3 class="text-sm font-bold uppercase tracking-wider">Audit Information</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">SYSTEM ID</p>
+                            <p class="text-sm font-mono text-slate-600 dark:text-slate-300">{{ ticketHead.id }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED BY</p>
+                            <div class="flex items-center gap-2">
+                                <div class="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">{{ ticketHead.createdBy.charAt(0) }}</div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white">{{ ticketHead.createdBy }}</p>
+                                    <p class="text-xs text-slate-500">{{ ticketHead.createdDate | date:'mediumDate' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LAST UPDATED BY</p>
+                            <div class="flex items-center gap-2">
+                                <div class="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">{{ ticketHead.updatedBy?.charAt(0) }}</div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white">{{ ticketHead.updatedBy }}</p>
+                                    <p class="text-xs text-slate-500">{{ ticketHead.lastUpdated | date:'mediumDate' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined !text-[18px]">bolt</span> Quick Actions
+                    </h3>
+                    <div class="flex flex-col gap-3">
+                        <button class="flex items-center gap-3 w-full text-left px-3 py-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm text-slate-600 dark:text-slate-300">
+                            <span class="material-symbols-outlined !text-[20px]">visibility</span>
+                            View Change Log
+                        </button>
+                         <button class="flex items-center gap-3 w-full text-left px-3 py-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm text-slate-600 dark:text-slate-300">
+                            <span class="material-symbols-outlined !text-[20px]">content_copy</span>
+                            Duplicate Ticket Head
+                        </button>
+                        <button class="flex items-center gap-3 w-full text-left px-3 py-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm text-red-600">
+                            <span class="material-symbols-outlined !text-[20px]">block</span>
+                            Deactivate Ticket Head
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-3">
+                    <button type="submit" form="headForm" [disabled]="isSubmitting()" class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-3 rounded-lg shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined !text-[20px]">save</span>
+                        Update Ticket Head
+                    </button>
+                    <button type="button" (click)="onCancel()" class="w-full bg-white border border-slate-300 text-slate-700 font-bold py-3 rounded-lg shadow-sm hover:bg-slate-50 transition-colors dark:bg-slate-800 dark:border-slate-600 dark:text-white dark:hover:bg-slate-700">
+                        Discard Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Ticket Head not found.</p>
+    }
+  </div>
+</div>

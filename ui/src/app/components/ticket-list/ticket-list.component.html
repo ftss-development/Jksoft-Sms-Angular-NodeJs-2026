@@ -1,0 +1,137 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Support</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Active Tickets</span>
+    </nav>
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-gray-200 dark:border-gray-800">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Support Tickets</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+          Manage customer support requests and technical issues.
+        </p>
+      </div>
+      <a routerLink="/tickets/add" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        <span>New Ticket</span>
+      </a>
+    </div>
+
+    <!-- Table -->
+    <div class="@container w-full">
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400">
+              <tr>
+                <th class="px-6 py-4 font-semibold">Ticket ID</th>
+                <th class="px-6 py-4 font-semibold">Subject</th>
+                <th class="px-6 py-4 font-semibold">Customer</th>
+                <th class="px-6 py-4 font-semibold">Assigned To</th>
+                <th class="px-6 py-4 font-semibold">Priority</th>
+                <th class="px-6 py-4 font-semibold">Status</th>
+                <th class="px-6 py-4 font-semibold">Created</th>
+                <th class="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 border-t border-slate-100 dark:divide-slate-800 dark:border-slate-800">
+              @for (ticket of paginatedTickets(); track ticket.id) {
+                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e]">
+                  <td class="px-6 py-4 font-medium text-slate-900 dark:text-white" data-label="Ticket ID">
+                    <a [routerLink]="['/tickets/detail', ticket.id]" class="text-primary hover:underline font-bold transition-colors">
+                      {{ ticket.ticketNumber }}
+                    </a>
+                  </td>
+                  <td class="px-6 py-4" data-label="Subject">{{ ticket.subject }}</td>
+                  <td class="px-6 py-4" data-label="Customer">{{ ticket.customer?.firstName }} {{ ticket.customer?.lastName }}</td>
+                  <td class="px-6 py-4" data-label="Assigned To">
+                    @if (ticket.assignedToName) {
+                      <div class="flex items-center gap-2">
+                        <div class="h-6 w-6 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                           {{ ticket.assignedToName.charAt(0) }}
+                        </div>
+                        <span class="text-slate-700 dark:text-slate-300 font-medium">{{ ticket.assignedToName }}</span>
+                      </div>
+                    } @else {
+                      <span class="text-slate-400 italic text-xs">Unassigned</span>
+                    }
+                  </td>
+                  <td class="px-6 py-4" data-label="Priority">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                      [class]="{
+                        'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400': ticket.priority === TicketPriority.Critical,
+                        'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400': ticket.priority === TicketPriority.High,
+                        'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400': ticket.priority === TicketPriority.Medium,
+                        'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400': ticket.priority === TicketPriority.Low
+                      }">
+                      {{ ticket.priority }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4" data-label="Status">
+                    <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                          [class]="{
+                            'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400': ticket.status === TicketStatus.Resolved,
+                            'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400': ticket.status === TicketStatus.InProgress,
+                            'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400': ticket.status === TicketStatus.Open,
+                            'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': ticket.status === TicketStatus.Closed
+                          }">
+                      {{ ticket.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4" data-label="Created">{{ ticket.createdDate | date:'MMM d, y' }}</td>
+                  <td class="px-6 py-4 text-right" data-label="Actions">
+                     <div class="flex items-center justify-end gap-2">
+                        <a [routerLink]="['/tickets/detail', ticket.id]" class="p-1.5 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors" title="View Details">
+                          <span class="material-symbols-outlined text-[20px]">visibility</span>
+                        </a>
+                        <a [routerLink]="['/tickets/edit', ticket.id]" class="p-1.5 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors" title="Edit">
+                          <span class="material-symbols-outlined text-[20px]">edit</span>
+                        </a>
+                        <button (click)="onDelete(ticket.id)" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors" title="Delete">
+                          <span class="material-symbols-outlined text-[20px]">delete</span>
+                        </button>
+                     </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="8" class="px-6 py-4 text-center text-slate-500 dark:text-slate-400">No tickets found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination Footer -->
+        <div class="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#23303e]">
+          <div class="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span class="font-medium text-slate-900 dark:text-white">{{ startItemIndex() }}</span> to <span class="font-medium text-slate-900 dark:text-white">{{ endItemIndex() }}</span> of <span class="font-medium text-slate-900 dark:text-white">{{ tickets().length }}</span> results
+          </div>
+          <div class="flex items-center gap-2">
+            <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1" class="flex items-center justify-center size-8 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2632] text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-[#23303e] disabled:opacity-50 transition-colors">
+              <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </button>
+            
+            @for(page of pages; track page) {
+               <button (click)="changePage(page)" 
+                       [class]="currentPage() === page ? 'bg-primary text-white border-primary' : 'bg-white text-slate-500 border-gray-300 hover:bg-gray-50 dark:bg-[#1a2632] dark:border-gray-600 dark:text-slate-400 dark:hover:bg-[#23303e]'"
+                       class="flex items-center justify-center size-8 rounded border text-sm font-medium transition-colors">
+                  {{ page }}
+               </button>
+            }
+
+            <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="flex items-center justify-center size-8 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2632] text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-[#23303e] disabled:opacity-50 transition-colors">
+              <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,165 @@
+
+<div class="flex flex-1 flex-col bg-slate-50 dark:bg-[#0B1116] h-full min-h-screen">
+  <!-- Top Navigation / Branding Area (Mocking the layout in screenshot) -->
+  <div class="bg-white dark:bg-[#1a2632] border-b border-slate-200 dark:border-slate-800 px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+          <div class="text-primary">
+             <span class="material-symbols-outlined !text-[28px]">equalizer</span>
+          </div>
+          <h1 class="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Network Manager</h1>
+      </div>
+      
+      <!-- Right Side Actions/Profile (Mock) -->
+      <div class="flex items-center gap-4">
+          <div class="relative w-64 hidden md:block">
+               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                  <span class="material-symbols-outlined !text-[18px]">search</span>
+              </span>
+              <input 
+                  type="text" 
+                  [value]="searchTerm()"
+                  (input)="searchTerm.set($any($event.target).value); currentPage.set(1)"
+                  class="block w-full h-9 pl-9 pr-3 rounded-lg border-0 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-0 sm:text-sm" 
+                  placeholder="Search protocol..."
+              />
+          </div>
+          <nav class="hidden md:flex gap-4 text-sm font-medium text-slate-600 dark:text-slate-400">
+              <a href="#" class="hover:text-primary">Dashboard</a>
+              <a href="#" class="text-primary font-bold border-b-2 border-primary pb-4 -mb-4">Signal Types</a>
+              <a href="#" class="hover:text-primary">Devices</a>
+              <a href="#" class="hover:text-primary">Analytics</a>
+          </nav>
+          <div class="flex items-center gap-2 border-l border-slate-200 dark:border-slate-700 pl-4">
+               <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg dark:hover:bg-slate-800"><span class="material-symbols-outlined !text-[20px]">notifications</span></button>
+               <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg dark:hover:bg-slate-800"><span class="material-symbols-outlined !text-[20px]">settings</span></button>
+               <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs">AJ</div>
+          </div>
+      </div>
+  </div>
+
+  <div class="p-8 max-w-[1400px] mx-auto w-full">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div class="flex flex-col gap-1">
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Signal Types</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+          Manage corporate signal transmission protocols and infrastructure standards
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button (click)="onGenerateData()" [disabled]="isGenerating()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-white border border-slate-300 dark:bg-[#23303e] dark:border-slate-600 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-sm shadow-sm transition-all active:scale-95 whitespace-nowrap disabled:opacity-50">
+            @if(isGenerating()) {
+                <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>
+                <span>Generating...</span>
+            } @else {
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+                <span>100 Data</span>
+            }
+        </button>
+        <a routerLink="/signal-types/add" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap">
+            <span class="material-symbols-outlined !text-[20px]">add</span>
+            <span>Add Signal Type</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Filter Chips -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div class="flex items-center gap-2">
+            <button class="flex items-center gap-2 px-3 py-1.5 bg-primary text-white rounded text-sm font-medium shadow-sm">
+                All Statuses
+                <span class="material-symbols-outlined !text-[16px]">expand_more</span>
+            </button>
+             <button class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded text-sm font-medium hover:bg-slate-50 dark:bg-[#1a2632] dark:border-slate-700 dark:text-slate-300">
+                Active Only
+                <span class="material-symbols-outlined !text-[16px]">check_circle</span>
+            </button>
+            <button class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded text-sm font-medium hover:bg-slate-50 dark:bg-[#1a2632] dark:border-slate-700 dark:text-slate-300">
+                Inactive Only
+                <span class="material-symbols-outlined !text-[16px]">cancel</span>
+            </button>
+        </div>
+        
+        <p class="text-sm text-slate-500">Showing {{ paginatedTypes().length }} of {{ filteredTypes().length }} signal types</p>
+    </div>
+
+    <!-- Table -->
+    <div class="@container w-full">
+      <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+              <tr>
+                <th class="px-6 py-4 font-bold tracking-wider w-[200px]">SIGNAL TYPE ID</th>
+                <th class="px-6 py-4 font-bold tracking-wider">TYPE NAME</th>
+                <th class="px-6 py-4 font-bold tracking-wider w-[150px]">STATUS</th>
+                <th class="px-6 py-4 font-bold tracking-wider text-right w-[150px]">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              @for (item of paginatedTypes(); track item.id) {
+                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors group">
+                  <td class="px-6 py-5 text-slate-500 font-mono font-medium text-sm" data-label="SIGNAL TYPE ID">{{ item.id }}</td>
+                  <td class="px-6 py-5 font-bold text-slate-900 dark:text-white text-base" data-label="TYPE NAME">
+                      {{ item.typeName }}
+                  </td>
+                  <td class="px-6 py-5" data-label="STATUS">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide" [class]="getStatusClass(item.status)">
+                         <span class="w-2 h-2 rounded-full mr-2" [class]="getStatusDot(item.status)"></span>
+                         {{ item.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-5 text-right" data-label="ACTIONS">
+                     <div class="flex items-center justify-end gap-2">
+                        <a [routerLink]="['/signal-types/detail', item.id]" class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg transition-colors dark:hover:bg-slate-800" title="View Details">
+                            <span class="material-symbols-outlined !text-[20px]">visibility</span>
+                        </a>
+                        <a [routerLink]="['/signal-types/edit', item.id]" class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg transition-colors dark:hover:bg-slate-800" title="Edit">
+                            <span class="material-symbols-outlined !text-[20px]">edit</span>
+                        </a>
+                        <button (click)="onDelete(item.id)" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors dark:hover:bg-red-900/20" title="Delete">
+                            <span class="material-symbols-outlined !text-[20px]">delete</span>
+                        </button>
+                     </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                      No signal types found.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-6 py-4 bg-slate-50/50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-800">
+          <div class="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span class="font-bold text-slate-900 dark:text-white">{{ startItemIndex() }}</span> to <span class="font-bold text-slate-900 dark:text-white">{{ endItemIndex() }}</span> of <span class="font-bold text-slate-900 dark:text-white">{{ filteredTypes().length }}</span> entries
+          </div>
+          <div class="flex items-center gap-2">
+            <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1" class="h-9 w-9 flex items-center justify-center rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors dark:bg-[#1a2632] dark:border-slate-700 dark:text-slate-300">
+              <span class="material-symbols-outlined !text-[18px]">chevron_left</span>
+            </button>
+            
+            <div class="flex gap-1">
+                 @for(page of pages; track page) {
+                    <button (click)="changePage(page)" 
+                       [class]="currentPage() === page ? 'bg-primary text-white border-primary' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 dark:bg-[#1a2632] dark:border-slate-700 dark:text-slate-300'"
+                       class="h-9 w-9 flex items-center justify-center rounded border text-sm font-bold transition-colors">
+                       {{ page }}
+                    </button>
+                 }
+            </div>
+  
+            <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="h-9 w-9 flex items-center justify-center rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors dark:bg-[#1a2632] dark:border-slate-700 dark:text-slate-300">
+               <span class="material-symbols-outlined !text-[18px]">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,151 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">›</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/term-categories">Term Management</a>
+      <span class="text-slate-400">›</span>
+      <span class="text-slate-900 font-bold dark:text-white">Edit Term Category</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit: {{ category?.categoryName }}</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base">Update the classification and settings for this term category.</p>
+    </div>
+
+    @if (category) {
+        <div class="flex flex-col md:flex-row justify-end gap-3 mb-4">
+             <button type="button" (click)="onCancel()" class="rounded-lg bg-white border border-slate-300 px-5 py-2.5 text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors dark:bg-slate-800 dark:border-slate-600 dark:text-white dark:hover:bg-slate-700">Cancel</button>
+             <button type="button" (click)="onSubmit()" class="rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-600 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined !text-[18px]">save</span> Save Changes
+            </button>
+        </div>
+
+        <form [formGroup]="categoryForm" class="flex flex-col lg:flex-row gap-6">
+            
+            <!-- Left Column -->
+            <div class="flex-1 flex flex-col gap-6">
+                <!-- Category Details -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-6 text-primary">
+                        <span class="material-symbols-outlined !text-[24px]">playlist_add_check</span>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Category Details</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Category Code</label>
+                            <input type="text" formControlName="categoryCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 p-3 shadow-sm sm:text-sm cursor-not-allowed font-mono"/>
+                        </div>
+                         <div>
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Category Name</label>
+                            <input type="text" formControlName="categoryName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                        </div>
+                         <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Description</label>
+                            <textarea formControlName="description" rows="3" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
+                        </div>
+                         <div class="md:col-span-2 grid grid-cols-2 gap-6">
+                             <div>
+                                 <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Status</label>
+                                 <select formControlName="isActive" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                     <option [value]="true">Active</option>
+                                     <option [value]="false">Inactive</option>
+                                 </select>
+                             </div>
+                             <div>
+                                 <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Review Frequency</label>
+                                 <select class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                     <option>Quarterly</option>
+                                     <option>Annually</option>
+                                     <option>Semi-Annually</option>
+                                 </select>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- System Config -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-6 text-slate-500">
+                        <span class="material-symbols-outlined !text-[24px]">settings</span>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">System Configuration</h3>
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between p-4 border border-slate-100 rounded-lg hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/50 transition-colors">
+                            <div>
+                                <span class="block text-sm font-bold text-slate-900 dark:text-white">Enable Auto-Renewal</span>
+                                <span class="text-xs text-slate-500">Automatically flag terms for renewal 30 days before expiry.</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" formControlName="enableAutoRenewal" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-slate-100 rounded-lg hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/50 transition-colors">
+                            <div>
+                                <span class="block text-sm font-bold text-slate-900 dark:text-white">Require Legal Approval</span>
+                                <span class="text-xs text-slate-500">All changes must be reviewed by the legal department.</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" formControlName="requireLegalApproval" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="w-full lg:w-80 flex flex-col gap-6">
+                <!-- Audit Info -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-4 text-blue-600">
+                        <span class="material-symbols-outlined !text-[20px]">history</span>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Audit Information</h3>
+                    </div>
+                    
+                    <div class="flex flex-col gap-6 text-sm">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED BY</p>
+                            <div class="flex items-center gap-2">
+                                <span class="h-6 w-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-600">{{ category.createdBy.charAt(0) }}</span>
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">{{ category.createdBy }}</p>
+                                    <p class="text-xs text-slate-500">System Architect</p>
+                                </div>
+                            </div>
+                             <p class="text-xs text-slate-500 mt-1 flex items-center gap-1"><span class="material-symbols-outlined !text-[12px]">calendar_today</span> {{ category.createdDate | date:'d MMM y, h:mm a' }}</p>
+                        </div>
+                        
+                        <div class="border-t border-slate-100 dark:border-slate-700 pt-4">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LAST UPDATED BY</p>
+                            <div class="flex items-center gap-2">
+                                <span class="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-600">{{ category.updatedBy?.charAt(0) || 'S' }}</span>
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">{{ category.updatedBy || 'System' }}</p>
+                                    <p class="text-xs text-slate-500">Compliance Lead</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1 flex items-center gap-1"><span class="material-symbols-outlined !text-[12px]">schedule</span> {{ category.lastUpdated | date:'d MMM y, h:mm a' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CURRENT VERSION</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-black text-slate-900 dark:text-white text-lg">v4.2.0</span>
+                            <a href="#" class="text-xs font-bold text-primary hover:underline">View History</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Category not found.</p>
+    }
+  </div>
+</div>

@@ -1,0 +1,169 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Settings</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/departments">Organizational Structure</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-medium">Designations</span>
+    </nav>
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-gray-200 dark:border-gray-800">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Designation Management</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+          Configure and manage job roles across the organization.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+         <button (click)="onGenerateData()" [disabled]="isGenerating()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium shadow-sm transition-all active:scale-95 whitespace-nowrap disabled:opacity-50">
+            @if(isGenerating()) {
+                <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>
+                <span>Generating...</span>
+            } @else {
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+                <span>Generate Data</span>
+            }
+        </button>
+        <a routerLink="/designations/add" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap">
+            <span class="material-symbols-outlined !text-[20px]">add</span>
+            <span>Add Designation</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="flex flex-col sm:flex-row justify-between gap-4 p-4 bg-white dark:bg-[#1a2632] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+      <div class="relative flex-1 max-w-2xl group">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+          <span class="material-symbols-outlined">search</span>
+        </div>
+        <input 
+            type="text" 
+            [value]="searchTerm()"
+            (input)="searchTerm.set($any($event.target).value); currentPage.set(1)"
+            class="block w-full h-10 pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-shadow" 
+            placeholder="Search designations by name, short code or level..."
+        />
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="flex items-center gap-2 px-4 h-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#23303e] text-sm text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+          <span class="material-symbols-outlined !text-[20px]">tune</span>
+          <span>Filters</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="@container w-full">
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+              <tr>
+                <th class="px-6 py-4 font-bold tracking-wider">Designation Name</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Short Code</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Level</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Status</th>
+                <th class="px-6 py-4 font-bold tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              @for (role of paginatedDesignations(); track role.id) {
+                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors group">
+                  <td class="px-6 py-4 font-bold text-slate-900 dark:text-white" data-label="Designation Name">
+                      {{ role.name }}
+                  </td>
+                  <td class="px-6 py-4 text-primary font-medium" data-label="Short Code">
+                      {{ role.shortCode }}
+                  </td>
+                  <td class="px-6 py-4" data-label="Level">
+                      <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                          {{ role.level }}
+                      </span>
+                  </td>
+                  <td class="px-6 py-4" data-label="Status">
+                    @if (role.status === 'Active') {
+                      <span class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+                          <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Active
+                      </span>
+                    } @else {
+                      <span class="inline-flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-sm font-bold">
+                          <span class="h-2 w-2 rounded-full bg-slate-400"></span> Inactive
+                      </span>
+                    }
+                  </td>
+                  <td class="px-6 py-4 text-right" data-label="Actions">
+                     <div class="flex items-center justify-end gap-3">
+                        <a [routerLink]="['/designations/detail', role.id]" class="text-slate-400 hover:text-primary transition-colors" title="View">
+                          <span class="material-symbols-outlined !text-[20px]">visibility</span>
+                        </a>
+                        <a [routerLink]="['/designations/edit', role.id]" class="text-slate-400 hover:text-primary transition-colors" title="Edit">
+                          <span class="material-symbols-outlined !text-[20px]">edit</span>
+                        </a>
+                        <button (click)="onDelete(role.id)" class="text-slate-400 hover:text-red-500 transition-colors" title="Delete">
+                          <span class="material-symbols-outlined !text-[20px]">delete</span>
+                        </button>
+                     </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">No designations found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1a2632]">
+          <div class="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span class="font-bold text-slate-900 dark:text-white">{{ startItemIndex() }}</span> to <span class="font-bold text-slate-900 dark:text-white">{{ endItemIndex() }}</span> of <span class="font-bold text-slate-900 dark:text-white">{{ filteredDesignations().length }} results</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1" class="h-9 w-9 flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 transition-colors">
+              <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </button>
+            
+            @for(page of pages; track page) {
+               <button (click)="changePage(page)" 
+                       [class]="currentPage() === page ? 'bg-primary text-white border-primary' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700'"
+                       class="h-9 w-9 flex items-center justify-center rounded border text-sm font-medium transition-colors">
+                  {{ page }}
+               </button>
+            }
+
+            <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="h-9 w-9 flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 transition-colors">
+              <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Total Roles -->
+        <div class="rounded-xl border border-slate-200 bg-blue-50/50 p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">TOTAL ROLES</p>
+            <p class="text-3xl font-black text-slate-900 dark:text-white">{{ totalRoles() }}</p>
+        </div>
+
+        <!-- Active Now -->
+        <div class="rounded-xl border border-slate-200 bg-emerald-50/50 p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2">ACTIVE NOW</p>
+            <p class="text-3xl font-black text-slate-900 dark:text-white">{{ activeRoles() }}</p>
+        </div>
+
+        <!-- Org Levels -->
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">ORGANIZATIONAL LEVELS</p>
+            <p class="text-3xl font-black text-slate-900 dark:text-white">{{ orgLevels() }}</p>
+        </div>
+    </div>
+  </div>
+</div>

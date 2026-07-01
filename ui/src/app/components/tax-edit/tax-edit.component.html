@@ -1,0 +1,93 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-background-dark">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Settings</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/taxes">Tax Management</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-primary font-medium">Edit Tax</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit Tax Details</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Update the configuration and rules for this tax record.
+      </p>
+    </div>
+
+    @if (tax(); as currentTax) {
+    <form [formGroup]="taxForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+        
+        <!-- Main Card -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-8">
+             <div class="flex flex-col gap-8">
+                 <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-700 pb-4">Tax Configuration</h3>
+                 
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-white mb-2">Name</label>
+                        <input type="text" formControlName="name" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                     </div>
+                     <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-white mb-2">Short Name</label>
+                        <input type="text" formControlName="shortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                     </div>
+                 </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-white mb-2">Percentage</label>
+                        <div class="relative">
+                            <input type="number" formControlName="percentage" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 pr-8 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">%</span>
+                        </div>
+                     </div>
+                     <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-white mb-2">Effective Date</label>
+                         <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
+                                <span class="material-symbols-outlined !text-[20px]">calendar_today</span>
+                            </span>
+                            <input type="date" formControlName="effectiveDate" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 pl-10 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                        </div>
+                     </div>
+                 </div>
+                 
+                 <!-- Audit Info -->
+                 <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
+                     <div class="flex items-center gap-2 mb-4 text-slate-500">
+                        <span class="material-symbols-outlined !text-[20px]">history</span>
+                        <h3 class="text-xs font-bold uppercase tracking-wider">AUDIT INFORMATION</h3>
+                     </div>
+                     <div class="grid grid-cols-2 gap-4 text-xs">
+                         <div>
+                             <p class="text-slate-400 font-bold uppercase">CREATED BY</p>
+                             <p class="font-medium text-slate-900 dark:text-white mt-1">{{ currentTax.createdBy }}</p>
+                             <p class="text-slate-400">{{ currentTax.createdDate | date:'medium' }}</p>
+                         </div>
+                         <div>
+                             <p class="text-slate-400 font-bold uppercase">LAST UPDATED BY</p>
+                             <p class="font-medium text-slate-900 dark:text-white mt-1">{{ currentTax.updatedBy || 'N/A' }}</p>
+                             <p class="text-slate-400">{{ currentTax.lastUpdated | date:'medium' }}</p>
+                         </div>
+                     </div>
+                </div>
+             </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+            <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm transition-colors dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-600">
+                Discard Changes
+            </button>
+            <button type="submit" [disabled]="isSubmitting() || taxForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                @if(isSubmitting()) {
+                    <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span>
+                } 
+                Update Tax
+            </button>
+        </div>
+    </form>
+    }
+  </div>
+</div>

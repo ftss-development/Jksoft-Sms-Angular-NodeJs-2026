@@ -1,0 +1,158 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Billing</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/stb-schemes">STB Schemes</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-primary font-medium">Scheme Detail</span>
+    </nav>
+
+    @if (scheme) {
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ scheme.schemeName }} ({{ scheme.id }})</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl mt-1">
+                    {{ scheme.description }}
+                </p>
+            </div>
+            <div class="flex gap-3">
+                 <a [routerLink]="['/stb-schemes/edit', scheme.id]" class="bg-primary hover:bg-blue-600 text-white font-bold h-10 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit Detail
+                </a>
+                <a routerLink="/stb-schemes" class="bg-white border border-slate-300 text-slate-700 font-bold h-10 px-5 rounded-lg hover:bg-slate-50 transition-colors text-sm flex items-center">
+                    Back to List
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column (General Info) -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- General Info Card -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">General Information</h3>
+                     
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">SCHEME NAME</p>
+                             <p class="text-base font-bold text-slate-900 dark:text-white">{{ scheme.schemeName }}</p>
+                         </div>
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">INTERNAL REFERENCE</p>
+                             <p class="text-base font-bold text-slate-900 dark:text-white font-mono">{{ scheme.internalReference }}</p>
+                         </div>
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">STATUS</p>
+                             <div class="flex items-center gap-2">
+                                <span class="h-2.5 w-2.5 rounded-full" [class.bg-emerald-500]="scheme.isActive" [class.bg-slate-400]="!scheme.isActive"></span>
+                                <span class="text-sm font-bold uppercase" [class.text-emerald-600]="scheme.isActive" [class.text-slate-500]="!scheme.isActive">
+                                    {{ scheme.status }}
+                                </span>
+                             </div>
+                         </div>
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">BILLING CYCLE</p>
+                             <p class="text-base font-bold text-slate-900 dark:text-white">{{ scheme.billingCycle }} (Prepaid)</p>
+                         </div>
+                         <div class="col-span-1 md:col-span-2">
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">STRATEGY OVERVIEW</p>
+                             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">{{ scheme.description }}</p>
+                         </div>
+                     </div>
+                </div>
+
+                <!-- History Log -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">History Log</h3>
+                    
+                    <div class="relative pl-4 space-y-8">
+                         <!-- Vertical line -->
+                         <div class="absolute left-[23px] top-3 bottom-3 w-0.5 bg-slate-200 dark:bg-slate-700"></div>
+
+                         @for (log of scheme.historyLog; track $index) {
+                             <div class="relative pl-12">
+                                 <div class="absolute left-0 top-0 h-12 w-12 rounded-full border-4 border-white dark:border-[#1a2632] flex items-center justify-center z-10"
+                                      [class.bg-blue-500]="log.type === 'success' || log.type === 'info'"
+                                      [class.text-white]="log.type === 'success' || log.type === 'info'"
+                                      [class.bg-slate-200]="log.type !== 'success' && log.type !== 'info'"
+                                      [class.text-slate-500]="log.type !== 'success' && log.type !== 'info'">
+                                     <span class="material-symbols-outlined !text-[20px]">{{ log.icon || 'history' }}</span>
+                                 </div>
+                                 
+                                 <div>
+                                     <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ log.title }}</h4>
+                                     <div class="flex gap-1 text-xs text-slate-500 mt-0.5">
+                                         <span>{{ log.timestamp | date:'MMM d, y' }} - {{ log.timestamp | date:'shortTime' }}</span>
+                                         <span>by System</span>
+                                     </div>
+                                     <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">{{ log.description }}</p>
+                                 </div>
+                             </div>
+                         } @empty {
+                             <p class="text-slate-500 italic pl-8">No history records found.</p>
+                         }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column (Audit & System Info) -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                <!-- Audit Trail Card -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-4 text-blue-600">
+                        <span class="material-symbols-outlined !text-[22px]">history_edu</span>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="pb-4 border-b border-slate-100 dark:border-slate-700">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED AT</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ scheme.createdDate | date:'MMMM d, y, hh:mm a' }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">by {{ scheme.createdBy }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LAST UPDATED AT</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ scheme.lastUpdated | date:'MMMM d, y, hh:mm a' }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">by {{ scheme.updatedBy || 'System' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Info Card -->
+                <div class="bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 p-6">
+                    <div class="flex items-center gap-2 mb-4 text-primary">
+                        <span class="material-symbols-outlined !text-[22px]">dataset</span>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">System Info</h3>
+                    </div>
+                    
+                    <div class="flex justify-between items-center py-2 border-b border-blue-100 dark:border-slate-700/50">
+                        <span class="text-sm text-slate-500">Scheme UID</span>
+                        <span class="text-xs font-mono text-slate-700 dark:text-slate-300 font-bold uppercase">{{ scheme.id }}</span>
+                    </div>
+                     <div class="flex justify-between items-center py-2 border-b border-blue-100 dark:border-slate-700/50">
+                        <span class="text-sm text-slate-500">Metadata Version</span>
+                        <span class="text-sm font-medium text-slate-900 dark:text-white">v3.0.1</span>
+                    </div>
+                     <div class="flex justify-between items-center py-2">
+                        <span class="text-sm text-slate-500">Revenue Stream</span>
+                        <span class="text-sm font-bold text-primary flex items-center gap-1 cursor-pointer hover:underline">
+                            <span class="material-symbols-outlined !text-[16px]">trending_up</span> {{ scheme.revenueStream }}
+                        </span>
+                    </div>
+                </div>
+                
+                 <div class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-6 text-center">
+                    <p class="text-xs text-slate-500 mb-2">Modifying billing terms? Refer to the</p>
+                    <a href="#" class="text-sm font-bold text-primary hover:underline">Revenue Compliance Policy</a>.
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Scheme not found.</p>
+    }
+  </div>
+</div>

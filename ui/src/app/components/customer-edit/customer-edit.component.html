@@ -1,0 +1,234 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Data Management</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/customers">Customers</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Edit Customer</span>
+    </nav>
+
+    <!-- Page Heading & Subtitle -->
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Edit Customer</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Update the details and status for <strong class="font-semibold text-slate-900 dark:text-white">{{ customer?.firstName }} {{ customer?.lastName }}</strong>.
+      </p>
+    </div>
+
+    @if (customer) {
+      <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+        <!-- General Information Section -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+          <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <span class="material-symbols-outlined text-primary text-2xl">person</span>
+            <h3 class="text-xl font-semibold text-slate-900 dark:text-white">General Information</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
+            <!-- Basic Info -->
+            <div>
+              <label for="accountNo" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Account No</label>
+              <input id="accountNo" type="text" formControlName="accountNo"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+              @if (customerForm.get('accountNo')?.invalid && (customerForm.get('accountNo')?.dirty || customerForm.get('accountNo')?.touched)) {
+                <p class="mt-1 text-xs text-red-500">Account No is required.</p>
+              }
+            </div>
+            <div>
+              <label for="salutation" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Salutation</label>
+              <select id="salutation" formControlName="salutationId"
+                      class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                @for (sal of salutations; track sal.salutationId) {
+                  <option [value]="sal.salutationId">{{ sal.salutationType }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label for="firstName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">First Name</label>
+              <input id="firstName" type="text" formControlName="firstName"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+              @if (customerForm.get('firstName')?.invalid && (customerForm.get('firstName')?.dirty || customerForm.get('firstName')?.touched)) {
+                <p class="mt-1 text-xs text-red-500">First Name is required.</p>
+              }
+            </div>
+            <div>
+              <label for="middleName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Middle Name</label>
+              <input id="middleName" type="text" formControlName="middleName"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+            </div>
+            <div>
+              <label for="lastName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Last Name</label>
+              <input id="lastName" type="text" formControlName="lastName"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+              @if (customerForm.get('lastName')?.invalid && (customerForm.get('lastName')?.dirty || customerForm.get('lastName')?.touched)) {
+                <p class="mt-1 text-xs text-red-500">Last Name is required.</p>
+              }
+            </div>
+            <div>
+              <label for="subscriberType" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Subscriber Type</label>
+              <select id="subscriberType" formControlName="subscriberTypeId"
+                      class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                @for (subType of subscriberTypes; track subType.subscriberTypeId) {
+                  <option [value]="subType.subscriberTypeId">{{ subType.type }}</option>
+                }
+              </select>
+            </div>
+            <!-- Contact Details -->
+            <div>
+              <label for="mobileNo1" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Mobile No</label>
+              <input id="mobileNo1" type="text" formControlName="mobileNo1"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+              @if (customerForm.get('mobileNo1')?.invalid && (customerForm.get('mobileNo1')?.dirty || customerForm.get('mobileNo1')?.touched)) {
+                <p class="mt-1 text-xs text-red-500">
+                  @if (customerForm.get('mobileNo1')?.errors?.['required']) {
+                    Mobile No is required.
+                  } @else if (customerForm.get('mobileNo1')?.errors?.['pattern']) {
+                    Please enter a valid 10-digit mobile number.
+                  }
+                </p>
+              }
+            </div>
+            <div>
+              <label for="emailId1" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
+              <input id="emailId1" type="email" formControlName="emailId1"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+              @if (customerForm.get('emailId1')?.invalid && (customerForm.get('emailId1')?.dirty || customerForm.get('emailId1')?.touched)) {
+                <p class="mt-1 text-xs text-red-500">
+                  @if (customerForm.get('emailId1')?.errors?.['required']) {
+                    Email is required.
+                  } @else if (customerForm.get('emailId1')?.errors?.['email']) {
+                    Please enter a valid email address.
+                  }
+                </p>
+              }
+            </div>
+            <!-- Address Details -->
+            <div>
+              <label for="address1" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Address Line 1</label>
+              <input id="address1" type="text" formControlName="address1"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+              @if (customerForm.get('address1')?.invalid && (customerForm.get('address1')?.dirty || customerForm.get('address1')?.touched)) {
+                <p class="mt-1 text-xs text-red-500">Address Line 1 is required.</p>
+              }
+            </div>
+            <div>
+              <label for="pinCode" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pin Code</label>
+              <input id="pinCode" type="text" formControlName="pinCode"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+              @if (customerForm.get('pinCode')?.invalid && (customerForm.get('pinCode')?.dirty || customerForm.get('pinCode')?.touched)) {
+                <p class="mt-1 text-xs text-red-500">
+                  @if (customerForm.get('pinCode')?.errors?.['required']) {
+                    Pin Code is required.
+                  } @else if (customerForm.get('pinCode')?.errors?.['pattern']) {
+                    Please enter a valid 6-digit pin code.
+                  }
+                </p>
+              }
+            </div>
+            <!-- Other Details -->
+            <div>
+              <label for="company" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Company</label>
+              <select id="company" formControlName="companyId"
+                      class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                @for (comp of companies; track comp.id) {
+                  <option [value]="comp.id">{{ comp.companyName }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label for="gstMode" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">GST Mode</label>
+              <select id="gstMode" formControlName="gstModeId"
+                      class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                @for (mode of gstModes; track mode.gstModeId) {
+                  <option [value]="mode.gstModeId">{{ mode.type }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label for="gstNo" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">GST No</label>
+              <input id="gstNo" type="text" formControlName="gstNo"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+            </div>
+            <div>
+              <label for="panNo" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">PAN No</label>
+              <input id="panNo" type="text" formControlName="panNo"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+            </div>
+            <div>
+              <label for="aadhaarNo" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Aadhaar No</label>
+              <input id="aadhaarNo" type="text" formControlName="aadhaarNo"
+                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+            </div>
+            <div>
+              <label for="connectionType" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Connection Type</label>
+              <select id="connectionType" formControlName="connectionTypeId"
+                      class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                @for (connType of connectionTypes; track connType.connectionTypeId) {
+                  <option [value]="connType.connectionTypeId">{{ connType.type }}</option>
+                }
+              </select>
+            </div>
+            <div class="md:col-span-1">
+              <label for="remark" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Remark</label>
+              <textarea id="remark" formControlName="remark" rows="3"
+                        class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
+            </div>
+            <div class="md:col-span-1 pt-4">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                <span class="ms-3 text-sm font-medium text-slate-900 dark:text-slate-300">Is Active</span>
+              </label>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">If inactive, this customer will not be able to log in.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audit Information Section -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+          <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <span class="material-symbols-outlined text-slate-500 text-2xl">history</span>
+            <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Audit Information</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">CREATED BY</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ customer.createdBy }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">CREATED DATE</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ customer.createdDate | date:'MMM d, y, hh:mm a' }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">UPDATED BY</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ customer.updatedBy }}</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-500 dark:text-slate-400">LAST UPDATED</p>
+              <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ customer.lastUpdated | date:'MMM d, y, hh:mm a' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-4 flex justify-end gap-3">
+          <button type="button" (click)="onCancel()"
+                  class="inline-flex items-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+            Cancel
+          </button>
+          <button type="submit"
+                  class="inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all active:scale-95"
+                  [disabled]="customerForm.invalid || customerForm.pristine">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    } @else {
+      <p class="text-slate-500 dark:text-slate-400">Loading customer data or customer not found...</p>
+    }
+  </div>
+</div>

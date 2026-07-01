@@ -1,0 +1,130 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Geo Data</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Cities</span>
+    </nav>
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-gray-200 dark:border-gray-800">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">City Management</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+          Manage all city entities, their codes, and geographical associations efficiently.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button (click)="onGenerateData()" [disabled]="isGenerating()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium shadow-sm transition-all active:scale-95 whitespace-nowrap disabled:opacity-50">
+            @if(isGenerating()) {
+                <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>
+                <span>Generating...</span>
+            } @else {
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+                <span>Generate Data</span>
+            }
+        </button>
+        <a routerLink="/cities/add" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            <span>Add New City</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="flex flex-col sm:flex-row justify-between gap-4 p-4 bg-white dark:bg-[#1a2632] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+      <div class="relative flex-1 max-w-md group">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+          <span class="material-symbols-outlined">search</span>
+        </div>
+        <input class="block w-full h-10 pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-shadow" placeholder="Search by city, code, or state..." type="text"/>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="flex items-center gap-2 px-4 h-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#23303e] text-sm text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+          <span class="material-symbols-outlined text-[20px]">filter_list</span>
+          <span>Filter</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="@container w-full">
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+              <tr>
+                <th class="px-6 py-4 font-bold tracking-wider">City Name</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Code</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Short Name</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Parent State</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Parent Country</th>
+                <th class="px-6 py-4 font-bold tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 border-t border-slate-100 dark:divide-slate-800 dark:border-slate-800">
+              @for (city of paginatedCities(); track city.id) {
+                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e]">
+                  <td class="px-6 py-4 font-medium text-slate-900 dark:text-white" data-label="City Name">{{ city.cityName }}</td>
+                  <td class="px-6 py-4" data-label="Code">
+                      <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10 dark:bg-slate-800 dark:text-slate-400 dark:ring-slate-400/20 font-mono">
+                          {{ city.cityCode }}
+                      </span>
+                  </td>
+                  <td class="px-6 py-4 font-mono text-xs uppercase" data-label="Short Name">{{ city.shortName }}</td>
+                  <td class="px-6 py-4 text-slate-700 dark:text-slate-300" data-label="Parent State">{{ getStateName(city.stateId) }}</td>
+                  <td class="px-6 py-4 text-slate-500 dark:text-slate-400" data-label="Parent Country">{{ getCountryName(city.countryId) }}</td>
+                  <td class="px-6 py-4 text-right" data-label="Actions">
+                     <div class="flex items-center justify-end gap-2">
+                        <a [routerLink]="['/cities/detail', city.id]" class="p-1.5 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors" title="View Details">
+                          <span class="material-symbols-outlined text-[20px]">visibility</span>
+                        </a>
+                        <a [routerLink]="['/cities/edit', city.id]" class="p-1.5 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors" title="Edit">
+                          <span class="material-symbols-outlined text-[20px]">edit</span>
+                        </a>
+                        <button (click)="onDelete(city.id)" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors" title="Delete">
+                          <span class="material-symbols-outlined text-[20px]">delete</span>
+                        </button>
+                     </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="px-6 py-4 text-center text-slate-500 dark:text-slate-400">No cities found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#23303e]">
+          <div class="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span class="font-medium text-slate-900 dark:text-white">{{ startItemIndex() }}</span> to <span class="font-medium text-slate-900 dark:text-white">{{ endItemIndex() }}</span> of <span class="font-medium text-slate-900 dark:text-white">{{ cities().length }}</span> results
+          </div>
+          <div class="flex items-center gap-2">
+            <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1" class="flex items-center justify-center size-8 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2632] text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-[#23303e] disabled:opacity-50 transition-colors">
+              <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </button>
+            
+            @for(page of pages; track page) {
+               <button (click)="changePage(page)" 
+                       [class]="currentPage() === page ? 'bg-primary text-white border-primary' : 'bg-white text-slate-500 border-gray-300 hover:bg-gray-50 dark:bg-[#1a2632] dark:border-gray-600 dark:text-slate-400 dark:hover:bg-[#23303e]'"
+                       class="flex items-center justify-center size-8 rounded border text-sm font-medium transition-colors">
+                  {{ page }}
+               </button>
+            }
+
+            <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="flex items-center justify-center size-8 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2632] text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-[#23303e] disabled:opacity-50 transition-colors">
+              <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

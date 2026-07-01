@@ -1,0 +1,161 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">›</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/term-categories">Legal Management</a>
+      <span class="text-slate-400">›</span>
+      <span class="text-slate-900 font-bold dark:text-white">Term Category Details</span>
+    </nav>
+
+    @if (category) {
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">{{ category.categoryName }}</h1>
+                <div class="flex items-center gap-3 mt-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide" [class.bg-emerald-100]="category.isActive" [class.text-emerald-800]="category.isActive" [class.bg-slate-100]="!category.isActive" [class.text-slate-600]="!category.isActive">
+                         <span class="w-2 h-2 rounded-full" [class.bg-emerald-500]="category.isActive" [class.bg-slate-500]="!category.isActive"></span>
+                         {{ category.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                    <span class="text-sm text-slate-500">Created on {{ category.createdDate | date:'d MMM yyyy' }}</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                 <button class="flex items-center gap-2 bg-white border border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-lg shadow-sm hover:bg-slate-50 transition-colors text-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white dark:hover:bg-slate-700">
+                    <span class="material-symbols-outlined !text-[20px]">history</span>
+                    History
+                </button>
+                 <a [routerLink]="['/term-categories/edit', category.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                    <span class="material-symbols-outlined !text-[20px]">edit</span>
+                    Edit Category
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- Info Card -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+                     <div class="flex items-center gap-2 mb-6 text-primary">
+                         <span class="material-symbols-outlined !text-[24px]">description</span>
+                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">Category Information</h3>
+                     </div>
+
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 mb-8">
+                         <div>
+                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CATEGORY CODE</p>
+                             <p class="text-base font-bold text-slate-900 dark:text-white font-mono">{{ category.categoryCode }}</p>
+                         </div>
+                         <div>
+                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CATEGORY NAME</p>
+                             <p class="text-base font-bold text-slate-900 dark:text-white">{{ category.categoryName }}</p>
+                         </div>
+                         <div class="col-span-2">
+                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">DESCRIPTION</p>
+                             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">{{ category.description }}</p>
+                         </div>
+                         <div>
+                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DEPARTMENT</p>
+                             <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined !text-[18px] text-slate-500">business</span>
+                                <p class="text-sm font-bold text-slate-900 dark:text-white">{{ category.department }}</p>
+                             </div>
+                         </div>
+                         <div>
+                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">GLOBAL ENFORCEMENT</p>
+                             <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2 py-0.5 rounded dark:bg-blue-900/30 dark:text-blue-300 uppercase">
+                                 {{ category.globalEnforcement }}
+                             </span>
+                         </div>
+                     </div>
+                </div>
+
+                <!-- Active Terms -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                        <div class="flex items-center gap-2 text-primary">
+                            <span class="material-symbols-outlined !text-[24px]">gavel</span>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Active Terms & Conditions</h3>
+                        </div>
+                        <span class="text-xs font-bold text-slate-500">{{ category.linkedTerms?.length || 0 }} Terms Listed</span>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-sm">
+                            <thead class="bg-slate-50 dark:bg-slate-800/50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                                <tr>
+                                    <th class="px-6 py-4">TERM CODE</th>
+                                    <th class="px-6 py-4">TERM NAME</th>
+                                    <th class="px-6 py-4">VERSION</th>
+                                    <th class="px-6 py-4 text-right">LAST REVIEW</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @for (term of category.linkedTerms; track term.termCode) {
+                                    <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors">
+                                        <td class="px-6 py-4 font-mono text-xs text-slate-600 dark:text-slate-400">{{ term.termCode }}</td>
+                                        <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">{{ term.termName }}</td>
+                                        <td class="px-6 py-4 text-slate-600 dark:text-slate-400">{{ term.version }}</td>
+                                        <td class="px-6 py-4 text-right text-slate-600 dark:text-slate-400">{{ term.lastReview }}</td>
+                                    </tr>
+                                } @empty {
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-8 text-center text-slate-500 italic">No associated terms found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 h-full">
+                    <div class="flex items-center gap-2 mb-6 text-blue-600">
+                        <span class="material-symbols-outlined !text-[24px]">history_edu</span>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Full Audit Trail</h3>
+                    </div>
+
+                    <div class="relative pl-3 space-y-8">
+                         <div class="absolute left-[20px] top-3 bottom-3 w-0.5 bg-slate-200 dark:bg-slate-700"></div>
+
+                         @for (audit of category.auditTrail; track $index) {
+                             <div class="relative pl-12">
+                                 <div class="absolute left-0 top-0 h-10 w-10 rounded-full border-4 border-white dark:border-[#1a2632] flex items-center justify-center z-10"
+                                     [class]="audit.icon === 'add_circle' ? 'bg-slate-200 text-slate-600' : 'bg-blue-100 text-blue-600'">
+                                     <span class="material-symbols-outlined !text-[18px]">{{ audit.icon || 'circle' }}</span>
+                                 </div>
+                                 
+                                 <div>
+                                     <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ audit.action }}</h4>
+                                     <p class="text-xs text-slate-500 font-medium mb-1">{{ audit.timestamp | date:'d MMM yyyy, hh:mm a' }}</p>
+                                     <p class="text-sm text-slate-600 dark:text-slate-300 leading-snug">{{ audit.description }}</p>
+                                     
+                                     <!-- Mock User Badge -->
+                                     <div class="flex items-center gap-2 mt-2">
+                                         <div class="h-5 w-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">
+                                             {{ audit.actor.charAt(0) }}
+                                         </div>
+                                         <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ audit.actor }}</span>
+                                         <span class="text-[10px] text-slate-400">Legal Counsel</span>
+                                     </div>
+                                 </div>
+                             </div>
+                         }
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
+                        <button class="text-sm font-bold text-primary hover:underline">View Full Activity Log</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Category not found.</p>
+    }
+  </div>
+</div>

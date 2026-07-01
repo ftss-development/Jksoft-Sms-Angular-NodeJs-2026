@@ -1,0 +1,125 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Service Management</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/service-categories">Categories</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold">Category Detail</span>
+    </nav>
+
+    @if (category) {
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ category.categoryName }} ({{ category.shortName }})</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl mt-1">
+                    Detailed classification and metadata for the service category {{ category.categoryName }}.
+                </p>
+            </div>
+            <div class="flex gap-3">
+                 <a [routerLink]="['/service-categories/edit', category.id]" class="bg-primary hover:bg-blue-600 text-white font-bold h-10 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit Detail
+                </a>
+                <a routerLink="/service-categories" class="bg-white border border-slate-300 text-slate-700 font-bold h-10 px-5 rounded-lg hover:bg-slate-50 transition-colors text-sm flex items-center">
+                    Back to List
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column (General Info) -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- General Info Card -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">General Information</h3>
+                     
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">CATEGORY NAME</p>
+                             <p class="text-base font-bold text-slate-900 dark:text-white">{{ category.categoryName }}</p>
+                         </div>
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">SHORT NAME</p>
+                             <p class="text-base font-bold text-slate-900 dark:text-white">{{ category.shortName }}</p>
+                         </div>
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">ACTIVE STATUS</p>
+                             <div class="flex items-center gap-2">
+                                <span class="h-2.5 w-2.5 rounded-full" [class.bg-emerald-500]="category.isActive" [class.bg-slate-400]="!category.isActive"></span>
+                                <span class="text-sm font-bold uppercase" [class.text-emerald-600]="category.isActive" [class.text-slate-500]="!category.isActive">
+                                    {{ category.isActive ? 'ACTIVE' : 'INACTIVE' }}
+                                </span>
+                             </div>
+                         </div>
+                         <div>
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">GLOBAL IDENTIFIER</p>
+                             <p class="text-base font-bold text-slate-900 dark:text-white">{{ category.globalIdentifier || 'N/A' }}</p>
+                         </div>
+                         <div class="col-span-1 md:col-span-2">
+                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">DESCRIPTION</p>
+                             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">{{ category.description }}</p>
+                         </div>
+                     </div>
+                </div>
+            </div>
+
+            <!-- Right Column (Audit & System Info) -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                <!-- Audit Trail Card -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center gap-2 mb-4 text-blue-600">
+                        <span class="material-symbols-outlined !text-[22px] filled">check_box</span>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="pb-4 border-b border-slate-100 dark:border-slate-700">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED AT</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ category.createdDate | date:'mediumDate' }}, {{ category.createdDate | date:'shortTime' }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">by {{ category.createdBy }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">LAST UPDATED AT</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ category.lastUpdated | date:'mediumDate' }}, {{ category.lastUpdated | date:'shortTime' }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">by {{ category.updatedBy || 'System' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Info Card -->
+                <div class="bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 p-6">
+                    <div class="flex items-center gap-2 mb-4 text-blue-600">
+                        <span class="material-symbols-outlined !text-[22px]">info</span>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">System Info</h3>
+                    </div>
+                    
+                    <div class="flex justify-between items-center py-2 border-b border-blue-100 dark:border-slate-700/50">
+                        <span class="text-sm text-slate-500">Entity UID</span>
+                        <span class="text-xs font-mono text-slate-700 dark:text-slate-300">{{ category.globalIdentifier }}</span>
+                    </div>
+                     <div class="flex justify-between items-center py-2 border-b border-blue-100 dark:border-slate-700/50">
+                        <span class="text-sm text-slate-500">Schema Version</span>
+                        <span class="text-sm font-medium text-slate-900 dark:text-white">{{ category.schemaVersion || 'v1.0.0' }}</span>
+                    </div>
+                     <div class="flex justify-between items-center py-2">
+                        <span class="text-sm text-slate-500">Reference Type</span>
+                        <a href="#" class="text-sm font-bold text-primary hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined !text-[16px]">link</span> Core Catalog
+                        </a>
+                    </div>
+                </div>
+                
+                 <div class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-6 text-center">
+                    <p class="text-xs text-slate-500 mb-2">Questions about category classification? Contact the</p>
+                    <a href="#" class="text-sm font-bold text-primary hover:underline">Data Governance Team</a>.
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Category not found.</p>
+    }
+  </div>
+</div>

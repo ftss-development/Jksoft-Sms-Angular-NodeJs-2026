@@ -1,0 +1,136 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="#">Management</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold dark:text-white">Particular Groups</span>
+    </nav>
+    
+    <!-- Header -->
+    <div class="flex flex-col gap-1 pb-4">
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Particular Groups Management</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+          Manage and organize your financial particular groupings.
+        </p>
+    </div>
+
+    <!-- Search & Actions -->
+    <div class="bg-white dark:bg-[#1a2632] p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between gap-4">
+      <div class="relative flex-1 max-w-lg group">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+          <span class="material-symbols-outlined !text-[20px]">search</span>
+        </span>
+        <input 
+            type="text" 
+            [value]="searchTerm()"
+            (input)="searchTerm.set($any($event.target).value); currentPage.set(1)"
+            class="block w-full h-10 pl-10 pr-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-shadow" 
+            placeholder="Search by ID, Name or Short Name"
+        />
+      </div>
+      <div class="flex items-center gap-3">
+        <button (click)="onGenerateData()" [disabled]="isGenerating()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium shadow-sm transition-all active:scale-95 whitespace-nowrap disabled:opacity-50">
+            @if(isGenerating()) {
+                <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>
+                <span>Generating...</span>
+            } @else {
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+                <span>100 Data</span>
+            }
+        </button>
+        <a routerLink="/particular-groups/add" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap">
+          <span class="material-symbols-outlined !text-[20px]">add</span>
+          <span>Add New Group</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="@container w-full">
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800 font-bold">
+              <tr>
+                <th class="px-6 py-4 tracking-wider w-[120px]">ID</th>
+                <th class="px-6 py-4 tracking-wider">GROUP NAME</th>
+                <th class="px-6 py-4 tracking-wider">SHORT NAME</th>
+                <th class="px-6 py-4 tracking-wider">STATUS</th>
+                <th class="px-6 py-4 tracking-wider text-right">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 border-t border-slate-100 dark:divide-slate-800 dark:border-slate-800">
+              @for (group of paginatedGroups(); track group.id) {
+                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors">
+                  <td class="px-6 py-4 font-medium text-slate-900 dark:text-white" data-label="ID">
+                      PG-{{ group.id }}
+                  </td>
+                  <td class="px-6 py-4 font-medium text-slate-700 dark:text-slate-300" data-label="GROUP NAME">
+                      {{ group.groupName }}
+                  </td>
+                  <td class="px-6 py-4 text-primary" data-label="SHORT NAME">{{ group.shortName }}</td>
+                  <td class="px-6 py-4" data-label="STATUS">
+                    @if (group.isActive) {
+                      <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                           <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Active
+                      </span>
+                    } @else {
+                      <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-400">
+                           <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span> Inactive
+                      </span>
+                    }
+                  </td>
+                  <td class="px-6 py-4 text-right" data-label="ACTIONS">
+                     <div class="flex items-center justify-end gap-2">
+                        <a [routerLink]="['/particular-groups/detail', group.id]" class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg transition-colors" title="View Details">
+                          <span class="material-symbols-outlined !text-[20px]">visibility</span>
+                        </a>
+                        <a [routerLink]="['/particular-groups/edit', group.id]" class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg transition-colors" title="Edit">
+                          <span class="material-symbols-outlined !text-[20px]">edit</span>
+                        </a>
+                        <button (click)="onDelete(group.id)" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                          <span class="material-symbols-outlined !text-[20px]">delete</span>
+                        </button>
+                     </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="px-6 py-10 text-center text-slate-500 dark:text-slate-400">No particular groups found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1a2632]">
+          <div class="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span class="font-bold text-slate-900 dark:text-white">{{ startItemIndex() }}</span> to <span class="font-bold text-slate-900 dark:text-white">{{ endItemIndex() }}</span> of <span class="font-bold text-slate-900 dark:text-white">{{ groups().length }}</span> results
+          </div>
+          <div class="flex items-center gap-1">
+            <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1" class="px-3 py-1 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+              Previous
+            </button>
+            
+            @for(page of pages; track page) {
+               <button (click)="changePage(page)" 
+                       [class]="currentPage() === page ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 dark:bg-[#1a2632] dark:border-slate-700 dark:text-slate-400 dark:hover:bg-[#23303e]'"
+                       class="w-8 h-8 flex items-center justify-center rounded border text-sm font-medium transition-colors">
+                  {{ page }}
+               </button>
+            }
+  
+            <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="px-3 py-1 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

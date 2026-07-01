@@ -1,0 +1,114 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <span class="material-symbols-outlined text-slate-500 text-[18px]">inventory_2</span>
+      <span class="text-slate-500 dark:text-slate-400 font-medium">Inventory</span>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/item-makers">Item Makers</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Edit Maker</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Edit Item Maker</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Modify properties and operational status of the manufacturer.
+      </p>
+    </div>
+
+    @if (maker) {
+    <form [formGroup]="makerForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+        
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+             <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                 <span class="material-symbols-outlined text-primary !text-[20px]">edit_note</span>
+                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">General Information</h3>
+             </div>
+             
+             <div class="p-6 md:p-8 flex flex-col gap-8">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Maker Name</label>
+                        <input type="text" formControlName="makerName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                     </div>
+                     <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Short Name</label>
+                        <input type="text" formControlName="shortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                     </div>
+                 </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Status</label>
+                        <select formControlName="status" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                     </div>
+                     <div>
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Headquarters</label>
+                        <input type="text" formControlName="headquarters" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                     </div>
+                 </div>
+
+                 <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Website</label>
+                    <input type="text" formControlName="website" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                 </div>
+
+                 <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Description</label>
+                    <textarea formControlName="description" rows="3" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
+                 </div>
+             </div>
+        </div>
+
+        <!-- Audit Information -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+             <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                 <div class="flex items-center gap-2">
+                     <span class="material-symbols-outlined text-slate-500 !text-[20px]">history</span>
+                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Information</h3>
+                 </div>
+             </div>
+             
+             <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                 <div>
+                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED BY</p>
+                     <p class="font-bold text-slate-900 dark:text-white">{{ maker.createdBy }}</p>
+                 </div>
+                 <div>
+                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED DATE</p>
+                     <p class="font-bold text-slate-900 dark:text-white">{{ maker.createdDate | date:'MMM d, yyyy' }} at {{ maker.createdDate | date:'shortTime' }}</p>
+                 </div>
+                 <div>
+                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">UPDATED BY</p>
+                     <p class="font-bold text-slate-900 dark:text-white">{{ maker.updatedBy || 'System' }}</p>
+                 </div>
+                 <div>
+                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">UPDATED DATE</p>
+                     <p class="font-bold text-slate-900 dark:text-white">{{ maker.lastUpdated | date:'MMM d, yyyy' }} at {{ maker.lastUpdated | date:'shortTime' }}</p>
+                 </div>
+             </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
+             <button type="button" (click)="onCancel()" class="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 font-bold text-sm text-slate-700 dark:text-white hover:bg-slate-50 transition-colors">
+                 Discard Changes
+             </button>
+             <button type="submit" [disabled]="isSubmitting() || makerForm.invalid" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all flex items-center gap-2 disabled:opacity-50">
+                 @if(isSubmitting()) {
+                     <span class="material-symbols-outlined animate-spin !text-[18px]">sync</span> Saving...
+                 } @else {
+                     <span class="material-symbols-outlined !text-[18px]">save</span> Update Maker
+                 }
+             </button>
+        </div>
+    </form>
+    } @else {
+        <p class="text-center text-slate-500 py-10">Item Maker not found.</p>
+    }
+  </div>
+</div>

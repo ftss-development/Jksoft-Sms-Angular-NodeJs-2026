@@ -1,0 +1,190 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Data Management</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/packages">Packages</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Details</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Package Details</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Viewing details for <strong class="text-slate-900 dark:text-white">{{ package?.packageName }}</strong>.
+      </p>
+    </div>
+
+    @if (package) {
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+        <!-- Left Column: Info -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+          
+          <!-- Basic Info -->
+          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+             <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+                  <span class="material-symbols-outlined text-primary text-2xl">info</span>
+                  <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Basic Information</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                  <div class="md:col-span-2">
+                      <p class="text-sm font-medium text-slate-500">Package Name</p>
+                      <p class="text-lg font-bold text-slate-900 dark:text-white">{{ package.packageName }}</p>
+                  </div>
+                  <div>
+                      <p class="text-sm font-medium text-slate-500">Short Name</p>
+                      <p class="text-base text-slate-900 dark:text-white">{{ package.packageShortName }}</p>
+                  </div>
+                  <div>
+                      <p class="text-sm font-medium text-slate-500">Grade</p>
+                      <p class="text-base text-slate-900 dark:text-white">{{ package.packageGrade }}</p>
+                  </div>
+                  <div class="md:col-span-2">
+                      <p class="text-sm font-medium text-slate-500">Description</p>
+                      <p class="text-base text-slate-700 dark:text-slate-300">{{ package.description }}</p>
+                  </div>
+                   <div>
+                      <p class="text-sm font-medium text-slate-500">Service Category</p>
+                      <p class="text-base text-slate-900 dark:text-white">{{ package.serviceCategoryType }}</p>
+                  </div>
+                  <div>
+                      <p class="text-sm font-medium text-slate-500">MSO / Broadcaster</p>
+                      <p class="text-base text-slate-900 dark:text-white">{{ package.msoOrBroadcaster }}</p>
+                  </div>
+                   <div>
+                      <p class="text-sm font-medium text-slate-500">Creation Date</p>
+                      <p class="text-base text-slate-900 dark:text-white">{{ package.packageCreationDate | date:'mediumDate' }}</p>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Pricing -->
+          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+              <div class="mb-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-2xl">payments</span>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Pricing & Tax</h3>
+                </div>
+                @if(package.isTaxInclusive) {
+                    <span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                        Tax Inclusive
+                    </span>
+                }
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                   <div>
+                      <p class="text-sm font-medium text-slate-500">Base Rate</p>
+                      <p class="text-lg font-bold text-slate-900 dark:text-white">{{ package.baseRate | currency }}</p>
+                  </div>
+                  <div>
+                      <p class="text-sm font-medium text-slate-500">Tax</p>
+                      <p class="text-lg font-bold text-slate-900 dark:text-white">{{ package.taxPercentage | number:'1.0-2' }}%</p>
+                  </div>
+                   <div>
+                      <p class="text-sm font-medium text-slate-500">Total Amount</p>
+                      <p class="text-xl font-black text-primary">{{ package.totalAmount | currency }}</p>
+                  </div>
+                   <div>
+                      <p class="text-sm font-medium text-slate-500">DRP</p>
+                      <p class="text-base font-semibold text-slate-900 dark:text-white">{{ package.drp | currency }}</p>
+                  </div>
+                   <div>
+                      <p class="text-sm font-medium text-slate-500">MRP</p>
+                      <p class="text-base font-semibold text-slate-900 dark:text-white">{{ package.mrp | currency }}</p>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Channels -->
+          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+               <div class="mb-4 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <span class="material-symbols-outlined text-primary text-2xl">cast_connected</span>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Mapped Channels ({{ package.mappedChannels.length }})</h3>
+               </div>
+               <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+                   <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                       <thead class="bg-gray-50 dark:bg-gray-800">
+                           <tr>
+                               <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                               <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                               <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Language</th>
+                           </tr>
+                       </thead>
+                       <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-[#1a2632]">
+                           @for (channel of package.mappedChannels; track channel.id) {
+                               <tr>
+                                   <td class="px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">{{ channel.name }}</td>
+                                   <td class="px-4 py-2 text-sm text-gray-500">{{ channel.category }}</td>
+                                   <td class="px-4 py-2 text-sm text-gray-500">{{ channel.language }}</td>
+                               </tr>
+                           }
+                       </tbody>
+                   </table>
+               </div>
+          </div>
+          
+          <div class="flex justify-end gap-3">
+              <a routerLink="/packages" class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-[#23303e] dark:text-slate-200 dark:hover:bg-slate-700 transition-colors">
+                  Back to List
+              </a>
+              <a [routerLink]="['/packages/edit', package.id]" class="rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-600 transition-all">
+                  Edit Package
+              </a>
+          </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="lg:col-span-1 flex flex-col gap-6">
+             <!-- Status -->
+            <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Package Status</h3>
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="inline-flex h-3 w-3 rounded-full" [class]="package.isActive ? 'bg-green-500' : 'bg-slate-400'"></span>
+                    <span class="text-base font-medium text-slate-900 dark:text-white">{{ package.isActive ? 'Active' : 'Inactive' }}</span>
+                </div>
+                
+                <div class="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-600 dark:text-slate-400">Active Customers</span>
+                        <span class="font-bold text-slate-900 dark:text-white">{{ package.activeCustomers | number }}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-600 dark:text-slate-400">Pending Enquiries</span>
+                        <span class="font-bold text-slate-900 dark:text-white">{{ package.pendingEnquiries | number }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Trail (Read Only) -->
+            <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+             <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+                  <span class="material-symbols-outlined text-slate-500 text-xl">history</span>
+                  <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+             </div>
+             <div class="relative pl-4 space-y-6">
+                 <div class="absolute left-1.5 top-2 bottom-2 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                 <div class="relative pl-6">
+                      <div class="absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-green-500 dark:border-[#1a2632]"></div>
+                      <p class="text-xs font-medium text-slate-500 uppercase">CREATED BY</p>
+                      <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ package.createdBy }}</p>
+                      <p class="text-xs text-slate-500">{{ package.createdDate | date:'medium' }}</p>
+                 </div>
+                 <div class="relative pl-6">
+                      <div class="absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-blue-500 dark:border-[#1a2632]"></div>
+                      <p class="text-xs font-medium text-slate-500 uppercase">LAST UPDATED BY</p>
+                      <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ package.updatedBy }}</p>
+                      <p class="text-xs text-slate-500">{{ package.lastUpdated | date:'medium' }}</p>
+                 </div>
+             </div>
+            </div>
+        </div>
+
+      </div>
+    }
+  </div>
+</div>

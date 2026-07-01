@@ -1,0 +1,243 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Financials</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/banks">Banks</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-primary font-medium">{{ bank?.bankName }}</span>
+    </nav>
+
+    @if (bank) {
+        <!-- Header Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-end gap-4 mb-2">
+            <div class="flex items-center gap-3 bg-white dark:bg-[#1a2632] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">IS ACTIVE</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" [checked]="bank.isActive" class="sr-only peer" disabled>
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-500"></div>
+                </label>
+            </div>
+            <a [routerLink]="['/banks/edit', bank.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-all active:scale-95 text-sm">
+                <span class="material-symbols-outlined !text-[18px]">edit</span>
+                Edit Details
+            </a>
+        </div>
+
+        <!-- Bank Info Card -->
+        <div class="rounded-xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <div class="flex flex-col md:flex-row items-start gap-6">
+                <!-- Icon -->
+                <div class="h-20 w-20 rounded-xl bg-sky-100 flex-shrink-0 flex items-center justify-center text-primary dark:bg-sky-900/30 dark:text-sky-400">
+                    <span class="material-symbols-outlined !text-[40px]">account_balance</span>
+                </div>
+                
+                <div class="flex-1 w-full">
+                    <h1 class="text-3xl font-black text-slate-900 dark:text-white mb-6">{{ bank.bankName }}</h1>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">SHORT NAME</p>
+                            <p class="text-base font-bold text-slate-900 dark:text-white">{{ bank.shortName }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">BANK CODE</p>
+                            <p class="text-base font-bold text-slate-900 dark:text-white">{{ bank.code }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">SWIFT / BIC</p>
+                            <p class="text-base font-bold text-slate-900 dark:text-white">{{ bank.swiftCode || 'N/A' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">CATEGORY</p>
+                            <p class="text-base font-bold text-slate-900 dark:text-white">{{ bank.category || 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="border-b border-slate-200 dark:border-slate-800 mt-2">
+            <nav class="flex gap-8" aria-label="Tabs">
+                <button (click)="setActiveTab('accounts')" 
+                        class="pb-4 text-sm font-bold border-b-2 transition-colors px-1"
+                        [class.border-primary]="activeTab() === 'accounts'"
+                        [class.text-primary]="activeTab() === 'accounts'"
+                        [class.border-transparent]="activeTab() !== 'accounts'"
+                        [class.text-slate-500]="activeTab() !== 'accounts'"
+                        [class.hover:text-slate-700]="activeTab() !== 'accounts'">
+                    Bank Accounts
+                </button>
+                <button (click)="setActiveTab('compliance')" 
+                        class="pb-4 text-sm font-bold border-b-2 transition-colors px-1"
+                        [class.border-primary]="activeTab() === 'compliance'"
+                        [class.text-primary]="activeTab() === 'compliance'"
+                        [class.border-transparent]="activeTab() !== 'compliance'"
+                        [class.text-slate-500]="activeTab() !== 'compliance'"
+                        [class.hover:text-slate-700]="activeTab() !== 'compliance'">
+                    Compliance Documents
+                </button>
+                <button (click)="setActiveTab('contacts')" 
+                        class="pb-4 text-sm font-bold border-b-2 transition-colors px-1"
+                        [class.border-primary]="activeTab() === 'contacts'"
+                        [class.text-primary]="activeTab() === 'contacts'"
+                        [class.border-transparent]="activeTab() !== 'contacts'"
+                        [class.text-slate-500]="activeTab() !== 'contacts'"
+                        [class.hover:text-slate-700]="activeTab() !== 'contacts'">
+                    Contact Persons
+                </button>
+            </nav>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4">
+            <!-- Left Content Area (Tabs Content) -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                
+                @if (activeTab() === 'accounts') {
+                    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Associated Accounts</h3>
+                            <span class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold px-3 py-1 rounded-md">{{ accounts().length }} Accounts Total</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-left text-sm">
+                                <thead class="border-b border-slate-100 dark:border-slate-700">
+                                    <tr>
+                                        <th class="py-3 font-bold text-slate-400 uppercase text-[10px] tracking-wider">Account Name</th>
+                                        <th class="py-3 font-bold text-slate-400 uppercase text-[10px] tracking-wider">Account Number</th>
+                                        <th class="py-3 font-bold text-slate-400 uppercase text-[10px] tracking-wider">Currency</th>
+                                        <th class="py-3 font-bold text-slate-400 uppercase text-[10px] tracking-wider">Type</th>
+                                        <th class="py-3 font-bold text-slate-400 uppercase text-[10px] tracking-wider text-right">Balance (Est.)</th>
+                                        <th class="py-3 font-bold text-slate-400 uppercase text-[10px] tracking-wider text-right">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                                    @for (acc of accounts(); track acc.id) {
+                                        <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                            <td class="py-4 font-bold text-slate-900 dark:text-white">{{ acc.accountName }}</td>
+                                            <td class="py-4 font-mono text-slate-600 dark:text-slate-400">{{ getMaskedAccountNumber(acc.accountNumber) }}</td>
+                                            <td class="py-4 text-slate-600 dark:text-slate-400">{{ acc.currency }}</td>
+                                            <td class="py-4 text-slate-600 dark:text-slate-400">{{ acc.accountType }}</td>
+                                            <td class="py-4 text-right font-bold text-slate-900 dark:text-white">
+                                                {{ acc.balance | currency:'USD':'symbol':'1.2-2' }}
+                                            </td>
+                                            <td class="py-4 text-right">
+                                                @if (acc.status === 'Active' || acc.status === 'Active & Verified') {
+                                                    <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded dark:bg-emerald-900/30 dark:text-emerald-400 uppercase">ACTIVE</span>
+                                                } @else {
+                                                    <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded dark:bg-amber-900/30 dark:text-amber-400 uppercase">PENDING</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    } @empty {
+                                        <tr>
+                                            <td colspan="6" class="py-8 text-center text-slate-500 italic">No accounts linked to this bank yet.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+
+                @if (activeTab() === 'compliance') {
+                    <div class="rounded-xl border border-slate-200 bg-white p-10 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] text-center">
+                        <span class="material-symbols-outlined text-slate-300 text-5xl mb-2">folder_off</span>
+                        <p class="text-slate-500">No compliance documents uploaded.</p>
+                    </div>
+                }
+
+                @if (activeTab() === 'contacts') {
+                    <div class="rounded-xl border border-slate-200 bg-white p-10 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] text-center">
+                        <span class="material-symbols-outlined text-slate-300 text-5xl mb-2">person_off</span>
+                        <p class="text-slate-500">No additional contact persons listed.</p>
+                    </div>
+                }
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                
+                <!-- Audit Trail -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="material-symbols-outlined text-slate-500 !text-[20px]">history</span>
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+                    </div>
+
+                    <div class="relative pl-2">
+                         <!-- Vertical line -->
+                         <div class="absolute left-[9px] top-2 bottom-4 w-0.5 bg-gray-100 dark:bg-gray-700"></div>
+                         
+                         <!-- Mock Items matching image -->
+                         <div class="relative pl-8 mb-8">
+                            <div class="absolute left-0 top-1 h-5 w-5 rounded-full bg-blue-50 border-4 border-white dark:border-[#1a2632] dark:bg-blue-900 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary !text-[12px]">edit</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900 dark:text-white">Bank details updated by <span class="text-primary">Sarah Jenkins</span></p>
+                                <p class="text-xs text-slate-500 mt-1">2 hours ago • Updated SWIFT code from NOSCUS44XXX</p>
+                            </div>
+                         </div>
+
+                         <div class="relative pl-8 mb-8">
+                            <div class="absolute left-0 top-1 h-5 w-5 rounded-full bg-emerald-50 border-4 border-white dark:border-[#1a2632] dark:bg-emerald-900 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-emerald-600 !text-[12px]">add</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900 dark:text-white">New Account Added: Tax Collection Escrow</p>
+                                <p class="text-xs text-slate-500 mt-1">Dec 14, 2023 • System generated</p>
+                            </div>
+                         </div>
+
+                         <div class="relative pl-8">
+                            <div class="absolute left-0 top-1 h-5 w-5 rounded-full bg-slate-100 border-4 border-white dark:border-[#1a2632] dark:bg-slate-700 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-slate-500 !text-[12px]">verified_user</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900 dark:text-white">Compliance Review Completed</p>
+                                <p class="text-xs text-slate-500 mt-1">Nov 28, 2023 • Regulatory compliance team</p>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Quick Note -->
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-6 shadow-sm dark:border-blue-900/50 dark:bg-blue-900/20">
+                    <div class="flex items-center gap-2 mb-3 text-blue-700 dark:text-blue-400">
+                        <span class="material-symbols-outlined !text-[20px] fill-current">info</span>
+                        <h3 class="text-xs font-bold uppercase tracking-wider">QUICK NOTE</h3>
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        This bank is currently flagged for quarterly compliance review. All associated accounts are undergoing routine audit checks.
+                    </p>
+                </div>
+
+                <!-- Primary Contact -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                     <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Primary Contact</h3>
+                     <div class="flex items-center gap-3 mb-4">
+                         <div class="h-10 w-10 rounded bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-sm">ML</div>
+                         <div>
+                             <p class="text-sm font-bold text-slate-900 dark:text-white">Marcus Lowery</p>
+                             <p class="text-xs text-slate-500">Relationship Manager</p>
+                         </div>
+                     </div>
+                     <button class="w-full border border-primary text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 font-bold text-xs py-2 rounded transition-colors">
+                         View Full Contact
+                     </button>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <div class="text-center py-20">
+            <p class="text-slate-500">Bank not found.</p>
+            <a routerLink="/banks" class="text-primary hover:underline mt-2 inline-block">Back to Banks</a>
+        </div>
+    }
+  </div>
+</div>

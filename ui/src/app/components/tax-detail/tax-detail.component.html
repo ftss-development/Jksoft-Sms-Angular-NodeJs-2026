@@ -1,0 +1,134 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-background-dark">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/taxes">Tax Management</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold dark:text-white">VAT-01 Details</span>
+    </nav>
+
+    @if (tax) {
+        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ tax.id }} - Standard Sales Tax</h1>
+                <div class="flex items-center gap-3 mt-2">
+                    <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Active
+                    </span>
+                    <span class="text-xs text-slate-500">Last updated {{ tax.lastUpdated | date:'medium' }}</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="flex items-center gap-2 h-10 px-4 rounded-lg border border-slate-300 bg-white text-slate-700 font-bold text-sm hover:bg-slate-50 transition-colors">
+                    <span class="material-symbols-outlined !text-[18px]">history</span>
+                    History
+                </button>
+                 <a [routerLink]="['/taxes/edit', tax.id]" class="flex items-center gap-2 h-10 px-5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit Configuration
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- Tax Identity -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2"><span class="material-symbols-outlined !text-[20px] text-primary">badge</span> Tax Identity</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TAX CODE</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ tax.id }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TAX TYPE</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ tax.taxName }}</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">LEGAL NAME</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ tax.legalName || 'N/A' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">JURISDICTION</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1 flex items-center gap-2">
+                                <span class="material-symbols-outlined !text-[16px] text-slate-400">flag</span> {{ tax.jurisdiction || 'N/A' }}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TAX AUTHORITY</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white mt-1">{{ tax.taxAuthority || 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full Audit Trail -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2"><span class="material-symbols-outlined !text-[20px] text-primary">history</span> Full Audit Trail</h3>
+                     <div class="relative pl-4 space-y-8">
+                         <div class="absolute left-[23px] top-3 bottom-3 w-0.5 bg-slate-200 dark:bg-slate-700"></div>
+                         @for (log of tax.auditTrail; track $index) {
+                             <div class="relative pl-12">
+                                 <div class="absolute left-0 top-0 h-12 w-12 rounded-full border-4 border-white dark:border-[#1a2632] flex items-center justify-center z-10 bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                                     <span class="material-symbols-outlined !text-[20px]">{{ log.icon }}</span>
+                                 </div>
+                                 <div>
+                                     <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ log.title }}</h4>
+                                     <div class="flex gap-2 text-xs text-slate-500 mt-0.5">
+                                         <span>{{ log.timestamp | date:'MMM d, y, h:mm a' }}</span>
+                                         <span>• by {{ log.actor }}</span>
+                                     </div>
+                                     <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">{{ log.description }}</p>
+                                 </div>
+                             </div>
+                         } @empty {
+                             <p class="text-slate-500 italic pl-8">No audit history found.</p>
+                         }
+                    </div>
+                     <div class="mt-8 text-center">
+                         <a href="#" class="text-sm font-bold text-primary hover:underline">View Entire Audit Log</a>
+                     </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                     <h3 class="text-base font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2"><span class="material-symbols-outlined !text-[20px] text-primary">settings</span> Configuration</h3>
+                     <div class="space-y-6">
+                         <div class="flex justify-between items-center">
+                             <span class="text-sm font-medium text-slate-600 dark:text-slate-400">Tax Rate</span>
+                             <span class="font-black text-2xl text-slate-900 dark:text-white">{{ tax.value | number:'1.2-2' }}%</span>
+                         </div>
+                         <div class="flex justify-between items-center">
+                             <span class="text-sm font-medium text-slate-600 dark:text-slate-400">Currency</span>
+                             <span class="font-bold text-slate-900 dark:text-white">{{ tax.currency || 'N/A' }}</span>
+                         </div>
+                         <div class="flex justify-between items-center">
+                             <span class="text-sm font-medium text-slate-600 dark:text-slate-400">Effective Date</span>
+                             <span class="font-bold text-slate-900 dark:text-white">{{ tax.effectiveDate | date:'d MMM yyyy' }}</span>
+                         </div>
+                          <div class="flex justify-between items-center">
+                             <span class="text-sm font-medium text-slate-600 dark:text-slate-400">Rounding Rule</span>
+                             <span class="font-bold text-slate-900 dark:text-white">{{ tax.roundingRule || 'N/A' }}</span>
+                         </div>
+                         <div class="pt-4 border-t border-slate-100 dark:border-slate-700">
+                             <p class="text-sm font-medium text-slate-600 dark:text-slate-400">GL Settlement Account</p>
+                             <div class="flex items-center gap-2 mt-1 text-sm text-primary font-bold hover:underline cursor-pointer">
+                                 <span class="material-symbols-outlined !text-[16px]">account_balance</span>
+                                 <span>{{ tax.glSettlementAccount || 'N/A' }}</span>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+                <!-- Associated Particular Groups (omitted for simplicity) -->
+            </div>
+        </div>
+
+    } @else {
+        <div class="text-center py-20 text-slate-500">Tax rule not found.</div>
+    }
+  </div>
+</div>

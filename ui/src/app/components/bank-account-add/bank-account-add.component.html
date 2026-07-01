@@ -1,0 +1,154 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1000px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <span class="text-slate-500 dark:text-slate-400 font-medium">Financial Assets</span>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/bank-accounts">Bank Accounts</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-primary font-medium">Add New Bank Account</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Add New Bank Account</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Configure a new company bank account for settlements and payments.
+      </p>
+    </div>
+
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+        <!-- Basic Details -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b pb-4 mb-6 dark:border-gray-700">Basic Details</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Account Name <span class="text-red-500">*</span></label>
+                    <input type="text" formControlName="accountName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. Primary Operations Account"/>
+                    @if (accountForm.get('accountName')?.invalid && accountForm.get('accountName')?.touched) {
+                        <p class="text-xs text-red-500 mt-1">Account Name is required.</p>
+                    }
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Account No <span class="text-red-500">*</span></label>
+                    <input type="text" formControlName="accountNumber" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="1234567890"/>
+                    <div class="flex justify-between mt-1">
+                        @if (accountForm.get('accountNumber')?.invalid && accountForm.get('accountNumber')?.touched) {
+                            <p class="text-xs text-red-500">Valid Account Number required.</p>
+                        } @else {
+                            <span></span>
+                        }
+                        <span class="text-xs text-slate-400">Max 18 digits</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Bank Name <span class="text-red-500">*</span></label>
+                    <select formControlName="bankId" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        <option value="" disabled>Select Bank</option>
+                        @for (bank of banks(); track bank.id) {
+                            <option [value]="bank.id">{{ bank.bankName }}</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Branch Name <span class="text-red-500">*</span></label>
+                    <input type="text" formControlName="branchName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. Downtown Financial District"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b pb-4 mb-6 dark:border-gray-700">Configuration</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Account Type <span class="text-red-500">*</span></label>
+                    <select formControlName="accountType" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        <option value="" disabled>Select type...</option>
+                        @for (type of accountTypes; track type) {
+                            <option [value]="type">{{ type }}</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Associated Company <span class="text-red-500">*</span></label>
+                    <select formControlName="companyId" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        <option value="" disabled>Select company...</option>
+                        @for (comp of companies(); track comp.id) {
+                            <option [value]="comp.id">{{ comp.companyName }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 flex items-center justify-between border border-slate-200 dark:border-slate-700">
+                <div>
+                    <span class="block text-sm font-bold text-slate-900 dark:text-white">Default Account</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400">Set as primary account for automated settlements</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" formControlName="isDefault" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Identifiers -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6 md:p-8">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b pb-4 mb-6 dark:border-gray-700">Technical / Banking Identifiers</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">IFSC Code <span class="text-red-500">*</span></label>
+                    <input type="text" formControlName="ifscCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="BANK0001234"/>
+                    <div class="flex justify-end mt-1"><span class="text-xs text-slate-400">Max 11 characters</span></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Swift Code</label>
+                    <input type="text" formControlName="swiftCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="BANKUS33XXX"/>
+                    <div class="flex justify-end mt-1"><span class="text-xs text-slate-400">Max 11 characters</span></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">MICR Code</label>
+                    <input type="text" formControlName="micrCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="000111222"/>
+                    <div class="flex justify-end mt-1"><span class="text-xs text-slate-400">Max 12 characters</span></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Merchant Name</label>
+                    <input type="text" formControlName="merchantName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. ACME_HOLDINGS_LLP"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+            <button type="button" (click)="onCancel()" class="px-6 py-2.5 text-sm font-bold text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors">
+                Cancel
+            </button>
+            <button type="submit" [disabled]="accountForm.invalid || isSubmitting()" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                @if(isSubmitting()) {
+                    Saving...
+                } @else {
+                    Submit Account
+                }
+            </button>
+        </div>
+    </form>
+
+    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50 rounded-xl p-4 flex gap-4 mt-2">
+        <div class="min-w-[40px] h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined !text-[20px]">verified_user</span>
+        </div>
+        <div>
+            <h4 class="text-sm font-bold text-blue-800 dark:text-blue-300">Compliance Check</h4>
+            <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">Account details will be validated against bank API services. Ensure IFSC and Account Number match exactly as per bank records to avoid settlement failures.</p>
+        </div>
+    </div>
+  </div>
+</div>

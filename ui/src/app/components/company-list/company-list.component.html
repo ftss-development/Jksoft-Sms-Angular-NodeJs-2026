@@ -1,0 +1,138 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Company Management</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-gray-200 dark:border-gray-800">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Company Management</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+          Manage corporate entities, subsidiaries, and their legal structures.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button (click)="onGenerateData()" [disabled]="isGenerating()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#23303e] hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium shadow-sm transition-all active:scale-95 whitespace-nowrap disabled:opacity-50">
+            @if(isGenerating()) {
+                <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>
+                <span>Generating...</span>
+            } @else {
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+                <span>Generate Data</span>
+            }
+        </button>
+        <a routerLink="/companies/add" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap">
+            <span class="material-symbols-outlined text-[20px]">domain_add</span>
+            <span>Add Company</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="flex flex-col md:flex-row gap-4 p-4 bg-white dark:bg-[#1a2632] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+      <div class="relative flex-1 group">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+          <span class="material-symbols-outlined">search</span>
+        </div>
+        <input class="block w-full h-10 pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-shadow" placeholder="Search by Company Name, Short Name, or CIN..." type="text"/>
+      </div>
+      <div class="flex gap-3">
+        <select class="h-10 rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-700 dark:text-slate-300 text-sm focus:border-primary focus:ring-primary shadow-sm min-w-[140px]">
+            <option value="">All Cities</option>
+            <option value="New York">New York</option>
+            <option value="San Francisco">San Francisco</option>
+            <option value="Chicago">Chicago</option>
+        </select>
+        <select class="h-10 rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-700 dark:text-slate-300 text-sm focus:border-primary focus:ring-primary shadow-sm min-w-[140px]">
+            <option value="">Status: All</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Pending">Pending</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="@container w-full">
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+              <tr>
+                <th class="px-6 py-4 font-bold tracking-wider">Company Name</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Short Name</th>
+                <th class="px-6 py-4 font-bold tracking-wider">CIN No</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Parent Company</th>
+                <th class="px-6 py-4 font-bold tracking-wider">City</th>
+                <th class="px-6 py-4 font-bold tracking-wider">Status</th>
+                <th class="px-6 py-4 font-bold tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              @for (company of paginatedCompanies(); track company.id) {
+                <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e]">
+                  <td class="px-6 py-4 font-medium text-slate-900 dark:text-white" data-label="Company Name">
+                      {{ company.companyName }}
+                  </td>
+                  <td class="px-6 py-4 text-primary font-medium" data-label="Short Name">{{ company.shortName }}</td>
+                  <td class="px-6 py-4 font-mono text-xs" data-label="CIN No">{{ company.cin }}</td>
+                  <td class="px-6 py-4" data-label="Parent Company">{{ company.parentCompanyName || 'N/A' }}</td>
+                  <td class="px-6 py-4" data-label="City">{{ company.city }}</td>
+                  <td class="px-6 py-4" data-label="Status">
+                    <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide" [class]="getStatusClass(company.status)">
+                      {{ company.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-right" data-label="Actions">
+                     <div class="flex items-center justify-end gap-2">
+                        <a [routerLink]="['/companies/detail', company.id]" class="text-slate-400 hover:text-primary transition-colors" title="View">
+                          <span class="material-symbols-outlined text-[20px]">visibility</span>
+                        </a>
+                        <a [routerLink]="['/companies/edit', company.id]" class="text-slate-400 hover:text-primary transition-colors" title="Edit">
+                          <span class="material-symbols-outlined text-[20px]">edit</span>
+                        </a>
+                        <button (click)="onDelete(company.id)" class="text-slate-400 hover:text-red-500 transition-colors" title="Delete">
+                          <span class="material-symbols-outlined text-[20px]">delete</span>
+                        </button>
+                     </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">No companies found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1a2632]">
+          <div class="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span class="font-bold text-slate-900 dark:text-white">{{ startItemIndex() }}</span> to <span class="font-bold text-slate-900 dark:text-white">{{ endItemIndex() }}</span> of <span class="font-bold text-slate-900 dark:text-white">{{ companies().length }}</span> companies
+          </div>
+          <div class="flex items-center gap-2">
+            <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1" class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+              Previous
+            </button>
+            @for(page of pages; track page) {
+               <button (click)="changePage(page)" 
+                       [class]="currentPage() === page ? 'bg-primary text-white border-primary' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300'"
+                       class="px-4 py-2 text-sm font-medium border rounded-lg transition-colors">
+                  {{ page }}
+               </button>
+            }
+            <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

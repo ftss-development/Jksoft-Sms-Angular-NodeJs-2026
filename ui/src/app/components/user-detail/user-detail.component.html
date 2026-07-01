@@ -1,0 +1,337 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Dashboard</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/users">Users</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Profile Details</span>
+    </nav>
+
+    @if (user) {
+        <!-- Header Card -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <!-- Avatar -->
+                <div class="relative">
+                    <div class="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center text-3xl font-bold text-primary dark:bg-blue-900/30 overflow-hidden ring-4 ring-slate-50 dark:ring-slate-800">
+                        @if (user.avatarUrl && !user.avatarUrl.includes('ui-avatars')) {
+                            <img [src]="user.avatarUrl" alt="Profile" class="h-full w-full object-cover">
+                        } @else {
+                            {{ getInitials(user.firstName, user.lastName) }}
+                        }
+                    </div>
+                    <span class="absolute bottom-1 right-1 h-5 w-5 rounded-full border-2 border-white dark:border-[#1a2632]" 
+                          [class]="user.status === 'Active' ? 'bg-emerald-500' : 'bg-slate-400'">
+                    </span>
+                </div>
+                
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-3">
+                        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ user.firstName }} {{ user.lastName }}</h1>
+                        <span class="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-bold uppercase text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                            {{ user.status }} ACCOUNT
+                        </span>
+                    </div>
+                    <p class="text-lg text-slate-600 dark:text-slate-300 mt-1">
+                        {{ user.jobTitle }} • {{ user.department }} Dept
+                    </p>
+                    <div class="flex items-center justify-center md:justify-start gap-4 mt-3 text-sm text-slate-500 dark:text-slate-400">
+                        <div class="flex items-center gap-1.5">
+                            <span class="material-symbols-outlined !text-[18px]">email</span>
+                            {{ user.email }}
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="material-symbols-outlined !text-[18px]">location_on</span>
+                            {{ user.location }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                 <a [routerLink]="['/users/edit', user.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit User
+                </a>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="border-b border-slate-200 dark:border-slate-800 mt-2">
+            <nav class="flex gap-8" aria-label="Tabs">
+                <button (click)="setActiveTab('profile')" 
+                        class="pb-4 text-sm font-bold border-b-2 transition-colors px-1"
+                        [class.border-primary]="activeTab() === 'profile'"
+                        [class.text-primary]="activeTab() === 'profile'"
+                        [class.border-transparent]="activeTab() !== 'profile'"
+                        [class.text-slate-500]="activeTab() !== 'profile'"
+                        [class.hover:text-slate-700]="activeTab() !== 'profile'">
+                    Profile Details
+                </button>
+                <button (click)="setActiveTab('security')" 
+                        class="pb-4 text-sm font-bold border-b-2 transition-colors px-1"
+                        [class.border-primary]="activeTab() === 'security'"
+                        [class.text-primary]="activeTab() === 'security'"
+                        [class.border-transparent]="activeTab() !== 'security'"
+                        [class.text-slate-500]="activeTab() !== 'security'"
+                        [class.hover:text-slate-700]="activeTab() !== 'security'">
+                    Security Settings
+                </button>
+            </nav>
+        </div>
+
+        <div class="mt-6">
+        @if (activeTab() === 'profile') {
+            <!-- Grid Layout for Profile -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-left-4 duration-300">
+                
+                <!-- Personal Details -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6 text-primary">
+                        <span class="material-symbols-outlined">person</span>
+                        <h3 class="text-sm font-bold uppercase tracking-wider">Personal Details</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-y-6">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">FIRST NAME</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ user.firstName }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">LAST NAME</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ user.lastName }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">USERNAME</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ user.username }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">PHONE NUMBER</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ user.phone || '+1 (555) 012-3456' }}</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">RECOVERY EMAIL</p>
+                            <p class="text-sm font-medium text-slate-500 italic">Not provided</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Settings -->
+                <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+                    <div class="flex items-center gap-2 mb-6 text-blue-600 dark:text-blue-400">
+                        <span class="material-symbols-outlined">settings</span>
+                        <h3 class="text-sm font-bold uppercase tracking-wider">Account Settings</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-y-6">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">USER ROLE</p>
+                            <div class="flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ user.role }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">DEPARTMENT</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ user.department }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">CREATED DATE</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ user.createdDate | date:'MMM d, y • h:mm a' }}</p>
+                        </div>
+                        <div>
+                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">LAST PASSWORD CHANGE</p>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">January 15, 2024</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">TWO-FACTOR AUTH</p>
+                            <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                                @if (user.twoFactorEnabled) {
+                                    <span class="material-symbols-outlined !text-[18px]">check_circle</span>
+                                    <span class="text-sm font-bold">Enabled</span>
+                                } @else {
+                                    <span class="material-symbols-outlined !text-[18px] text-slate-400">cancel</span>
+                                    <span class="text-sm font-bold text-slate-500">Disabled</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Login Activity -->
+                <div class="lg:col-span-2 rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] overflow-hidden">
+                    <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2 text-slate-900 dark:text-white">
+                            <span class="material-symbols-outlined text-slate-500 !text-[20px]">history</span>
+                            <h3 class="text-lg font-bold">Recent Login Activity</h3>
+                        </div>
+                        <button class="text-sm font-bold text-primary hover:underline">View Full Logs</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+                            <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold tracking-wider">TIMESTAMP</th>
+                                    <th class="px-6 py-4 font-bold tracking-wider">IP ADDRESS</th>
+                                    <th class="px-6 py-4 font-bold tracking-wider">DEVICE / BROWSER</th>
+                                    <th class="px-6 py-4 font-bold tracking-wider">LOCATION</th>
+                                    <th class="px-6 py-4 font-bold tracking-wider text-right">STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @for (log of recentActivity; track log.id) {
+                                    <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e]">
+                                        <td class="px-6 py-4 text-slate-900 dark:text-white font-medium">
+                                            {{ log.timestamp | date:'MMM d, y • hh:mm a' }}
+                                        </td>
+                                        <td class="px-6 py-4 font-mono">{{ log.ipAddress }}</td>
+                                        <td class="px-6 py-4">{{ log.device }}</td>
+                                        <td class="px-6 py-4">{{ log.location }}</td>
+                                        <td class="px-6 py-4 text-right">
+                                            @if (log.status === 'Success') {
+                                                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase dark:bg-emerald-900/30 dark:text-emerald-400">SUCCESS</span>
+                                            } @else {
+                                                <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase dark:bg-rose-900/30 dark:text-rose-400">FAILED</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                } @empty {
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-8 text-center italic">No recent activity logs found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        } @else if (activeTab() === 'security') {
+            <!-- Security Tab Content -->
+            <div class="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                
+                <!-- Status & Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">TWO-FACTOR AUTHENTICATION</p>
+                            <div class="flex items-center gap-2">
+                                @if (user.twoFactorEnabled) {
+                                    <span class="text-emerald-600 font-bold flex items-center gap-1">
+                                        <span class="material-symbols-outlined !text-[18px]">check_circle</span> Enabled
+                                    </span>
+                                } @else {
+                                    <span class="text-slate-500 font-bold flex items-center gap-1">
+                                        <span class="material-symbols-outlined !text-[18px]">cancel</span> Disabled
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                        <div class="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500">
+                            <span class="material-symbols-outlined">phonelink_lock</span>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632] flex items-center justify-between">
+                         <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">LAST LOGIN</p>
+                            <p class="font-bold text-slate-900 dark:text-white">
+                                {{ user.lastLogin ? (user.lastLogin | date:'medium') : 'Never' }}
+                            </p>
+                        </div>
+                         <div class="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500">
+                            <span class="material-symbols-outlined">login</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Sessions -->
+                <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] overflow-hidden">
+                    <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Active Sessions</h3>
+                            <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase dark:bg-blue-900/30 dark:text-blue-400 tracking-wide">
+                                {{ sessions.length }} Active
+                            </span>
+                        </div>
+                        <button (click)="revokeAllSessions()" class="text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30">
+                            <span class="material-symbols-outlined !text-[16px]">logout</span>
+                            Revoke All
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+                            <thead class="bg-slate-50/50 text-[11px] uppercase text-slate-500 dark:bg-slate-800/30 dark:text-slate-400 border-b border-slate-100 dark:border-slate-700 tracking-wider font-bold">
+                                <tr>
+                                    <th class="px-6 py-4">Device / App</th>
+                                    <th class="px-6 py-4">IP Address</th>
+                                    <th class="px-6 py-4">Created</th>
+                                    <th class="px-6 py-4">Last Used</th>
+                                    <th class="px-6 py-4 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                                @for (session of sessions; track session.id) {
+                                    <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e] transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-4">
+                                                <div class="h-10 w-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center dark:bg-slate-800 dark:text-slate-400">
+                                                    @if (session.deviceType === 'Desktop') {
+                                                        <span class="material-symbols-outlined !text-[24px]">laptop_mac</span>
+                                                    } @else if (session.deviceType === 'Mobile') {
+                                                        <span class="material-symbols-outlined !text-[24px]">smartphone</span>
+                                                    } @else {
+                                                        <span class="material-symbols-outlined !text-[24px]">language</span>
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <p class="font-bold text-slate-900 dark:text-white text-sm">{{ session.deviceName }}</p>
+                                                    @if(session.deviceDetail) {
+                                                      <p class="text-xs text-slate-500">{{ session.deviceDetail }}</p>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-slate-800 dark:text-slate-300 text-sm">{{ session.ipAddress }}</td>
+                                        <td class="px-6 py-4 text-sm text-slate-500">
+                                            {{ session.createdDate | date:'MMM d, y' }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            <div class="flex flex-col">
+                                                @if ((session.lastUsedDate | date:'yyyyMMdd') === (dateNow() | date:'yyyyMMdd')) {
+                                                  <span class="font-medium text-slate-900 dark:text-white">Today, {{ session.lastUsedDate | date:'h:mm a' }}</span>
+                                                } @else if ((session.lastUsedDate | date:'yyyyMMdd') === (yesterday() | date:'yyyyMMdd')) {
+                                                  <span class="font-medium text-slate-900 dark:text-white">Yesterday, {{ session.lastUsedDate | date:'h:mm a' }}</span>
+                                                } @else {
+                                                  <span class="font-medium text-slate-900 dark:text-white">{{ session.lastUsedDate | date:'MMM d, y' }}</span>
+                                                  <span class="text-xs text-slate-500">{{ session.lastUsedDate | date:'h:mm a' }}</span>
+                                                }
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button (click)="revokeSession(session.id)" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded transition-colors dark:hover:bg-slate-700 dark:hover:text-slate-200" title="Revoke Session">
+                                                <span class="material-symbols-outlined !text-[20px]">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                } @empty {
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-8 text-center text-slate-500">No active sessions found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+
+    } @else {
+        <p class="text-center text-slate-500 py-10">User not found.</p>
+    }
+  </div>
+</div>

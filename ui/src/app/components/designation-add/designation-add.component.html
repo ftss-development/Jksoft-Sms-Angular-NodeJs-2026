@@ -1,0 +1,107 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[800px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400">/</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/designations">Organization</a>
+      <span class="text-slate-400">/</span>
+      <span class="text-slate-900 font-bold">Add New Designation</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-4">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Add New Designation</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Define a new role and hierarchy level within the organization.
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+        <div class="flex items-center gap-3 mb-6">
+             <div class="h-10 w-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center dark:bg-blue-900/30 dark:text-blue-400">
+                <span class="material-symbols-outlined">badge</span>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Designation Details</h3>
+                <p class="text-xs text-slate-500">Basic information required for organizational mapping.</p>
+            </div>
+        </div>
+
+        <form [formGroup]="designationForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white">Designation Name <span class="text-red-500">*</span></label>
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider">MAX 50 CHARS</span>
+                </div>
+                <input type="text" formControlName="name" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. Senior Software Engineer"/>
+                <p class="text-xs text-slate-500 mt-1">Provide the full official title of the role.</p>
+                @if (designationForm.get('name')?.invalid && designationForm.get('name')?.touched) {
+                    <p class="text-xs text-red-500 mt-1">Name is required.</p>
+                }
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                     <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-slate-900 dark:text-white">Short Code <span class="text-red-500">*</span></label>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-wider">MAX 10 CHARS</span>
+                    </div>
+                    <input type="text" formControlName="shortCode" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. SSE"/>
+                     @if (designationForm.get('shortCode')?.invalid && designationForm.get('shortCode')?.touched) {
+                        <p class="text-xs text-red-500 mt-1">Code is required.</p>
+                    }
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-900 dark:text-white mb-2">Designation Level <span class="text-red-500">*</span></label>
+                    <input type="text" formControlName="level" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] text-slate-900 dark:text-white p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. Level 4"/>
+                     @if (designationForm.get('level')?.invalid && designationForm.get('level')?.touched) {
+                        <p class="text-xs text-red-500 mt-1">Level is required.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 flex items-center justify-between border border-slate-200 dark:border-slate-700">
+                <div>
+                    <span class="block text-sm font-bold text-slate-900 dark:text-white">Status</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400">Should this designation be active immediately?</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    </label>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">
+                        {{ designationForm.get('isActive')?.value ? 'Active' : 'Inactive' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4">
+                <button type="button" (click)="onCancel()" class="px-6 py-2.5 text-sm font-bold text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" [disabled]="designationForm.invalid || isSubmitting()" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    @if(isSubmitting()) {
+                        Saving...
+                    } @else {
+                        Save Designation
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Info Box -->
+    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50 rounded-xl p-4 flex gap-4">
+        <div class="min-w-[40px] h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-200">
+            <span class="material-symbols-outlined !text-[20px]">info</span>
+        </div>
+        <div>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Guidelines for New Designations</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                Designation Levels are used to calculate reporting hierarchy. A lower number typically represents a higher seniority level (e.g., Level 1 is Executive Leadership). Ensure the Short Code is unique within your department.
+            </p>
+        </div>
+    </div>
+  </div>
+</div>

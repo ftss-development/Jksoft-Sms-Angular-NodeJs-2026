@@ -1,0 +1,130 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Data Management</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/particulars">Particulars</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Add Particular</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Add Particular</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Create a new particular configuration entry.
+      </p>
+    </div>
+
+    <form [formGroup]="particularForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+      
+      <!-- General Information -->
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+        <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+          <span class="material-symbols-outlined text-primary text-2xl">description</span>
+          <h3 class="text-xl font-semibold text-slate-900 dark:text-white">General Information</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Name</label>
+                <input type="text" formControlName="name" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                @if (particularForm.get('name')?.invalid && particularForm.get('name')?.touched) {
+                    <p class="mt-1 text-xs text-red-500">Name is required.</p>
+                }
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Short Name</label>
+                <input type="text" formControlName="shortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Value</label>
+                <textarea rows="3" formControlName="value" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
+                @if (particularForm.get('value')?.invalid && particularForm.get('value')?.touched) {
+                    <p class="mt-1 text-xs text-red-500">Value is required.</p>
+                }
+            </div>
+        </div>
+      </div>
+
+      <!-- Classification & Settings -->
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+        <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+          <span class="material-symbols-outlined text-primary text-2xl">tune</span>
+          <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Classification & Settings</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Particular Type</label>
+                <select formControlName="particularType" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                    <option value="" disabled selected>Select Type</option>
+                    @for (type of particularTypes(); track type.id) {
+                        <option [value]="type.typeName">{{ type.typeName }}</option>
+                    }
+                </select>
+                @if (particularTypes().length === 0) {
+                    <p class="text-xs text-amber-500 mt-1">No types found. Add particular types first.</p>
+                }
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Note Type</label>
+                <select formControlName="noteType" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                    <option value="" disabled selected>Select Note Type</option>
+                    @for (note of noteTypes(); track note.id) {
+                        <option [value]="note.typeName">{{ note.typeName }}</option>
+                    }
+                </select>
+                 @if (noteTypes().length === 0) {
+                    <p class="text-xs text-amber-500 mt-1">No note types found. Add note types first.</p>
+                }
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Start Date</label>
+                <input type="date" formControlName="startDate" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+            </div>
+
+            <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                <div>
+                    <span class="block text-sm font-medium text-slate-900 dark:text-white">Status</span>
+                    <span class="block text-xs text-slate-500 dark:text-slate-400">Enable this particular</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" formControlName="status" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                </label>
+            </div>
+
+            <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                <div>
+                    <span class="block text-sm font-medium text-slate-900 dark:text-white">Is Active</span>
+                    <span class="block text-xs text-slate-500 dark:text-slate-400">Mark record as active</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                </label>
+            </div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end gap-3">
+        <button type="button" (click)="onCancel()"
+                class="inline-flex items-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+          Cancel
+        </button>
+        <button type="submit"
+                class="inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all active:scale-95"
+                [disabled]="particularForm.invalid || particularForm.pristine">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

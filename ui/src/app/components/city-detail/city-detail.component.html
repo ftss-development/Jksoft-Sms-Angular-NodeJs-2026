@@ -1,0 +1,111 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Geo Data</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/cities">Cities</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Details</span>
+    </nav>
+
+    <div class="flex flex-col gap-2 pb-2">
+      <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">City Details</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+        Viewing details for <strong class="text-slate-900 dark:text-white">{{ city?.cityName }}</strong>.
+      </p>
+    </div>
+
+    @if (city) {
+        <div class="flex flex-col gap-6">
+            <!-- General Information Section -->
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+                <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <span class="material-symbols-outlined text-primary text-2xl">location_city</span>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white">General Information</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
+                    <div>
+                        <p class="font-medium text-slate-500 dark:text-slate-400 text-sm">City Name</p>
+                        <p class="mt-1 font-semibold text-slate-900 dark:text-white text-lg">{{ city.cityName }}</p>
+                    </div>
+                    <div>
+                        <p class="font-medium text-slate-500 dark:text-slate-400 text-sm">City Code</p>
+                        <p class="mt-1 font-mono text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded inline-block text-xs">{{ city.cityCode }}</p>
+                    </div>
+                    <div>
+                        <p class="font-medium text-slate-500 dark:text-slate-400 text-sm">Short Name</p>
+                        <p class="mt-1 font-mono text-slate-900 dark:text-white">{{ city.shortName }}</p>
+                    </div>
+                    <div>
+                        <p class="font-medium text-slate-500 dark:text-slate-400 text-sm">Parent State</p>
+                        <p class="mt-1 font-medium text-slate-900 dark:text-white">{{ stateName }}</p>
+                    </div>
+                    <div>
+                        <p class="font-medium text-slate-500 dark:text-slate-400 text-sm">Parent Country</p>
+                        <p class="mt-1 font-medium text-slate-900 dark:text-white">{{ countryName }}</p>
+                    </div>
+                    <div>
+                        <p class="font-medium text-slate-500 dark:text-slate-400 text-sm">Status</p>
+                        <div class="mt-1">
+                            @if (city.isActive) {
+                                <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                    Active
+                                </span>
+                            } @else {
+                                <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                                    Inactive
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Information Section -->
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1a2632] p-6">
+                <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+                  <span class="material-symbols-outlined text-slate-500 text-2xl">history</span>
+                  <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Audit Information</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                  <div>
+                    <p class="font-medium text-slate-500 dark:text-slate-400">CREATED BY</p>
+                    <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ city.createdBy }}</p>
+                  </div>
+                  <div>
+                    <p class="font-medium text-slate-500 dark:text-slate-400">CREATED DATE</p>
+                    <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ city.createdDate | date:'MMM d, y, hh:mm a' }}</p>
+                  </div>
+                  <div>
+                    <p class="font-medium text-slate-500 dark:text-slate-400">UPDATED BY</p>
+                    <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ city.updatedBy || '-' }}</p>
+                  </div>
+                  <div>
+                    <p class="font-medium text-slate-500 dark:text-slate-400">LAST UPDATED</p>
+                    <p class="mt-1 font-semibold text-slate-900 dark:text-white">{{ (city.lastUpdated | date:'MMM d, y, hh:mm a') || '-' }}</p>
+                  </div>
+                </div>
+            </div>
+
+            <div class="mt-4 flex justify-end gap-3">
+                <a routerLink="/cities"
+                   class="inline-flex items-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#23303e] px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                  Back to List
+                </a>
+                <a [routerLink]="['/cities/edit', city.id]"
+                    class="inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all active:scale-95">
+                  Edit City
+                </a>
+            </div>
+        </div>
+    } @else {
+        <div class="text-center py-20">
+            <p class="text-slate-500">City not found.</p>
+            <a routerLink="/cities" class="text-primary hover:underline mt-2 inline-block">Back to Cities</a>
+        </div>
+    }
+  </div>
+</div>

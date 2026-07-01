@@ -1,0 +1,256 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/dashboard">Home</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" href="#">Data Management</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <a class="text-slate-500 dark:text-slate-400 hover:text-primary font-medium transition-colors" routerLink="/packages">Packages</a>
+      <span class="text-slate-400 dark:text-slate-600 font-medium">/</span>
+      <span class="text-slate-900 dark:text-white font-semibold">Package Details</span>
+    </nav>
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-gray-200 dark:border-gray-800">
+        <div class="flex flex-col gap-2">
+            <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Package Details</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl">
+              View and edit package configuration details.
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+             <button type="button" (click)="onCancel()" class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-[#23303e] dark:text-slate-200 dark:hover:bg-slate-700 transition-colors">
+                Cancel
+            </button>
+            <button type="button" (click)="onSubmit()" class="rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-600 transition-all">
+                Save Changes
+            </button>
+        </div>
+    </div>
+
+    @if (package) {
+    <form [formGroup]="packageForm" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Left Column: Main Form Area -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+          
+        <!-- Basic Information -->
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+                <span class="material-symbols-outlined text-primary text-2xl">info</span>
+                <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Basic Information</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Package Name</label>
+                    <input type="text" formControlName="packageName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Package Short Name</label>
+                    <input type="text" formControlName="packageShortName" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Package Grade</label>
+                    <input type="text" formControlName="packageGrade" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Description</label>
+                    <textarea rows="3" formControlName="description" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Service Category Type</label>
+                    <select formControlName="serviceCategoryType" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        <option value="">Select</option>
+                        <option value="Broadband Internet">Broadband Internet</option>
+                        <option value="Cable TV">Cable TV</option>
+                        <option value="IPTV">IPTV</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">MSO Or Broadcaster</label>
+                    <select formControlName="msoOrBroadcaster" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        <option value="">Select</option>
+                        <option value="Global Networks Ltd.">Global Networks Ltd.</option>
+                        <option value="Local Cable">Local Cable</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Package Creation Date</label>
+                    <input type="date" formControlName="packageCreationDate" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Package Inactive From</label>
+                    <input type="date" formControlName="packageInactiveFrom" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing & Tax -->
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <div class="mb-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-2xl">payments</span>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Pricing & Tax</h3>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" formControlName="isTaxInclusive" class="sr-only peer">
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    <span class="ml-3 text-sm font-medium text-slate-700 dark:text-slate-300">Tax Inclusive</span>
+                </label>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Base Rate ($)</label>
+                    <input type="number" formControlName="baseRate" (input)="recalculateTotal()" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tax (%)</label>
+                    <input type="number" formControlName="taxPercentage" (input)="recalculateTotal()" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Total Amount ($)</label>
+                    <input type="number" formControlName="totalAmount" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-[#15202b] text-slate-900 dark:text-white shadow-sm sm:text-sm cursor-not-allowed"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">DRP (Distributor Retail Price)</label>
+                    <input type="number" formControlName="drp" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">MRP (Maximum Retail Price)</label>
+                    <input type="number" formControlName="mrp" class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#23303e] text-slate-900 dark:text-white placeholder-slate-500 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapped Channels -->
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <div class="mb-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-2xl">cast_connected</span>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Mapped Channels</h3>
+                </div>
+                <button type="button" (click)="addMockChannel()" class="flex items-center gap-1 text-sm font-bold text-primary hover:text-blue-600">
+                    <span class="material-symbols-outlined !text-[20px]">add_circle</span>
+                    Add Channel
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm text-slate-500 dark:text-slate-400">
+                    <thead class="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-slate-800/50 dark:text-slate-400">
+                        <tr>
+                            <th class="px-4 py-2 font-semibold">Channel Name</th>
+                            <th class="px-4 py-2 font-semibold">Category</th>
+                            <th class="px-4 py-2 font-semibold">Language</th>
+                            <th class="px-4 py-2 font-semibold text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        @for (channel of mappedChannels; track channel.id; let i = $index) {
+                            <tr class="hover:bg-slate-50 dark:hover:bg-[#23303e]">
+                                <td class="px-4 py-3 font-medium text-slate-900 dark:text-white">{{ channel.name }}</td>
+                                <td class="px-4 py-3">{{ channel.category }}</td>
+                                <td class="px-4 py-3">{{ channel.language }}</td>
+                                <td class="px-4 py-3 text-right">
+                                    <button type="button" (click)="removeChannel(i)" class="text-slate-400 hover:text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined !text-[20px]">close</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        } @empty {
+                            <tr>
+                                <td colspan="4" class="px-4 py-8 text-center text-slate-500 italic">No channels mapped yet.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4 text-center">
+                 <button type="button" class="text-xs text-slate-500 hover:text-primary">View all {{ mappedChannels.length }} mapped channels</button>
+            </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Status & Sidebar -->
+      <div class="lg:col-span-1 flex flex-col gap-6">
+        <!-- Package Status -->
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Package Status</h3>
+            
+            <div class="bg-slate-50 dark:bg-[#15202b] rounded-lg p-4 mb-6 flex items-center justify-between">
+                <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Is Active</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" formControlName="isActive" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                </label>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <p class="text-xs font-medium text-slate-500 uppercase">Associations Summary</p>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600 dark:text-slate-400">Active Customers</span>
+                    <span class="font-bold text-slate-900 dark:text-white">{{ package.activeCustomers | number }}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600 dark:text-slate-400">Pending Enquiries</span>
+                    <span class="font-bold text-slate-900 dark:text-white">{{ package.pendingEnquiries | number }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Trail -->
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1a2632]">
+             <div class="mb-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+                  <span class="material-symbols-outlined text-slate-500 text-xl">history</span>
+                  <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Trail</h3>
+             </div>
+             
+             <div class="relative pl-4 space-y-6">
+                 <!-- Timeline Line -->
+                 <div class="absolute left-1.5 top-2 bottom-2 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                 
+                 <div class="relative pl-6">
+                      <div class="absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-green-500 dark:border-[#1a2632]"></div>
+                      <p class="text-xs font-medium text-slate-500 uppercase">CREATED BY</p>
+                      <div class="mt-1 flex items-center gap-2">
+                          <div class="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-xs text-slate-600 font-bold">
+                              {{ package.createdBy.charAt(0) }}
+                          </div>
+                          <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ package.createdBy }}</p>
+                      </div>
+                      <p class="mt-1 text-xs font-mono text-slate-500">CREATED DATE</p>
+                      <p class="text-xs text-slate-700 dark:text-slate-300">{{ package.createdDate | date:'medium' }}</p>
+                 </div>
+
+                 <div class="relative pl-6">
+                      <div class="absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-blue-500 dark:border-[#1a2632]"></div>
+                      <p class="text-xs font-medium text-slate-500 uppercase">LAST UPDATED BY</p>
+                      <div class="mt-1 flex items-center gap-2">
+                          <div class="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-xs text-slate-600 font-bold">
+                              {{ package.updatedBy?.charAt(0) }}
+                          </div>
+                          <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ package.updatedBy }}</p>
+                      </div>
+                      <p class="mt-1 text-xs font-mono text-slate-500">UPDATED DATE</p>
+                      <p class="text-xs text-slate-700 dark:text-slate-300">{{ package.lastUpdated | date:'medium' }}</p>
+                 </div>
+             </div>
+        </div>
+
+      </div>
+    </form>
+    }
+  </div>
+</div>

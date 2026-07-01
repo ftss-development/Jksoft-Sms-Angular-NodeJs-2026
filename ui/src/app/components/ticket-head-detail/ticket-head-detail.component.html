@@ -1,0 +1,199 @@
+
+<div class="flex flex-1 flex-col py-8 px-4 md:px-8 lg:px-10 bg-slate-50 dark:bg-[#0B1116] h-full">
+  <div class="mx-auto w-full max-w-[1200px] flex flex-col gap-6">
+    <!-- Breadcrumbs -->
+    <nav class="flex flex-wrap items-center gap-2 px-1 text-sm">
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/dashboard">Configuration</a>
+      <span class="text-slate-400">›</span>
+      <a class="text-slate-500 hover:text-primary transition-colors" routerLink="/ticket-heads">Ticket Heads</a>
+      <span class="text-slate-400">›</span>
+      <span class="text-slate-900 font-bold dark:text-white">{{ ticketHead?.name }}</span>
+    </nav>
+
+    @if (ticketHead) {
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row items-start justify-between gap-4 pb-2">
+            <div>
+                <div class="flex items-center gap-3">
+                    <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ ticketHead.name }} #{{ ticketHead.id.split('-')[2] || '102' }}</h1>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase dark:bg-emerald-900/30 dark:text-emerald-400">
+                        {{ ticketHead.status }}
+                    </span>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 text-base mt-1">
+                    Configuration for automated hardware fault routing and resolution logic.
+                </p>
+            </div>
+            <div class="flex gap-3">
+                 <a routerLink="/ticket-heads" class="flex items-center gap-2 bg-white border border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-lg shadow-sm hover:bg-slate-50 transition-colors text-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white dark:hover:bg-slate-700">
+                    <span class="material-symbols-outlined !text-[18px]">arrow_back</span>
+                    Back to List
+                </a>
+                 <a [routerLink]="['/ticket-heads/edit', ticketHead.id]" class="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition-all active:scale-95 text-sm">
+                    <span class="material-symbols-outlined !text-[18px]">edit</span>
+                    Edit Head
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Resolution Policy Card -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-blue-50/50 dark:bg-blue-900/10">
+                    <div class="h-10 w-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center dark:bg-blue-900/30 dark:text-blue-400">
+                        <span class="material-symbols-outlined">timer</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Resolution Policy</h3>
+                </div>
+                <div class="p-6 flex flex-col gap-6 flex-1">
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
+                        <span class="text-sm font-medium text-slate-500">SLA Target</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white">{{ ticketHead.slaTargetHours }} Hours</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
+                        <span class="text-sm font-medium text-slate-500">Max Faults</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white">{{ ticketHead.maxFaultsBeforeEscalation }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
+                        <span class="text-sm font-medium text-slate-500">Auto-Close</span>
+                        <div class="flex items-center gap-1.5 font-bold text-emerald-600 text-sm">
+                            <span class="material-symbols-outlined !text-[18px]">check_circle</span> Enabled
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-slate-500">Escalation</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white">{{ ticketHead.escalationTeam }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categorization Card -->
+            <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-purple-50/50 dark:bg-purple-900/10">
+                    <div class="h-10 w-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center dark:bg-purple-900/30 dark:text-purple-400">
+                        <span class="material-symbols-outlined">category</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Categorization</h3>
+                </div>
+                <div class="p-6 flex flex-col gap-6 flex-1">
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
+                        <span class="text-sm font-medium text-slate-500">Domain</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white">{{ ticketHead.domain }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
+                        <span class="text-sm font-medium text-slate-500">Category</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white">{{ ticketHead.serviceCategory }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
+                        <span class="text-sm font-medium text-slate-500">Sub-Category</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white">Server Blade</span> <!-- Mock -->
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-slate-500">Reason Code</span>
+                        <div class="flex items-center gap-2">
+                             <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-xs font-mono font-bold text-slate-600 dark:text-slate-300">{{ ticketHead.shortName }}</span>
+                             <span class="material-symbols-outlined !text-[16px] text-slate-400 cursor-pointer">content_copy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Config Card -->
+            <div class="flex flex-col gap-6">
+                <!-- Visuals -->
+                <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-orange-50/50 dark:bg-orange-900/10">
+                        <div class="h-10 w-10 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center dark:bg-orange-900/30 dark:text-orange-400">
+                            <span class="material-symbols-outlined">palette</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Visual Config</h3>
+                    </div>
+                    <div class="p-6 flex flex-col gap-6">
+                        <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-700">
+                            <span class="text-sm font-medium text-slate-500">Label Color</span>
+                            <div class="flex items-center gap-2">
+                                <span class="h-6 w-12 rounded bg-orange-500" [style.background-color]="ticketHead.colorCode"></span>
+                                <span class="text-sm font-mono text-slate-600 dark:text-slate-400">{{ ticketHead.colorCode }}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-slate-500">Icon</span>
+                            <div class="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
+                                <span class="material-symbols-outlined !text-[20px]">{{ ticketHead.icon }}</span>
+                                <span class="text-sm capitalize">{{ ticketHead.icon }} Icon</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metadata -->
+                 <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                     <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2 text-slate-500 bg-slate-50/50 dark:bg-slate-800/30">
+                        <span class="material-symbols-outlined !text-[20px]">info</span>
+                        <h3 class="text-sm font-bold uppercase tracking-wider">Metadata</h3>
+                    </div>
+                    <div class="p-4 flex flex-col gap-4 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Created By</span>
+                            <div class="flex items-center gap-2">
+                                <div class="h-5 w-5 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-[10px]">{{ ticketHead.createdBy.charAt(0) }}</div>
+                                <span class="font-bold text-slate-900 dark:text-white">{{ ticketHead.createdBy }}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Created On</span>
+                            <span class="font-medium text-slate-900 dark:text-white">{{ ticketHead.createdDate | date:'MMM d, yyyy' }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Last Modified</span>
+                            <span class="font-medium text-slate-900 dark:text-white">{{ ticketHead.lastUpdated | date:'medium' }}</span>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <!-- Audit Log -->
+        <div class="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mt-6 p-6">
+             <div class="flex items-center justify-between mb-6">
+                 <div class="flex items-center gap-2 text-slate-900 dark:text-white">
+                     <span class="material-symbols-outlined">history</span>
+                     <h3 class="text-lg font-bold">Audit Log</h3>
+                 </div>
+                 <a href="#" class="text-sm font-bold text-primary hover:underline">View Full History</a>
+             </div>
+
+             <div class="relative pl-3 space-y-8">
+                  <div class="absolute left-[20px] top-3 bottom-3 w-0.5 bg-slate-200 dark:bg-slate-700"></div>
+
+                  @for (audit of ticketHead.auditTrail; track $index) {
+                      <div class="relative pl-12">
+                          <div class="absolute left-0 top-0 h-10 w-10 rounded-full bg-white dark:bg-[#1a2632] border-4 border-white dark:border-[#1a2632] flex items-center justify-center z-10">
+                              <span class="material-symbols-outlined !text-[20px] text-blue-500">circle</span>
+                          </div>
+                          
+                          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                              <div>
+                                  <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ audit.action }}</h4>
+                                  <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">{{ audit.description }}</p>
+                                  <div class="flex items-center gap-2 mt-1.5">
+                                      <div class="h-4 w-4 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-[8px]">{{ audit.actor.charAt(0) }}</div>
+                                      <span class="text-xs text-slate-500">{{ audit.actor }}</span>
+                                  </div>
+                              </div>
+                              <span class="text-xs font-bold text-slate-400 uppercase sm:text-right mt-2 sm:mt-0">
+                                  {{ audit.timestamp | date:'MMM d, yyyy, h:mm a' }}
+                              </span>
+                          </div>
+                      </div>
+                  } @empty {
+                    <p class="pl-8 text-slate-500 italic">No audit history recorded.</p>
+                  }
+             </div>
+        </div>
+    } @else {
+        <p class="text-center py-20 text-slate-500">Ticket Head not found.</p>
+    }
+  </div>
+</div>
