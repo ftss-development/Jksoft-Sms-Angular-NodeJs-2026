@@ -11,7 +11,7 @@ import { StbScheme, SchemeStatus, SchemeHistory } from '../models/stb-scheme.mod
 })
 export class StbSchemeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/stb_schemes';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/stb_schemes';
   private readonly _schemes = signal<StbScheme[]>([]);
   private readonly collectionName = 'stb_schemes';
 

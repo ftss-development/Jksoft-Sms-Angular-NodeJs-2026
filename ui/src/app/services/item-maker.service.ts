@@ -10,7 +10,7 @@ import { ItemMaker } from '../models/item-maker.model';
 })
 export class ItemMakerService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/item_makers';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/item_makers';
   private readonly _makers = signal<ItemMaker[]>([]);
   private readonly collectionName = 'item_makers';
 

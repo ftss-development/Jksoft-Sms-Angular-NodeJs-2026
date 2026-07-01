@@ -11,7 +11,7 @@ import { ServiceType, ServiceHistoryEvent } from '../models/service-type.model';
 })
 export class ServiceTypeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/service_types';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/service_types';
   private readonly _serviceTypes = signal<ServiceType[]>([]);
   private readonly collectionName = 'service_types';
 

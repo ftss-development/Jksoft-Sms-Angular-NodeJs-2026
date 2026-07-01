@@ -11,7 +11,7 @@ import { AreaService } from './area.service';
 })
 export class ColonyService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/colonies';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/colonies';
   private readonly areaService = inject(AreaService);
   private readonly _colonies = signal<Colony[]>([]);
   private readonly collectionName = 'colonies';

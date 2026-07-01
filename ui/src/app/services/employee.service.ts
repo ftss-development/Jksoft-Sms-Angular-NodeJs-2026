@@ -11,7 +11,7 @@ import { Employee, EmployeeStatus } from '../models/employee.model';
 })
 export class EmployeeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/employees';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/employees';
   private readonly _employees = signal<Employee[]>([]);
   private readonly collectionName = 'employees';
 

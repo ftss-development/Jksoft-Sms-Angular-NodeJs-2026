@@ -11,7 +11,7 @@ import { Store, StoreStatus } from '../models/store.model';
 })
 export class StoreService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/stores';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/stores';
   private readonly _stores = signal<Store[]>([]);
   private readonly collectionName = 'stores';
 

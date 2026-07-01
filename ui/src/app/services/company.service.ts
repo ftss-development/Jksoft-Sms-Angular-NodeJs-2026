@@ -10,7 +10,7 @@ import { Company, CompanyStatus } from '../models/company.model';
 })
 export class CompanyService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/companies';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/companies';
   private readonly _companies = signal<Company[]>([]);
   private readonly collectionName = 'companies';
 

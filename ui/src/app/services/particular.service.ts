@@ -13,7 +13,7 @@ import { NoteTypeService } from './note-type.service';
 })
 export class ParticularService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/particulars';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/particulars';
   private readonly particularTypeService = inject(ParticularTypeService);
   private readonly noteTypeService = inject(NoteTypeService);
   

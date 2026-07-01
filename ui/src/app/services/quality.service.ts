@@ -11,7 +11,7 @@ import { Quality, QualityAudit } from '../models/quality.model';
 })
 export class QualityService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/quality_classifications';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/quality_classifications';
   private readonly _qualities = signal<Quality[]>([]);
   private readonly collectionName = 'quality_classifications';
 

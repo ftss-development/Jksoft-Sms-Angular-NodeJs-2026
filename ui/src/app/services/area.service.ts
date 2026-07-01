@@ -11,7 +11,7 @@ import { DistrictService } from './district.service';
 })
 export class AreaService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/areas';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/areas';
   private readonly districtService = inject(DistrictService);
   private readonly _areas = signal<Area[]>([]);
   private readonly collectionName = 'areas';

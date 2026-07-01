@@ -10,7 +10,7 @@ import { Bank } from '../models/bank.model';
 })
 export class BankService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/banks';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/banks';
   private readonly _banks = signal<Bank[]>([]);
   private readonly collectionName = 'banks';
 

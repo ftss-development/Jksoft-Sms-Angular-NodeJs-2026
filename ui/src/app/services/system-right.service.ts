@@ -11,7 +11,7 @@ import { SystemRight } from '../models/role.model';
 })
 export class SystemRightService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/system_rights';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/system_rights';
   private readonly _rights = signal<SystemRight[]>([]);
   private readonly collectionName = 'system_rights';
 

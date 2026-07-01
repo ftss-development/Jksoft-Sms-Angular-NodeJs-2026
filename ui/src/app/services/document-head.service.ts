@@ -12,7 +12,7 @@ import { DocumentCategoryService } from './document-category.service';
 })
 export class DocumentHeadService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/document_heads';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/document_heads';
   private readonly categoryService = inject(DocumentCategoryService);
   private readonly _heads = signal<DocumentHead[]>([]);
   private readonly collectionName = 'document_heads';

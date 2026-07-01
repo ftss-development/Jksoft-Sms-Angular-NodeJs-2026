@@ -10,7 +10,7 @@ import { Country, CountryStatusType, Status } from '../models/country.model';
 })
 export class CountryService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/countries';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/countries';
   private readonly _countries = signal<Country[]>([]);
   private readonly collectionName = 'countries';
 

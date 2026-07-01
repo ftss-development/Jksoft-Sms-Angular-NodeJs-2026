@@ -10,7 +10,7 @@ import { NoteType, NoteTypeParticular } from '../models/note-type.model';
 })
 export class NoteTypeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/note_types';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/note_types';
   private readonly _noteTypes = signal<NoteType[]>([]);
   private readonly collectionName = 'note_types';
 

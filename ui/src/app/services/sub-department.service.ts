@@ -12,7 +12,7 @@ import { DepartmentService } from './department.service';
 })
 export class SubDepartmentService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/sub_departments';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/sub_departments';
   private readonly departmentService = inject(DepartmentService);
   private readonly _subDepartments = signal<SubDepartment[]>([]);
   private readonly collectionName = 'sub_departments';

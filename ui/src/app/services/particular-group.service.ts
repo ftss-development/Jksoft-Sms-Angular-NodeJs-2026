@@ -11,7 +11,7 @@ import { ParticularGroup } from '../models/particular-group.model';
 })
 export class ParticularGroupService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/particular_groups';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/particular_groups';
   private readonly _particularGroups = signal<ParticularGroup[]>([]);
   private readonly collectionName = 'particular_groups';
 

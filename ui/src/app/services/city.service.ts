@@ -11,7 +11,7 @@ import { StateService } from './state.service';
 })
 export class CityService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/cities';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/cities';
   private readonly stateService = inject(StateService);
   private readonly _cities = signal<City[]>([]);
   private readonly collectionName = 'cities';

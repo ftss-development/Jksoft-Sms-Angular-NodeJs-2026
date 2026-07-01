@@ -10,7 +10,7 @@ import { Language } from '../models/language.model';
 })
 export class LanguageService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/languages';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/languages';
   private readonly _languages = signal<Language[]>([]);
   private readonly collectionName = 'languages';
 

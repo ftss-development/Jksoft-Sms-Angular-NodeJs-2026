@@ -11,7 +11,7 @@ import { StatusType, StatusHistory } from '../models/status.model';
 })
 export class StatusService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/status_definitions';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/status_definitions';
   private readonly _statuses = signal<StatusType[]>([]);
   private readonly collectionName = 'status_definitions';
 

@@ -8,7 +8,7 @@ import { AuditLog, AuditSeverity, AuditCategory } from '../models/audit.model';
 })
 export class AuditService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/audit_logs';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/audit_logs';
   private readonly _logs = signal<AuditLog[]>([]);
   private readonly collectionName = 'audit_logs';
 

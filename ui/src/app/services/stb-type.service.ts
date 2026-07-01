@@ -11,7 +11,7 @@ import { StbType, StbStatus, StbHistoryEvent } from '../models/stb-type.model';
 })
 export class StbTypeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/stb_types';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/stb_types';
   private readonly _stbTypes = signal<StbType[]>([]);
   private readonly collectionName = 'stb_types';
 

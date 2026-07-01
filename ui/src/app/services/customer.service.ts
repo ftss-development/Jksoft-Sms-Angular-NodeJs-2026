@@ -11,7 +11,7 @@ import { Customer, CustomersAddress, CustomersContact, Status } from '../models/
 })
 export class CustomerService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/customers';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/customers';
   private readonly _customers = signal<Customer[]>([]);
   private readonly collectionName = 'customers';
 

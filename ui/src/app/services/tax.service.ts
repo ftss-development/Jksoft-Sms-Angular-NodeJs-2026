@@ -11,7 +11,7 @@ import { Tax, TaxStatus, TaxAuditTrail } from '../models/tax.model';
 })
 export class TaxService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/taxes';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/taxes';
   private readonly _taxes = signal<Tax[]>([]);
   private readonly collectionName = 'taxes';
 

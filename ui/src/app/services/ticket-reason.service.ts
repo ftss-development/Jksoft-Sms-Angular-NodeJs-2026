@@ -11,7 +11,7 @@ import { TicketReason, AssociatedHead } from '../models/ticket-reason.model';
 })
 export class TicketReasonService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/ticket_reasons';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/ticket_reasons';
   private readonly _reasons = signal<TicketReason[]>([]);
   private readonly collectionName = 'ticket_reasons';
 

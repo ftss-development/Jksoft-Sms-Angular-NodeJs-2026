@@ -11,7 +11,7 @@ import { TicketHead, ServiceCategory } from '../models/ticket-head.model';
 })
 export class TicketHeadService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/ticket_heads';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/ticket_heads';
   private readonly _ticketHeads = signal<TicketHead[]>([]);
   private readonly collectionName = 'ticket_heads';
 

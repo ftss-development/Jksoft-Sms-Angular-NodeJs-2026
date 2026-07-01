@@ -11,7 +11,7 @@ import { Designation, DesignationHistory } from '../models/designation.model';
 })
 export class DesignationService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/designations';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/designations';
   private readonly _designations = signal<Designation[]>([]);
   private readonly collectionName = 'designations';
 

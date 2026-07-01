@@ -10,7 +10,7 @@ import { BankAccount, BankAccountAudit, AccountType } from '../models/bank-accou
 })
 export class BankAccountService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/bank_accounts';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/bank_accounts';
   private readonly _bankAccounts = signal<BankAccount[]>([]);
   private readonly collectionName = 'bank_accounts';
 

@@ -12,7 +12,7 @@ import { SystemRightService } from './system-right.service';
 })
 export class RoleService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/roles';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/roles';
   private readonly rightService = inject(SystemRightService);
   private readonly _roles = signal<Role[]>([]);
   private readonly collectionName = 'roles';

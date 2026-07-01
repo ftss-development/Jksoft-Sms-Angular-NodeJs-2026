@@ -11,7 +11,7 @@ import { ServiceCategory, ServiceCategoryAudit } from '../models/service-categor
 })
 export class ServiceCategoryService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/service_categories';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/service_categories';
   private readonly _categories = signal<ServiceCategory[]>([]);
   private readonly collectionName = 'service_categories';
 

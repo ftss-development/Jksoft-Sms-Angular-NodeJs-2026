@@ -11,7 +11,7 @@ import { SignalType, SignalTypeStatus, SignalHistoryEvent } from '../models/sign
 })
 export class SignalTypeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/signal_types';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/signal_types';
   private readonly _signalTypes = signal<SignalType[]>([]);
   private readonly collectionName = 'signal_types';
 

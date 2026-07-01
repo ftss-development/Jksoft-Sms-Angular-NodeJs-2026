@@ -8,7 +8,7 @@ import { lastValueFrom } from 'rxjs';
 })
 export class UserService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/users';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/users';
   private readonly _users = signal<User[]>([]);
 
   constructor() {

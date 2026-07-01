@@ -11,7 +11,7 @@ import { TermCategory, LinkedTerm, TermCategoryAudit } from '../models/term-cate
 })
 export class TermCategoryService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/term_categories';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/term_categories';
   private readonly _categories = signal<TermCategory[]>([]);
   private readonly collectionName = 'term_categories';
 

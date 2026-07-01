@@ -11,7 +11,7 @@ import { ParticularType, ParticularTypeStatus } from '../models/particular-type.
 })
 export class ParticularTypeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/particular_types';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/particular_types';
   private readonly _particularTypes = signal<ParticularType[]>([]);
   private readonly collectionName = 'particular_types';
 

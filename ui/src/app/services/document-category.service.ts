@@ -11,7 +11,7 @@ import { DocumentCategory } from '../models/document-category.model';
 })
 export class DocumentCategoryService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/document_categories';
+  private apiUrl = 'https://jksoft-sms-angular-nodejs-2026.onrender.com/api/document_categories';
   private readonly _categories = signal<DocumentCategory[]>([]);
   private readonly collectionName = 'document_categories';
 
